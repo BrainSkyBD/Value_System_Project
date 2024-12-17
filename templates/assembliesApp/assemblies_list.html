@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block Company_Assemblies_active %}active open{% endblock %}
+{% block Assemblies_list_active %}active{% endblock %}
+{% block title %}Assemblies List{% endblock %}
+{% block content %}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Assemblies /</span> Assemblies List</h4>
+
+  
+    <!-- Responsive Table -->
+    <div class="card">
+      <h5 class="card-header">Resource List</h5>
+      <div class="table-responsive text-nowrap">
+        <table class="table table-bordered">
+          <thead>
+            <tr class="text-nowrap">
+              <th>#</th>
+              <th>Assembly_Name</th>
+              <!-- <th>Resources Category</th> -->
+              <th>Assemblies Code L1</th>
+              <th>Assemblies Code L2</th>
+              <th>Assemblies Code L3</th>
+              <th>Assembly Unit Cost</th>
+              <th>Total Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for assemblies in filter_Estimation_Assemblies %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ assemblies.Assembly_Name }}</td>
+              <!-- <td>{{ resource.Resources_Category }}</td> -->
+              <td>{{ assemblies.Assemblies_Code_L1.Assemblies_Code_L1 }}</td>
+              <td>{{ assemblies.Assemblies_Code_L2.Assemblies_Code_L2 }}</td>
+              <td>{{ assemblies.Assemblies_Code_L3.Assemblies_Code_L3 }}</td>
+              <td>${{ assemblies.Assembly_Unit_Cost }}</td>
+              <td>${{ assemblies.Total_Cost }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <th  colspan="8" class="text-center">No Resource To Show</th>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!--/ Responsive Table -->
+  </div>
+
+
+  {% endblock %}

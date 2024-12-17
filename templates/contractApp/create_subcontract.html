@@ -1,0 +1,632 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block Company_SubContract_active %}active open{% endblock %}
+{% block create_subcontract_active %}active{% endblock %}
+{% block title %}Create User{% endblock %}
+{% block content %}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Sub-Contract/</span> Create Sub-Contract</h4>
+
+    <!-- Basic Layout & Basic with Icons -->
+    <div class="row">
+      <!-- Basic Layout -->
+      <div class="col-xxl">
+        <div class="card mb-4">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="mb-0">Sub-Contract Form</h5>
+            <small class="text-muted float-end">New Resource</small>
+          </div>
+          <div class="card-body">
+            <form method="POST" action="" onsubmit="event.preventDefault(); calculateValues();">
+                {% csrf_token %}
+                <div class="row">
+                    <!-- Project Name -->
+                    <div class="mb-3 col-md-12">
+                        <label class=" col-form-label" for="Comb_Assem_Code">Comb-Assem-Code</label>
+                        <input type="text" class="form-control" id="Comb_Assem_Code" name="Comb_Assem_Code" placeholder="Comb-Assem-Code" required>
+                    </div>
+            
+                    <!-- <div class="mb-3 col-md-6">
+                        <label class="col-form-label" for="Resource_Name">Choose Assembly Name</label><br>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="numberInput" placeholder="Enter Assembly Name">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton">
+                                <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu w-100" id="dropdownMenu" style="margin-top: 42px;"></ul>
+                        </div>
+                    </div> -->
+
+                    <!-- Main Contract Selection -->
+                    <div class="mb-3 col-md-6">
+                        <label class="col-form-label" for="Contract_Name">Choose Contract</label>
+                        <div class="input-group mb-3">
+                            <input type="hidden" id="hiddencontractInputValue">
+                            <input type="hidden" id="hiddencontractInputId">
+                            
+                            <input type="text" class="form-control" id="contractInput" placeholder="Main Contract" autocomplete="off">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="contractDropdownButton">
+                                <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu w-100" style="margin-top: 40px; max-height: 200px; overflow-y: auto;" id="contractDropdown"></ul>
+                        </div>
+                    </div>
+
+                    <!-- Assembly Selection -->
+                    <div class="mb-3 col-md-6">
+                        <label class="col-form-label" for="Assembly_Name">Choose Assembly Name</label>
+                        <div class="input-group mb-3">
+                            <input type="hidden" id="hiddenassemblyInputValue">
+                            <input type="hidden" id="hiddenassemblyInputId">
+
+                            <input type="text" class="form-control" id="assemblyInput" placeholder="Assembly Name" disabled>
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="assemblyDropdownButton">
+                                <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu w-100" style="margin-top: 40px; max-height: 200px; overflow-y: auto;" id="assemblyDropdown"></ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Container to display resource totals for the selected assembly, hidden by default -->
+                    <div id="resourceTotalsContainer" class="mb-3 col-md-12" style="display: none;">
+                        <label class="col-form-label" for="Resource_Totals">Resource Code Totals</label>
+                        <!-- Dynamic inputs will be appended here -->
+                    </div>
+            
+                    <div class="mb-3 col-md-12">
+                        <label class=" col-form-label" for="Item_Description">Item Description</label>
+                        <textarea type="text" class="form-control" id="Item_Description" name="Item_Description" placeholder="" required></textarea>
+                    </div>
+                    <div class="mb-3 col-md-12">
+                        <label class=" col-form-label" for="Contract_Quantity">Sub-Contract Quantity</label>
+                        <input type="number" class="form-control" id="Contract_Quantity" name="Contract_Quantity" placeholder="Enter Contract Quantity" required>
+                    </div>
+                    
+                </div>
+              
+                <div class="row justify-content-end">
+                    <div class="">
+                        <button type="submit" class="btn btn-primary">Calculate</button>
+                    </div>
+                </div>
+            
+                <!-- Table to display the results -->
+                <div id="resultsTable" class="mt-4" style="display: none;">
+                    <h4>PRICE</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Unit</th>
+                                <th>Unit Cost</th>
+                                <th>Sub-Contract Quantity</th>
+                                <th>Total Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTableBody"></tbody>
+                    </table>
+            
+                    <h4 class="mt-3">BUDGET UNIT RATES</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Resource Code</th>
+                                <th>BUDGET UNIT RATES</th>
+                                <th>Budget Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resourceCodeTableBody"></tbody>
+                    </table>
+            
+                    <div class="text-center">
+                        <button type="button" class="btn btn-secondary" onclick="addToContract()">Add to Sub-Contract</button>
+                    </div>
+                </div>
+            </form>
+            
+            <!-- New table to accumulate the results -->
+            <div id="contractTableContainer" class="mt-4" style="display: none;">
+                <h4>Sub-Contract DETAILS</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Unit</th>
+                            <th>Unit Cost</th>
+                            <th>Quantity</th>
+                            <th>Total Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contractTableBody"></tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3">Totals</th>
+                            <th id="totalTotalPrice">$0.00</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div class="text-center" style="margin-top: 20px;">
+                    <!-- <button id="saveContractButton" type="button" class="btn btn-warning" onclick="saveContract()">Save Contract</button> -->
+
+                    <!-- Save Contract Button -->
+                    <button id="saveContractButton"  class="btn btn-primary" onclick="showContractNameModal()"  style="padding-left: 40px; padding-right: 40px; padding-top: 20px; padding-bottom: 20px;">Save Sub-Contract</button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="contractNameModal" tabindex="-1" aria-labelledby="contractNameModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="contractNameModalLabel">Enter Sub-Contract Name</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="text" id="contractNameInput" class="form-control" placeholder="Contract Name">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" onclick="saveContract()">Save Contract</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                
+                const contractInput = document.getElementById('contractInput');
+                const contractDropdownButton = document.getElementById('contractDropdownButton');
+                const contractDropdown = document.getElementById('contractDropdown');
+                const assemblyInput = document.getElementById('assemblyInput');
+                const assemblyDropdownButton = document.getElementById('assemblyDropdownButton');
+                const assemblyDropdown = document.getElementById('assemblyDropdown');
+                const budgetUnitCostInput = document.getElementById('Budget_Unit_Cost');
+                const contractQuantityInput = document.getElementById('Contract_Quantity');
+                const manualUnitCostInput = document.getElementById('Manual_Unit_Cost');
+                const useManualUnitCostCheckbox = document.getElementById('useManualUnitCost');
+                const resultTable = document.getElementById('resultTable');
+                const resultCode = document.getElementById('resultCode');
+                const contract_td = document.getElementById('contract_td');
+                const assembly_td = document.getElementById('assembly_td');
+                const resultQuantity = document.getElementById('resultQuantity');
+                const resultUnitCost = document.getElementById('resultUnitCost');
+                const resultTotalCost = document.getElementById('resultTotalCost');
+            
+                const contractData = JSON.parse('{{ filter_MainContract_json|safe }}');
+                console.log(contractData);
+
+
+                let assembliesData = null;
+                console.log(assembliesData);
+
+      
+            
+                // Populate the contract dropdown
+                function populateContractDropdown(items) {
+                    console.log(items)
+                    contractDropdown.innerHTML = '';
+                    items.forEach(item => {
+                        const li = document.createElement('li');
+                        const a = document.createElement('a');
+                        a.classList.add('dropdown-item');
+                        a.textContent = `${item.contract_name || 'Main Contract'}`;
+                        a.href = "#";
+                        a.addEventListener('click', () => selectcontract(item));
+                        li.appendChild(a);
+                        // console.log(a)
+                        // console.log(li)
+                        // contractDropdown.appendChild(li);
+
+                        // console.log('Appended <a> to <li>: ', li);
+                        contractDropdown.appendChild(li);
+                        // console.log('Appended <li> to dropdown:', contractDropdown);
+
+                    });
+                }
+            
+                // contract selection
+                function selectcontract(contract) {
+                    console.log('contract selected')
+                    console.log(contract)
+                    contractInput.value = contract.contract_name || 'Contract';
+
+                    document.getElementById('hiddencontractInputValue').value=contract.contract_name;
+                    document.getElementById('hiddencontractInputId').value=contract.id;
+                    
+                    contractDropdown.classList.remove('show');
+                    fetchAssemblies(contract.id);
+                }
+            
+                // Fetch assemblies for the selected contract
+                // function fetchAssemblies(contractId) {
+                //     fetch(`/fetch_assemblies_by_contract/${contractId}/`)
+                //         .then(response => response.json())
+                //         .then(data => {
+                //             console.log('data');
+                //             console.log(data);
+                //             const assembliesData = data;
+                //             console.log(assembliesData);
+                //             populateAssemblyDropdown(data);
+                //             assemblyInput.disabled = false;
+                //         })
+                //         .catch(error => console.error('Error fetching assemblies:', error));
+                // }
+
+                // Fetch assemblies for the selected contract
+                async function fetchAssemblies(contractId) {
+                    try {
+                        const response = await fetch(`/fetch_assemblies_by_contract/${contractId}/`);
+                        const data = await response.json();
+                        console.log('Fetched data:', data);
+                        assembliesData = data; // Update the global variable
+                        console.log('Updated assembliesData:', assembliesData);
+
+                        populateAssemblyDropdown(data);
+                        assemblyInput.disabled = false;
+
+                        // Enable the calculate button once data is available
+                        document.getElementById('calculateButton').disabled = false;
+                    } catch (error) {
+                        console.error('Error fetching assemblies:', error);
+                    }
+                }
+            
+                // Populate assembly dropdown
+                function populateAssemblyDropdown(assemblies) {
+                    assemblyDropdown.innerHTML = '';
+                    assemblies.forEach(assembly => {
+                        const assemblyName = assembly.assembly_name || 'Unnamed Assembly';
+                        const unitOfMeasure = assembly.unit_of_measure || 'N/A';
+                        
+                        const li = document.createElement('li');
+                        const a = document.createElement('a');
+                        a.classList.add('dropdown-item');
+                        a.textContent = `${assemblyName} (${unitOfMeasure})`;
+                        a.href = "#";
+                        a.addEventListener('click', () => selectAssembly(assembly));
+                        li.appendChild(a);
+                        assemblyDropdown.appendChild(li);
+                    });
+                }
+            
+                // Assembly selection
+                function selectAssembly(assembly) {
+                    assemblyInput.value = assembly.assembly_name;
+                    assemblyDropdown.classList.remove('show');
+
+                    document.getElementById('hiddenassemblyInputValue').value=assembly.assembly_name;
+                    document.getElementById('hiddenassemblyInputId').value=assembly.id;
+                }
+                
+            
+                // Event listeners for dropdowns
+                contractDropdownButton.addEventListener('click', () => {
+                    contractDropdown.classList.toggle('show');
+                });
+
+                assemblyDropdownButton.addEventListener('click', () => {
+                    assemblyDropdown.classList.toggle('show');
+                });
+
+                
+                // Filter resources by input
+                contractInput.addEventListener('input', () => {
+                    const value = contractInput.value.toLowerCase();
+                    console.log('value')
+                    console.log(value)
+                    const filteredcontract = contractData.filter(item =>
+                        (item.contract_name || '').toLowerCase().includes(value)
+                    );
+                    populateContractDropdown(filteredcontract);
+                    contractDropdown.classList.toggle('show');
+                });
+
+                // Filter resources by input
+                assemblyInput.addEventListener('input', () => {
+                    const value = assemblyInput.value.toLowerCase();
+                    console.log('value')
+                    console.log(value)
+                    const filteredassembly = assembliesData.filter(item =>
+                        (item.assembly_name || '').toLowerCase().includes(value)
+                    );
+                    populateAssemblyDropdown(filteredassembly);
+                    assemblyDropdown.classList.toggle('show');
+                });
+
+
+                // Close dropdowns when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!contractDropdownButton.contains(e.target) && !contractDropdown.contains(e.target)) {
+                        contractDropdown.classList.remove('show');
+                    }
+                    if (!assemblyDropdownButton.contains(e.target) && !assemblyDropdown.contains(e.target)) {
+                        assemblyDropdown.classList.remove('show');
+                    }
+                });
+            
+            
+                // Populate the initial resource dropdown
+                populateContractDropdown(contractData);
+
+            
+                // const assemblyInput = document.getElementById('assemblyInput');
+                const dropdownMenuButton = document.getElementById('dropdownMenuButton');
+                const dropdownMenu = document.getElementById('dropdownMenu');
+                const resourceTotalsContainer = document.getElementById('resourceTotalsContainer');
+            
+                // // Parse assemblies data from Django context
+                // const assembliesData = JSON.parse('{{ assemblies_data|safe }}');
+                // console.log(assembliesData);
+            
+                // function populateDropdown(items) {
+                //     dropdownMenu.innerHTML = ''; // Clear existing items
+            
+                //     items.forEach(item => {
+                //         const li = document.createElement('li');
+                //         const aTag = document.createElement('a');
+                //         aTag.classList.add('dropdown-item');
+                //         aTag.href = "#";
+                //         aTag.innerHTML = `${item.assembly_name} (${item.unit_of_measure})`;
+                        
+                //         aTag.addEventListener('click', (e) => {
+                //             e.preventDefault();
+            
+                //             // Set input field to selected assembly name
+                //             numberInput.value = item.assembly_name;
+                            
+                //             // Display resource code totals for the selected assembly
+                //             displayResourceCodeTotals(item.id);
+                            
+                //             dropdownMenu.classList.remove('show');
+                //         });
+            
+                //         li.appendChild(aTag);
+                //         dropdownMenu.appendChild(li);
+                //     });
+                // }
+            
+                // function displayResourceCodeTotals(assemblyId) {
+                //     const assembly = assembliesData.find(a => a.id === assemblyId);
+                    
+                //     if (assembly) {
+                //         const totals = assembly.resource_code_totals;
+            
+                //         // Clear existing inputs and show the container
+                //         resourceTotalsContainer.innerHTML = '';
+                //         resourceTotalsContainer.style.display = 'block';
+                        
+                //         for (const [resourceCode, budget_unit_rate] of Object.entries(totals)) {
+                //             // Create label and input for each resource code total
+                //             const label = document.createElement('label');
+                //             label.classList.add('col-form-label');
+                //             label.textContent = `${resourceCode}`;
+            
+                //             const input = document.createElement('input');
+                //             input.type = 'text';
+                //             input.classList.add('form-control', 'mb-2');
+                //             input.value = `$${budget_unit_rate}`;
+                //             input.setAttribute('readonly', 'readonly');
+            
+                //             // Append the label and input to the container
+                //             resourceTotalsContainer.appendChild(label);
+                //             resourceTotalsContainer.appendChild(input);
+                //         }
+                //     }
+                // }
+            
+                // // Initially populate the dropdown with all assemblies
+                // populateDropdown(assembliesData);
+            
+                // // Toggle dropdown visibility
+                // dropdownMenuButton.addEventListener('click', () => {
+                //     dropdownMenu.classList.toggle('show');
+                // });
+            
+                // // Filter dropdown based on input
+                // numberInput.addEventListener('input', () => {
+                //     const value = numberInput.value.toLowerCase();
+                //     const filteredData = assembliesData.filter(item => item.assembly_name.toLowerCase().includes(value));
+                //     populateDropdown(filteredData);
+                //     dropdownMenu.classList.add('show');
+                // });
+            
+                // // Close dropdown when clicking outside
+                // document.addEventListener('click', (e) => {
+                //     if (!dropdownMenuButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                //         dropdownMenu.classList.remove('show');
+                //     }
+                // });
+            
+                // Function to perform the calculations and update the table
+                function calculateValues() {
+                    console.log(assembliesData)
+
+                    if (!assembliesData || assembliesData.length === 0) {
+                        alert('Assemblies data is not available. Please fetch the assemblies first.');
+                        return;
+                    }
+                    
+                    const selectedAssemblyName = assemblyInput.value;
+                    const assembly = assembliesData.find(a => a.assembly_name === selectedAssemblyName);
+            
+                    if (!assembly) {
+                        alert('Please select a valid assembly name.');
+                        return;
+                    }
+            
+                    const unit = assembly.unit_of_measure;
+                    const unitCost = parseFloat(assembly.assembly_unit_cost);
+                    const contractQuantity = parseFloat(document.getElementById('Contract_Quantity').value);
+                    
+                    const unitPrice = unitCost;
+                    const totalPrice = unitPrice * contractQuantity;
+            
+                    // Update the results table
+                    const resultsTableBody = document.getElementById('resultsTableBody');
+                    const resourceCodeTableBody = document.getElementById('resourceCodeTableBody');
+            
+                    resultsTableBody.innerHTML = `
+                        <tr>
+                            <td>${unit}</td>
+                            <td>$${unitCost.toFixed(2)}</td>
+                            <td>${contractQuantity}</td>
+                            <td>$${totalPrice.toFixed(2)}</td>
+                        </tr>
+                    `;
+            
+                    resourceCodeTableBody.innerHTML = '';
+                    for (const [resourceCode, budget_unit_rate] of Object.entries(assembly.resource_code_totals)) {
+                        resourceCodeTableBody.innerHTML += `
+                            <tr>
+                                <td>${resourceCode}</td>
+                                <td>$${budget_unit_rate}</td>
+                                <td>$${budget_unit_rate*contractQuantity}</td>
+                            </tr>
+                        `;
+                    }
+            
+                    document.getElementById('resultsTable').style.display = 'block';
+                }
+            
+                function addToContract() {
+                    const resultsTableBody = document.getElementById('resultsTableBody').querySelector('tr');
+                    const contractTableBody = document.getElementById('contractTableBody');
+                    if (!resultsTableBody || !contractTableBody) {
+                        console.error('Table body not found');
+                        return;
+                    }
+                    
+                    const newRow = resultsTableBody.cloneNode(true);
+                    console.log('newRow')
+                    console.log(newRow)
+
+                    // newRow.removeChild(newRow.children[2]);
+
+                    // Create new <td> elements
+                    // const newTdAt3rd = document.createElement('td');
+                    // newTdAt3rd.textContent = 'New Cell 3'; // Content for the new cell at 3rd position
+
+                    // const newTdAt5th = document.createElement('td');
+                    // newTdAt5th.textContent = 'New Cell 5'; // Content for the new cell at 5th position
+
+                    // // Add the new cells
+                    // newRow.insertBefore(newTdAt3rd, newRow.children[2]); // Insert at 3rd position (index 2)
+                    // newRow.insertBefore(newTdAt5th, newRow.children[4]); // Insert at 5th position (index 4 after adding 3rd)
+
+                    // // Verify the updated row
+                    // console.log(newRow.outerHTML);
+                    // console.log('newRow')
+                    // console.log(newRow)
+            
+                    const actionCell = document.createElement('td');
+                    const removeButton = document.createElement('button');
+                    removeButton.classList.add('btn', 'btn-danger', 'btn-sm');
+                    removeButton.textContent = 'Remove';
+                    removeButton.onclick = function() {
+                        contractTableBody.removeChild(newRow);
+                        updateTotals();
+                    };
+            
+                    actionCell.appendChild(removeButton);
+                    newRow.appendChild(actionCell);
+                    
+                    contractTableBody.appendChild(newRow);
+                    updateTotals();
+                    document.getElementById('contractTableContainer').style.display = 'block';
+                }
+            
+                function updateTotals() {
+                    const contractTableBody = document.getElementById('contractTableBody');
+                    let totalTotalPrice = 0;
+            
+                    Array.from(contractTableBody.querySelectorAll('tr')).forEach(row => {
+                        const cells = row.querySelectorAll('td');
+                        console.log(cells)
+                        console.log(cells.length)
+                        if (cells.length >= 4) {
+                            totalTotalPrice += parseFloat(cells[2].textContent.replace('$', '')) || 0;
+                        }
+                    });
+            
+                    document.getElementById('totalTotalPrice').textContent = `$${totalTotalPrice.toFixed(2)}`;
+                }
+            
+            
+                function showContractNameModal() {
+                    const contractNameModal = new bootstrap.Modal(document.getElementById('contractNameModal'));
+                    contractNameModal.show();
+                }
+
+
+                function saveContract() {
+                    const saveButton = document.getElementById('saveContractButton');
+                    saveButton.textContent = 'Saving...';
+                    saveButton.disabled = true;
+
+                    const contractName = document.getElementById('contractNameInput').value;
+                    if (!contractName) {
+                        alert('Please enter a contract name.');
+                        saveButton.textContent = 'Save Contract';
+                        saveButton.disabled = false;
+                        return;
+                    }
+
+                    const contractTableBody = document.getElementById('contractTableBody');
+                    const rows = Array.from(contractTableBody.querySelectorAll('tr')).map(row => {
+                        return Array.from(row.querySelectorAll('td')).map(cell => cell.textContent.trim()).join(',');
+                    });
+
+                    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                    const data = new FormData();
+                    data.append('csrfmiddlewaretoken', csrfToken);
+                    data.append('subcontract_name', contractName);
+                    data.append('Comb_Assem_Code', document.getElementById('Comb_Assem_Code').value);
+                    data.append('hiddencontractInputId', document.getElementById('hiddencontractInputId').value);
+                    data.append('hiddenassemblyInputId', document.getElementById('hiddenassemblyInputId').value);
+                    data.append('Item_Description', document.getElementById('Item_Description').value);
+                    data.append('totalTotalPrice', document.getElementById('totalTotalPrice').textContent);
+
+                    // data.append('rows[]', rows);
+
+                    // Loop through rows and append each row separately to 'rows[]'
+                    rows.forEach(row => {
+                        data.append('rows[]', row); // Append each row as a separate element in 'rows[]'
+                    });
+
+                    fetch('{% url "save_subcontract" %}', {
+                        method: 'POST',
+                        body: data,
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.href = '{% url "contract_list" %}';
+                        } else {
+                            alert('An error occurred while saving the contract.');
+                            saveButton.textContent = 'Save Contract';
+                            saveButton.disabled = false;
+                        }
+                    }).catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while saving the contract.');
+                        saveButton.textContent = 'Save Contract';
+                        saveButton.disabled = false;
+                    });
+                }
+            
+            </script>
+            
+
+            
+          
+          
+          </div>
+        </div>
+      </div>
+      <!-- Basic with Icons -->
+      
+    </div>
+  </div>
+
+    
+{% endblock %}

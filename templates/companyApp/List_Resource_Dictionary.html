@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block Resource_Dictionary_active %}active open{% endblock %}
+{% block List_Resource_Dictionary_active %}active{% endblock %}
+{% block title %}User List{% endblock %}
+{% block content %}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Resource /</span> Resource List</h4>
+
+  
+    <!-- Responsive Table -->
+    <div class="card">
+      <h5 class="card-header">Resource List</h5>
+      <div class="table-responsive text-nowrap">
+        <table class="table table-bordered">
+          <thead>
+            <tr class="text-nowrap">
+              <th>#</th>
+              <th>Resource Name</th>
+              <!-- <th>Resources Category</th> -->
+              <th>Resource C0ode L1</th>
+              <th>Resource Code L2</th>
+              <th>Resource Code L3</th>
+              <th>Unit of Measure</th>
+              <th>Budget Unit Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for resource in filter_resoures %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ resource.Resource_Name }}</td>
+              <!-- <td>{{ resource.Resources_Category }}</td> -->
+              <td>{{ resource.Resource_Code_L1.Resource_Code_L1 }}</td>
+              <td>{{ resource.Resource_Code_L2.Resource_Code_L2 }}</td>
+              <td>{{ resource.Resource_Code_L3.Resource_Code_L3 }}</td>
+              <td>{{ resource.Unit_of_Measure }}</td>
+              <td>${{ resource.Budget_Unit_Cost }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <th  colspan="8" class="text-center">No Resource To Show</th>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!--/ Responsive Table -->
+  </div>
+
+
+  {% endblock %}

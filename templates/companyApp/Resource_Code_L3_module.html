@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block Resource_Code_active %}active open{% endblock %}
+{% block Resource_Code_L3_active %}active{% endblock %}
+{% block title %}Resource Code L3 List{% endblock %}
+{% block content %}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Resource Code Levels /</span> Resource Code L3</h4>
+
+  
+    <!-- Responsive Table -->
+    <div class="card">
+      <h5 class="card-header">Resource Code L3</h5>
+
+
+      <div style="display: flex; justify-content: flex-end; margin-right: 8px; margin-bottom: 10px;">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCenter">
+        Create
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modalCenter" tabindex="-1" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalCenterTitle">Create Resource Code L3</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form method="POST">{% csrf_token %}
+                        <div class="row g-2">
+                            <div class="col mb-0">
+                                <label for="Resource_Code_L1" class="form-label">Resource Code L1</label>
+                                <select class="form-select" id="Resource_Code_L1" name="Resource_Code_L1" required>
+                                    <option value="">-- Select --</option>
+                                    {% for company_Resource_Code_L1 in filter_company_Resource_Code_L1_query %}
+                                    <option value="{{ company_Resource_Code_L1.id }}">{{ company_Resource_Code_L1.Resource_Code_L1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="Resource_Code_L2" class="form-label">Resource Code L2</label>
+                                <select class="form-select" id="Resource_Code_L2" name="Resource_Code_L2" required>
+                                    <option value="">-- Select --</option>
+                                </select>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="Resource_Code_L3" class="form-label">Resource Code L3</label>
+                                <input type="text" id="Resource_Code_L3" name="Resource_Code_L3" class="form-control" placeholder="Resource Code L3" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                    </form>
+                    
+                    <script>
+                      document.addEventListener("DOMContentLoaded", function() {
+                          const resourceCodeL1Select = document.getElementById("Resource_Code_L1");
+                          const resourceCodeL2Select = document.getElementById("Resource_Code_L2");
+                      
+                          // Initially disable Resource_Code_L2
+                          resourceCodeL2Select.disabled = true;
+                      
+                          resourceCodeL1Select.addEventListener("change", function() {
+                              const resourceCodeL1Id = this.value;
+                      
+                              if (resourceCodeL1Id) {
+                                  // Enable Resource_Code_L2 if an L1 is selected
+                                  resourceCodeL2Select.disabled = false;
+                      
+                                  // Clear previous options and load new ones based on L1 selection
+                                  resourceCodeL2Select.innerHTML = '<option value="">Select Resource Code L2</option>';
+                      
+                                  fetch(`/get-resource-code-l2/?resource_code_l1_id=${resourceCodeL1Id}`)
+                                      .then(response => response.json())
+                                      .then(data => {
+                                          if (data.length === 0) {
+                                              // No L2 options found for selected L1
+                                              const option = document.createElement("option");
+                                              option.value = "";
+                                              option.text = "No Resource Code L2";
+                                              option.disabled = true;
+                                              resourceCodeL2Select.add(option);
+                                          } else {
+                                              // Populate L2 dropdown with options
+                                              data.forEach(item => {
+                                                  const option = document.createElement("option");
+                                                  option.value = item.id;
+                                                  option.text = item.Resource_Code_L2;
+                                                  resourceCodeL2Select.add(option);
+                                              });
+                                          }
+                                      })
+                                      .catch(error => console.error('Error:', error));
+                              } else {
+                                  // If no L1 is selected, disable and reset L2
+                                  resourceCodeL2Select.disabled = true;
+                                  resourceCodeL2Select.innerHTML = '<option value="">Select Resource Code L2</option>';
+                              }
+                          });
+                      });
+                      </script>
+                      
+                      
+                      
+                      
+                    
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+      <div class="table-responsive text-nowrap">
+        
+        <table class="table table-bordered">
+          <thead>
+            <tr class="text-nowrap">
+              <th>#</th>
+              <th>Resource Code L1</th>
+              <th>Resource Code L2</th>
+              <th>Resource Code L3</th>
+              <th>Created At</th>
+              <th>Updated At</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for Resource_Code_L3 in filter_company_Resource_Code_L3_query %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ Resource_Code_L3.Resource_Code_L1.Resource_Code_L1 }}</td>
+              <td>{{ Resource_Code_L3.Resource_Code_L2.Resource_Code_L2 }}</td>
+              <td>{{ Resource_Code_L3.Resource_Code_L3 }}</td>
+              <td>{{ Resource_Code_L3.created_at }}</td>
+              <td>{{ Resource_Code_L3.updated_at }}</td>
+              
+            </tr>
+            {% empty %}
+            <tr>
+              <th  colspan="6" class="text-center">No Resource To Show</th>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!--/ Responsive Table -->
+  </div>
+
+
+  {% endblock %}

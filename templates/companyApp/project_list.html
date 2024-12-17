@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block Project_active %}active open{% endblock %}
+{% block project_list_active %}active{% endblock %}
+
+{% block title %}User List{% endblock %}
+{% block content %}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Project /</span> Project List</h4>
+
+  
+    <!-- Responsive Table -->
+    <div class="card">
+      <h5 class="card-header">Responsive Table</h5>
+      <div class="table-responsive text-nowrap">
+        <table class="table table-bordered">
+          <thead>
+            <tr class="text-nowrap">
+              <th>#</th>
+              <th>Project Id</th>
+              <th>Project Name</th>
+              <th>Project Start Date</th>
+              <th>Short Description</th>
+              <th>Default Workflow</th>
+              <th>Note book</th>
+              <th>Created At</th>
+              <th>Updated At</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for project in all_project_filter %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ project.Project_Id }}</td>
+              <td>{{ project.Project_Name }}</td>
+              <td>{{ project.Project_Start_Date }}</td>
+              <td>{{ project.Short_Description }}</td>
+              <td>{{ project.Default_Workflow }}</td>
+              <td>{{ project.Note_book }}</td>
+              <td>{{ project.created_at }}</td>
+              <td>{{ project.updated_at }}</td>
+            {% empty %}
+            <tr>
+              <th  colspan="9" class="text-center">No Project To Show</th>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!--/ Responsive Table -->
+  </div>
+
+
+  {% endblock %}

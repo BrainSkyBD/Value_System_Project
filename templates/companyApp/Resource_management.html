@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block Resource_Code_active %}active open{% endblock %}
+{% block List_Resource_management_active %}active{% endblock %}
+{% block title %}Resource Code List{% endblock %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+
+    th,
+    td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #f4f4f4;
+    }
+
+    .toggle-icon {
+        cursor: pointer;
+        margin-right: 8px;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .nested {
+        padding-left: 20px;
+    }
+
+    .nested-2 {
+        padding-left: 40px;
+    }
+
+    .icon-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin: 0 5px;
+    }
+
+    .level1-row {
+        background-color: #e0f7fa;
+    }
+
+    .level2-row {
+        background-color: #ffe0b2;
+    }
+
+    .level3-row {
+        background-color: #e1bee7;
+    }
+
+    .add-button {
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Resource/</span> Create Resource</h4>
+
+    <!-- Basic Layout & Basic with Icons -->
+    <div class="row">
+        <!-- Basic Layout -->
+        <div class="col-xxl">
+            <div class="card mb-4">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">Resource Form</h5>
+                    <small class="text-muted float-end">New Resource</small>
+                </div>
+                <div class="card-body">
+                    <div class="container mt-4">
+                        <!-- Add Level 1 Button -->
+                        <button class="btn btn-primary add-button float-end" onclick="openModal('add', 'level1', null, null)">Add +</button>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Resource Code</th>
+                                    <th>Company</th>
+                                    <th>Actions</th>
+                                    <th>Created At</th>
+                                    <th>Updated At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for level1 in data %}
+                                <!-- Level 1 Row -->
+                                <tr class="level1-row">
+                                    <td>
+                                        {% if level1.level2|length > 0 %}
+                                        <span class="toggle-icon" data-target="level1-{{ level1.level1.id }}" onclick="toggleRows(this, 'level1-{{ level1.level1.id }}')">▶</span>
+                                        {% endif %}
+                                        {{ level1.level1.Resource_Code_L1 }} 
+
+                                        {% if level1.level2|length > 0 %}
+                                        <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-secondary-rgb), var(--bs-bg-opacity, 1)) !important;"> &nbsp;({{ level1.level2|length }})&nbsp;</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ level1.level1.Company_Details.Company_Legal_Name }}</td>
+                                    <td>
+                                        <!-- Add Level 2 -->
+                                        <button class="icon-btn" onclick="openModal('add', 'level2', {{ level1.level1.id }}, '{{ level1.level1.Resource_Code_L1 }}')">
+                                            <i class="fas fa-plus-circle"></i>
+                                        </button>
+                                        <!-- Delete Level 1 -->
+                                        <button class="icon-btn" onclick="openModal('delete', 'level1', {{ level1.level1.id }}, '{{ level1.level1.Resource_Code_L1 }}')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                    <td>{{ level1.level1.created_at }}</td>
+                                    <td>{{ level1.level1.updated_at }}</td>
+                                </tr>
+                                <!-- Level 2 Rows -->
+                                {% for level2 in level1.level2 %}
+                                <tr class="hidden level1-{{ level1.level1.id }} level2-row">
+                                    <td class="nested">
+                                        <span style="margin-left: 26px;">
+                                            {% if level2.level3|length > 0 %}
+                                            <span class="toggle-icon" data-target="level2-{{ level2.level2.id }}" onclick="toggleRows(this, 'level2-{{ level2.level2.id }}')">▶</span>
+                                            {% endif %}
+                                            {{ level2.level2.Resource_Code_L2 }}
+
+                                            {% if level2.level3|length > 0 %}
+                                            <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important;"> &nbsp;({{ level2.level3|length }})&nbsp;</small>
+                                            {% endif %}
+                                        </span>
+                                    </td>
+                                    <td>{{ level2.level2.Company_Details.Company_Legal_Name }}</td>
+                                    <td>
+                                        <!-- Add Level 3 -->
+                                        <button class="icon-btn" onclick="openModal('add', 'level3', {{ level2.level2.id }}, '{{ level2.level2.Resource_Code_L2 }}')">
+                                            <i class="fas fa-plus-circle"></i>
+                                        </button>
+                                        <!-- Delete Level 2 -->
+                                        <button class="icon-btn" onclick="openModal('delete', 'level2', {{ level2.level2.id }}, '{{ level2.level2.Resource_Code_L2 }}')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                    <td>{{ level2.level2.created_at }}</td>
+                                    <td>{{ level2.level2.updated_at }}</td>
+                                </tr>
+                                <!-- Level 3 Rows -->
+                                {% for level3 in level2.level3 %}
+                                <tr class="hidden level2-{{ level2.level2.id }} level3-row">
+                                    <td class="nested nested-2">
+                                        <span style="margin-left: 72px;">
+                                            {{ level3.Resource_Code_L3 }}
+                                        </span>
+                                    </td>
+                                    <td>{{ level3.Company_Details.Company_Legal_Name }}</td>
+                                    <td>
+                                        <!-- Delete Level 3 -->
+                                        <button class="icon-btn" onclick="openModal('delete', 'level3', {{ level3.id }}, '{{ level3.Resource_Code_L3 }}')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                    <td>{{ level3.created_at }}</td>
+                                    <td>{{ level3.updated_at }}</td>
+                                </tr>
+                                {% endfor %}
+                                {% endfor %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Basic with Icons -->
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="resourceModal" tabindex="-1" aria-labelledby="resourceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resourceModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" id="modalParentType" name="parent_type">
+                    <input type="hidden" id="modalParentId" name="parent_id">
+                    <div id="modalAddBody" class="mb-3 hidden">
+                        <p>Adding a <strong id="addLevel"></strong> under <strong id="parentItemName"></strong>:</p>
+                        <label for="resourceName" class="form-label">Resource Name:</label>
+                        <input type="text" id="resourceName" name="resource_name" class="form-control">
+                    </div>
+                    <div id="modalDeleteBody" class="hidden">
+                        <p>Are you sure you want to delete <strong id="itemName"></strong>?</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary hidden" id="modalAddButton" name="add_resource">Add</button>
+                    <button type="submit" class="btn btn-danger hidden" id="modalDeleteButton" name="delete_resource">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function toggleRows(icon, className) {
+        const rows = document.querySelectorAll(`.${className}`);
+        const isHidden = rows[0].classList.contains('hidden');
+        rows.forEach(row => {
+            row.classList.toggle('hidden', !isHidden);
+            if (!isHidden) {
+                const nestedIcons = row.querySelectorAll('.toggle-icon[data-target]');
+                nestedIcons.forEach(nestedIcon => {
+                    const nestedClass = nestedIcon.dataset.target;
+                    const nestedRows = document.querySelectorAll(`.${nestedClass}`);
+                    nestedRows.forEach(nestedRow => nestedRow.classList.add('hidden'));
+                    nestedIcon.textContent = '▶';
+                });
+            }
+        });
+        icon.textContent = isHidden ? '▼' : '▶';
+    }
+
+    function openModal(action, level, parentId, parentName) {
+        const modal = new bootstrap.Modal(document.getElementById('resourceModal'));
+        const modalTitle = document.getElementById('resourceModalLabel');
+        const modalAddBody = document.getElementById('modalAddBody');
+        const modalDeleteBody = document.getElementById('modalDeleteBody');
+        const modalAddButton = document.getElementById('modalAddButton');
+        const modalDeleteButton = document.getElementById('modalDeleteButton');
+        const addLevel = document.getElementById('addLevel');
+        const parentItemName = document.getElementById('parentItemName');
+        const itemName = document.getElementById('itemName');
+        const modalParentType = document.getElementById('modalParentType');
+        const modalParentId = document.getElementById('modalParentId');
+
+        modalAddBody.classList.add('hidden');
+        modalDeleteBody.classList.add('hidden');
+        modalAddButton.classList.add('hidden');
+        modalDeleteButton.classList.add('hidden');
+
+        if (action === 'add') {
+            modalTitle.textContent = `Add ${level}`;
+            modalAddBody.classList.remove('hidden');
+            modalAddButton.classList.remove('hidden');
+            addLevel.textContent = level;
+            parentItemName.textContent = parentName;
+            modalParentType.value = level;
+            modalParentId.value = parentId;
+        } else if (action === 'delete') {
+            modalTitle.textContent = `Delete ${level}`;
+            modalDeleteBody.classList.remove('hidden');
+            modalDeleteButton.classList.remove('hidden');
+            itemName.textContent = parentName;
+            modalParentType.value = level;
+            modalParentId.value = parentId;
+        }
+
+        modal.show();
+    }
+</script>
+
+{% endblock %}

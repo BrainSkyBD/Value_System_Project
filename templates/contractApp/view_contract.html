@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block Company_Contract_active %}active open{% endblock %}
+{% block contract_list_active %}active{% endblock %}
+{% block title %}Create User{% endblock %}
+{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+  <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Contract /</span> Contract: {{ contract.contract_name }}</h4>
+
+
+  <!-- Responsive Table -->
+  <div class="card">
+    <h5 class="card-header">Contract (Assembly List) </h5>
+    <div class="table-responsive text-nowrap">
+      <table class="table table-bordered">
+        <thead>
+          <tr class="text-nowrap">
+            <th>Combination Assembly Code</th>
+            <th>Assembly Name</th>
+            <th>Unit</th>
+            <th>Item Description</th>
+            <th>Unit Cost</th>
+            <th>Budget Quantity</th>
+            <th>Budget Costs</th>
+            <th>Markup</th>
+            <th>Markup Amount</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+            <th>Target Profit</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for detail in contract_details %}
+            <tr>
+              <td>{{ detail.comb_assem_code }}</td>
+              <td>{{ detail.assembly_name }}</td>
+              <td>{{ detail.unit }}</td>
+              <td>{{ detail.item_description }}</td>
+              <td>$ {{ detail.unit_cost }}</td>
+              <td>{{ detail.budget_quantity }}</td>
+              <td>$ {{ detail.budget_costs }}</td>
+              <td>{{ detail.markup }}%</td>
+              <td>$ {{ detail.markup_amount }}</td>
+              <td>$ {{ detail.unit_price }}</td>
+              <td>$ {{ detail.total_price }}</td>
+              <td>$ {{ detail.target_profit }}</td>
+            </tr>
+          {% endfor %}
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><b>$ {{ contract.contract_total_budget_costs }}</b></td>
+              <td></td>
+              <td><b>$ {{ contract.contract_total_markup_amount }}</b></td>
+              <td></td>
+              <td><b>$ {{ contract.contract_total_price }}</b></td>
+              <td><b>$ {{ contract.contract_total_target_profit }}</b></td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!--/ Responsive Table -->
+
+
+
+
+  {% if filter_expense %}
+  <div class="card mt-4">
+    <h5 class="card-header">Expense List</h5>
+    <div class="table-responsive text-nowrap">
+      <table class="table table-bordered">
+        <thead>
+          <tr class="text-nowrap">
+            <th>Combination Assembly Code</th>
+            <th>Contract</th>
+            <th>Assembly</th>
+            <th>Resource</th>
+            <th>Quantity</th>
+            <th>Unit Cost</th>
+            <th>Total Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for expense in filter_expense %}
+          <tr>  
+              <td>{{ expense.comb_assem_code }}</td>
+              <td>{{ expense.contract_value.contract_name }}</td>
+              <td>{{ expense.assembly_value.Assembly_Name }}</td>
+              <td>{{ expense.resource_value.Resource_Name }}</td>
+              <td>{{ expense.quantity }}</td>
+              <td>{{ expense.unit_cost }}</td>
+              <td>{{ expense.total_cost }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+              <td colspan="6"><strong>Total</strong></td>
+              <td><b>{{ total_cost }}</b></td>
+          </tr>
+      </tfoot>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if filter_subcontracts %}
+  <div class="card mt-4">
+    <h5 class="card-header">Subcontract List</h5>
+    <div class="table-responsive text-nowrap">
+      <table class="table table-bordered">
+        <thead>
+          <tr class="text-nowrap">
+            <th>#</th>
+            <th>Sub-Contract Name</th>
+            <th>Contract Total Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for detail in filter_subcontracts %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ detail.subcontract_name }}</td>
+              <td>$ {{ detail.contract_total_price }}</td>
+            </tr>
+          {% endfor %}
+          <tr>
+            <td></td>
+            <td></td>
+            <td><b>$ {{ subcontract_total_cost }}</b></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+</div>
+  
+{% endblock %}
