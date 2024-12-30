@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block Company_Contract_active %}active open{% endblock %}
+{% block List_contract_management_active %}active{% endblock %}
+{% block title %}Contract Code List{% endblock %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+
+    th,
+    td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #f4f4f4;
+    }
+
+    .toggle-icon {
+        cursor: pointer;
+        margin-right: 8px;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .nested {
+        padding-left: 20px;
+    }
+
+    .nested-2 {
+        padding-left: 40px;
+    }
+
+    .icon-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin: 0 5px;
+    }
+
+    .level1-row {
+        background-color: #e0f7fa;
+    }
+
+    .level2-row {
+        background-color: #ffe0b2;
+    }
+
+    .level3-row {
+        background-color: #e1bee7;
+    }
+
+    .add-button {
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Contract/</span> Create Contract</h4>
+
+    <!-- Basic Layout & Basic with Icons -->
+    <div class="row">
+        <!-- Basic Layout -->
+        <div class="col-xxl">
+            <div class="card mb-4">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">Contract Table</h5>
+                    <small class="text-muted float-end">New Contracts</small>
+                </div>
+                <div class="card-body">
+                    <div class="container mt-4">
+                        <!-- Add Level 1 Button -->
+                        <a class="btn btn-primary add-button float-end" href="{% url 'create_contract' %}">Add +</a>
+                        <div class="table-responsive text-nowrap" style="width: 100%;">
+                            
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Contract Name</th>
+                                        <th>Contract <br>Total Budget <br>Costs</th>
+                                        <th>Contract <br>Total Markup <br>Amount</th>
+                                        <th>Contract <br>Total Price</th>
+                                        <th>Contract <br>Total Target <br>Profit</th>
+                                        <th>Unit</th>
+                                        <th>Unit Cost</th>
+                                        <th>Budget Quantity</th>
+                                        <th>Contract Quantity</th>
+                                        <th>Unit Price</th>
+                                        <th>Markup</th>
+                                        <th>Created At</th>
+                                        <th>Updated At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for contract in my_contracts %}
+                                    
+                                    <!-- Level 1 Row -->
+                                    <tr class="level1-row" style="background: #873a95;
+    color: white;">
+                                        <td>
+                                            <span class="toggle-icon" data-target="contract-{{contract.id}}" onclick="toggleRows(this, 'contract-{{contract.id}}')">▶</span>
+                                            
+                                            {{contract.contract_name}}
+
+
+                                            <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-secondary-rgb), var(--bs-bg-opacity, 1)) !important;"> &nbsp;({{ contract.main_contract_details_query_count }})&nbsp;</small>
+                                            
+                                        </td>
+                                        <td>{{ contract.contract_total_budget_costs }}</td>
+                                        <td>$ {{ contract.contract_total_markup_amount }}</td>
+                                        <td>$ {{ contract.contract_total_price }}</td>
+                                        <td>$ {{ contract.contract_total_target_profit }}</td>
+                                        
+                                        <td>-</td>
+                                        <td>{{ contract.get_contract_total_unit_cost }}</td>
+                                        <td>{{ contract.get_contract_total_budget_quantity }}</td>
+                                        <td>{{ contract.get_contract_total_contract_quantity }}</td>
+                                        <td>{{ contract.get_contract_total_unit_price }}</td>
+
+                                        <td></td>
+
+                                        <td>{{ contract.created_at }}</td>
+                                        <td>{{ contract.updated_at }}</td>
+                                    </tr>
+                                    {% for record_main_contract_details in contract.main_contract_details_query %}
+                                    <!-- Level 1 Row -->
+                                    <tr class="hidden contract-{{contract.id}} level1-row">
+                                        <td>
+                                            <span style="margin-left: 26px;">
+                                                <span class="toggle-icon" data-target="level1-{{record_main_contract_details.id}}-{{ record_main_contract_details.assembly_row.Assemblies_Code_L1.id }}" onclick="toggleRows(this, 'level1-{{record_main_contract_details.id}}-{{ record_main_contract_details.assembly_row.Assemblies_Code_L1.id }}')">▶</span>
+                                                
+                                                {{ record_main_contract_details.assembly_row.Assemblies_Code_L1.Assemblies_Code_L1 }} 
+                                            </span>
+                                            
+                                        </td>
+
+                                        <td>{{ record_main_contract_details.budget_costs }}</td>
+                                        <td>{{ record_main_contract_details.markup_amount }}</td>
+                                        <td>{{ record_main_contract_details.total_price }}</td>
+                                        <td>{{ record_main_contract_details.target_profit }}</td>
+                                        
+                                        <td>{{ record_main_contract_details.unit }}</td>
+                                        <td>{{ record_main_contract_details.unit_cost }}</td>
+                                        <td>{{ record_main_contract_details.budget_quantity }}</td>
+                                        <td>{{ record_main_contract_details.contract_quantity }}</td>
+                                        <td>{{ record_main_contract_details.unit_price }}</td>
+                                        <td>{{ record_main_contract_details.markup }}%</td>
+
+                                        <td>{{ record_main_contract_details.assembly_row.Assemblies_Code_L1.created_at }}</td>
+                                        <td>{{ record_main_contract_details.assembly_row.Assemblies_Code_L1.updated_at }}</td>
+                                    </tr>
+
+
+                                    <!-- Level 2 Rows -->
+                                    <tr class="hidden level1-{{record_main_contract_details.id}}-{{ record_main_contract_details.assembly_row.Assemblies_Code_L1.id }} level2-row">
+                                        <td class="nested">
+                                            <span style="margin-left: 58px;">
+                                                <span class="toggle-icon" data-target="level2-{{record_main_contract_details.id}}-{{ record_main_contract_details.assembly_row.Assemblies_Code_L2.id }}" onclick="toggleRows(this, 'level2-{{record_main_contract_details.id}}-{{ record_main_contract_details.assembly_row.Assemblies_Code_L2.id }}')">▶</span>
+                                                
+                                                {{ record_main_contract_details.assembly_row.Assemblies_Code_L2.Assemblies_Code_L2 }}
+
+                                                {% if level2.level3|length > 0 %}
+                                                <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important;"> &nbsp;({{ level2.level3|length }})&nbsp;</small>
+                                                {% endif %}
+                                            </span>
+                                        </td>
+
+                                        <td>{{ record_main_contract_details.budget_costs }}</td>
+                                        <td>{{ record_main_contract_details.markup_amount }}</td>
+                                        <td>{{ record_main_contract_details.total_price }}</td>
+                                        <td>{{ record_main_contract_details.target_profit }}</td>
+
+                                        <td>{{ record_main_contract_details.unit }}</td>
+                                        <td>{{ record_main_contract_details.unit_cost }}</td>
+                                        <td>{{ record_main_contract_details.budget_quantity }}</td>
+                                        <td>{{ record_main_contract_details.contract_quantity }}</td>
+                                        <td>{{ record_main_contract_details.unit_price }}</td>
+                                        <td>{{ record_main_contract_details.markup }}%</td>
+
+                                        <td>{{ record_main_contract_details.assembly_row.Assemblies_Code_L2.created_at }}</td>
+                                        <td>{{ record_main_contract_details.assembly_row.Assemblies_Code_L2.created_at }}</td>
+                                    </tr>
+
+
+                                    <!-- Level 3 Rows -->
+                                    <tr class="hidden level2-{{record_main_contract_details.id}}-{{ record_main_contract_details.assembly_row.Assemblies_Code_L2.id }} level3-row">
+                                        <td class="nested nested-2">
+                                            <span style="margin-left: 106px;">
+                                                
+                                                {{ record_main_contract_details.assembly_row.Assemblies_Code_L3.Assemblies_Code_L3 }}
+                                            </span>
+                                        </td>
+                                        <td>{{ record_main_contract_details.budget_costs }}</td>
+                                        <td>{{ record_main_contract_details.markup_amount }}</td>
+                                        <td>{{ record_main_contract_details.total_price }}</td>
+                                        <td>{{ record_main_contract_details.target_profit }}</td>
+
+                                        <td>{{ record_main_contract_details.unit }}</td>
+                                        <td>{{ record_main_contract_details.unit_cost }}</td>
+                                        <td>{{ record_main_contract_details.budget_quantity }}</td>
+                                        <td>{{ record_main_contract_details.contract_quantity }}</td>
+                                        <td>{{ record_main_contract_details.unit_price }}</td>
+                                        <td>{{ record_main_contract_details.markup }}%</td>
+
+                                        <td>{{ record_main_contract_details.assembly_row.Assemblies_Code_L3.created_at }}</td>
+                                        <td>{{ record_main_contract_details.assembly_row.Assemblies_Code_L3.updated_at }}</td>
+                                    </tr>
+                                    
+                                {% endfor %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Basic with Icons -->
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function toggleRows(icon, className) {
+        const rows = document.querySelectorAll(`.${className}`);
+        const isHidden = rows[0].classList.contains('hidden');
+        rows.forEach(row => {
+            row.classList.toggle('hidden', !isHidden);
+            if (!isHidden) {
+                // Find all nested toggle icons within this row
+                const nestedIcons = row.querySelectorAll('.toggle-icon[data-target]');
+                nestedIcons.forEach(nestedIcon => {
+                    const nestedClass = nestedIcon.dataset.target;
+                    const nestedRows = document.querySelectorAll(`.${nestedClass}`);
+                    nestedRows.forEach(nestedRow => nestedRow.classList.add('hidden'));
+                    nestedIcon.textContent = '▶';
+                    // Recursively hide deeper nested rows and reset icons
+                    hideNestedRows(nestedClass);
+                });
+            }
+        });
+        icon.textContent = isHidden ? '▼' : '▶';
+    }
+
+    function hideNestedRows(className) {
+        const nestedRows = document.querySelectorAll(`.${className}`);
+        nestedRows.forEach(row => {
+            row.classList.add('hidden');
+            const nestedIcons = row.querySelectorAll('.toggle-icon[data-target]');
+            nestedIcons.forEach(nestedIcon => {
+                const nestedClass = nestedIcon.dataset.target;
+                nestedIcon.textContent = '▶'; // Reset icon to collapsed state
+                hideNestedRows(nestedClass); // Recursively hide deeper nested rows
+            });
+        });
+    }
+
+    
+</script>
+
+{% endblock %}

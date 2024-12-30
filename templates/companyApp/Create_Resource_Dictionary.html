@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block Resource_Dictionary_active %}active open{% endblock %}
+{% block Create_Resource_Dictionary_active %}active{% endblock %}
+{% block title %}Create User{% endblock %}
+{% block content %}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Resource/</span> Create Resource</h4>
+
+    <!-- Basic Layout & Basic with Icons -->
+    <div class="row">
+      <!-- Basic Layout -->
+      <div class="col-xxl">
+        <div class="card mb-4">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="mb-0">Resource Form</h5>
+            <small class="text-muted float-end">New Resource</small>
+          </div>
+          <div class="card-body">
+            <form method="POST" action="">
+              {% csrf_token %}
+              <div class="row">
+                
+                <div class="mb-3 col-md-4">
+                    <label for="Resource_Code_L1" class="form-label">Resource Code L1</label>
+                    <select class="form-select" id="Resource_Code_L1" name="Resource_Code_L1" required>
+                        <option value="">-- Select --</option>
+                        {% for company_Resource_Code_L1 in filter_company_Resource_Code_L1_query %}
+                        <option value="{{ company_Resource_Code_L1.id }}">{{ company_Resource_Code_L1.Resource_Code_L1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="Resource_Code_L2" class="form-label">Resource Code L2</label>
+                    <select class="form-select" id="Resource_Code_L2" name="Resource_Code_L2" required disabled>
+                        <option value="">-- Select --</option>
+                    </select>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="Resource_Code_L3" class="form-label">Resource Code L3</label>
+                    <select class="form-select" id="Resource_Code_L3" name="Resource_Code_L3" required disabled>
+                        <option value="">-- Select --</option>
+                    </select>
+                </div>
+                <!-- <div class="mb-3 col-md-12">
+                    <label class=" col-form-label" for="Resource_Name">Resource Name</label>
+                    <input type="text" class="form-control" id="Resource_Name" name="Resource_Name" placeholder="Enter Resource Name" required>
+                </div> -->
+                <div class="mb-3 col-md-12">
+                    <label class=" col-form-label" for="Resource_Name">Resource Name</label>
+                    <input type="text" class="form-control" id="Resource_Name" name="Resource_Name" placeholder="Resource Name will auto-fill" readonly>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label class=" col-form-label" for="Unit_of_Measure">Unit of Measure</label>
+                    <input type="text" class="form-control" id="Unit_of_Measure" name="Unit_of_Measure" placeholder="Enter Unit of Measure" required>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label class=" col-form-label" for="Budget_Unit_Cost">Budget Unit Cost</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">$</span>
+                        <input type="text" class="form-control" placeholder="100" id="Budget_Unit_Cost" name="Budget_Unit_Cost"  aria-label="Amount (to the nearest dollar)" required>
+                    </div>
+                </div>
+            </div>
+          
+              <div class="row justify-content-end">
+                  <div class="">
+                      <button type="submit" class="btn btn-primary">Create</button>
+                  </div>
+              </div>
+          </form>
+          
+          </div>
+        </div>
+      </div>
+      <!-- Basic with Icons -->
+      
+    </div>
+  </div>
+
+
+  
+
+
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const resourceCodeL1Select = document.getElementById("Resource_Code_L1");
+        const resourceCodeL2Select = document.getElementById("Resource_Code_L2");
+        const resourceCodeL3Select = document.getElementById("Resource_Code_L3");
+        const resourceNameInput = document.getElementById("Resource_Name");
+
+        // Initially disable Resource_Code_L2 and Resource_Code_L3
+        resourceCodeL2Select.disabled = true;
+        resourceCodeL3Select.disabled = true;
+        resourceNameInput.readOnly = true; // Make Resource Name non-editable
+
+        function updateResourceName() {
+            const l1Text = resourceCodeL1Select.options[resourceCodeL1Select.selectedIndex]?.text || '';
+            const l2Text = resourceCodeL2Select.options[resourceCodeL2Select.selectedIndex]?.text || '';
+            const l3Text = resourceCodeL3Select.options[resourceCodeL3Select.selectedIndex]?.text || '';
+
+            // Concatenate values with dashes and update the input
+            const resourceName = [l1Text, l2Text, l3Text]
+                .filter(Boolean) // Remove empty strings
+                .join('-'); // Join with a dash
+
+            resourceNameInput.value = resourceName;
+        }
+
+        resourceCodeL1Select.addEventListener("change", function() {
+            const resourceCodeL1Id = this.value;
+
+            // Reset Resource_Code_L2 and L3
+            resourceCodeL2Select.innerHTML = '<option value="">-- Select --</option>';
+            resourceCodeL3Select.innerHTML = '<option value="">-- Select --</option>';
+            resourceCodeL3Select.disabled = true;
+
+            if (resourceCodeL1Id) {
+                resourceCodeL2Select.disabled = false;
+
+                fetch(`/get-resource-code-l2/?resource_code_l1_id=${resourceCodeL1Id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length === 0) {
+                            const option = document.createElement("option");
+                            option.value = "";
+                            option.text = "No Resource Code L2";
+                            option.disabled = true;
+                            resourceCodeL2Select.add(option);
+                        } else {
+                            data.forEach(item => {
+                                const option = document.createElement("option");
+                                option.value = item.id;
+                                option.text = item.Resource_Code_L2;
+                                resourceCodeL2Select.add(option);
+                            });
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            } else {
+                resourceCodeL2Select.disabled = true;
+                resourceCodeL3Select.disabled = true;
+            }
+
+            updateResourceName();
+        });
+
+        resourceCodeL2Select.addEventListener("change", function() {
+            const resourceCodeL2Id = this.value;
+
+            // Reset Resource_Code_L3
+            resourceCodeL3Select.innerHTML = '<option value="">-- Select --</option>';
+
+            if (resourceCodeL2Id) {
+                resourceCodeL3Select.disabled = false;
+
+                fetch(`/get-resource-code-l3/?resource_code_l2_id=${resourceCodeL2Id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length === 0) {
+                            const option = document.createElement("option");
+                            option.value = "";
+                            option.text = "No Resource Code L3";
+                            option.disabled = true;
+                            resourceCodeL3Select.add(option);
+                        } else {
+                            data.forEach(item => {
+                                const option = document.createElement("option");
+                                option.value = item.id;
+                                option.text = item.Resource_Code_L3;
+                                resourceCodeL3Select.add(option);
+                            });
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            } else {
+                resourceCodeL3Select.disabled = true;
+            }
+
+            updateResourceName();
+        });
+
+        resourceCodeL3Select.addEventListener("change", updateResourceName);
+    });
+</script>
+
+    
+{% endblock %}

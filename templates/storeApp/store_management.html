@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block store_active %}active open{% endblock %}
+{% block store_management_active %}active{% endblock %}
+{% block title %}Resource Code List{% endblock %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+
+    th,
+    td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #f4f4f4;
+    }
+
+    .toggle-icon {
+        cursor: pointer;
+        margin-right: 3px;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .nested {
+        padding-left: 20px;
+    }
+
+    .nested-2 {
+        padding-left: 40px;
+    }
+
+    .icon-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin: 0 5px;
+    }
+
+    .level1-row {
+        background-color: #1fcba2;
+    }
+
+    .level2-row {
+        background-color: #b2fffb;
+    }
+
+    .level3-row {
+        background-color: #e1bee7;
+    }
+
+    .add-button {
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light"> Store/</span> Store Management</h4>
+
+    <!-- Basic Layout & Basic with Icons -->
+    <div class="row">
+        <!-- Basic Layout -->
+        <div class="col-xxl">
+            <div class="card mb-4">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">Resource Form</h5>
+                    <small class="text-muted float-end">New Resource</small>
+                </div>
+                <div class="card-body">
+                    <div class="container mt-4">
+                        <div class="table-responsive text-nowrap" style="width: 100%;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Resource Code/Resource Name</th>
+                                        <th>Company</th>
+                                        <th>Available Stock<br>Quantity</th>
+                                        <th>Total Stock-In<br>Quantity</th>
+                                        <th>Total Stock-In<br>Price</th>
+                                        <th>Total Stock-Out<br>Quantity</th>
+                                        <th>Total Stock-Out<br>Price</th>
+                                        <th>Unit of Measure</th>
+                                        <th>Budget Unit Cost</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for level1 in data %}
+                                    <!-- Level 1 Row -->
+                                    <tr class="level1-row">
+                                        <td>
+                                            {% if level1.level2|length > 0 %}
+                                            <span class="toggle-icon" data-target="level1-{{ level1.level1.id }}" onclick="toggleRows(this, 'level1-{{ level1.level1.id }}')">▶</span>
+                                            {% endif %}
+                                            {{ level1.level1.Resource_Code_L1 }}
+                                            {% if level1.level2|length > 0 %}
+                                            <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-secondary-rgb), var(--bs-bg-opacity, 1)) !important;"> &nbsp;({{ level1.level2|length }})&nbsp;</small>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ level1.level1.Company_Details.Company_Legal_Name }}</td>
+                                        <td>{{ level1.level1.calculate_stock_availablity }}</td>
+                                        <td>{{ level1.level1.total_stock_in_calculation }}</td>
+                                        <td>{{ level1.level1.total_stock_in_calculation_price }}</td>
+                                        <td>{{ level1.level1.total_stock_out_calculation }}</td>
+                                        <td>{{ level1.level1.total_stock_out_calculation_price }}</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <!-- Level 2 Rows -->
+                                    {% for level2 in level1.level2 %}
+                                    <tr class="hidden level1-{{ level1.level1.id }} level2-row">
+                                        <td class="nested">
+                                            <span style="margin-left: 26px;">
+                                                {% if level2.level3|length > 0 %}
+                                                <span class="toggle-icon" data-target="level2-{{ level2.level2.id }}" onclick="toggleRows(this, 'level2-{{ level2.level2.id }}')">▶</span>
+                                                {% endif %}
+                                                {{ level2.level2.Resource_Code_L2 }}
+                                                {% if level2.level3|length > 0 %}
+                                                <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important;"> &nbsp;({{ level2.level3|length }})&nbsp;</small>
+                                                {% endif %}
+                                            </span>
+                                        </td>
+                                        <td>{{ level2.level2.Company_Details.Company_Legal_Name }}</td>
+                                        <td>{{ level2.level2.calculate_stock_availablity }}</td>
+                                        <td>{{ level2.level2.total_stock_in_calculation }}</td>
+                                        <td>{{ level2.level2.total_stock_in_calculation_price }}</td>
+                                        <td>{{ level2.level2.total_stock_out_calculation }}</td>
+                                        <td>{{ level2.level2.total_stock_out_calculation_price }}</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <!-- Level 3 Rows -->
+                                    {% for level3 in level2.level3 %}
+                                    <tr class="hidden level2-{{ level2.level2.id }} level3-row">
+                                        <td class="nested nested-2">
+                                            <span style="margin-left: 52px;">
+                                                
+                                                <span class="toggle-icon" data-target="resources-{{ level3.resource.id }}" onclick="toggleRows(this, 'resources-{{ level3.resource.id }}')">▶</span>
+                                               
+                                                {{ level3.resource.Resource_Code_L3 }}
+                                            </span>
+                                        </td>
+                                        <td>{{ level3.resource.Company_Details.Company_Legal_Name }}</td>
+                                        <td>{{ level3.resource.calculate_stock_availablity }}</td>
+                                        <td>{{ level3.resource.total_stock_in_calculation }}</td>
+                                        <td>{{ level3.resource.total_stock_in_calculation_price }}</td>
+                                        <td>{{ level3.resource.total_stock_out_calculation }}</td>
+                                        <td>{{ level3.resource.total_stock_out_calculation_price }}</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <!-- Company Resources Rows -->
+                                    {% for resource in level3.resources %}
+                                    <tr class="hidden resources-{{ level3.resource.id }}" style="background: #873a95;
+    color: white;">
+                                        <td class="nested nested-3">
+                                            <span style="margin-left: 92px;">
+                                                {{ resource.Resource_Name }}
+                                            </span>
+                                        </td>
+                                        <td>{{ resource.Company_Details.Company_Legal_Name }}</td>
+                                        <td>{{ resource.calculate_stock_availablity }}</td>
+                                        <td>{{ resource.total_stock_in_calculation }}</td>
+                                        <td>{{ resource.total_stock_in_calculation_price }}</td>
+                                        <td>{{ resource.total_stock_out_calculation }}</td>
+                                        <td>{{ resource.total_stock_out_calculation_price }}</td>
+                                        <td>{{ resource.Unit_of_Measure }}</td>
+                                        <td>$ {{ resource.Budget_Unit_Cost }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr class="hidden resources-{{ level3.resource.id }}" style="background: #873a95; color: white;">
+                                        <td colspan="7" class=" text-muted"><span style="margin-left: 92px; font-style: italic;">No resources available</span></td>
+                                    </tr>
+                                    {% endfor %}
+
+                                    {% endfor %}
+                                    {% endfor %}
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Basic with Icons -->
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="resourceModal" tabindex="-1" aria-labelledby="resourceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resourceModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" id="modalParentType" name="parent_type">
+                    <input type="hidden" id="modalParentId" name="parent_id">
+                    <div id="modalAddBody" class="mb-3 hidden">
+                        <p>Adding a <strong id="addLevel"></strong> under <strong id="parentItemName"></strong>:</p>
+                        <label for="resourceName" class="form-label">Resource Name:</label>
+                        <input type="text" id="resourceName" name="resource_name" class="form-control">
+                    </div>
+                    <div id="modalDeleteBody" class="hidden">
+                        <p>Are you sure you want to delete <strong id="itemName"></strong>?</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary hidden" id="modalAddButton" name="add_resource">Add</button>
+                    <button type="submit" class="btn btn-danger hidden" id="modalDeleteButton" name="delete_resource">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function toggleRows(icon, className) {
+        const rows = document.querySelectorAll(`.${className}`);
+        const isHidden = rows[0].classList.contains('hidden');
+        rows.forEach(row => {
+            row.classList.toggle('hidden', !isHidden);
+            if (!isHidden) {
+                // Find all nested toggle icons within this row
+                const nestedIcons = row.querySelectorAll('.toggle-icon[data-target]');
+                nestedIcons.forEach(nestedIcon => {
+                    const nestedClass = nestedIcon.dataset.target;
+                    const nestedRows = document.querySelectorAll(`.${nestedClass}`);
+                    nestedRows.forEach(nestedRow => nestedRow.classList.add('hidden'));
+                    nestedIcon.textContent = '▶';
+                    // Recursively hide deeper nested rows and reset icons
+                    hideNestedRows(nestedClass);
+                });
+            }
+        });
+        icon.textContent = isHidden ? '▼' : '▶';
+    }
+
+    function hideNestedRows(className) {
+        const nestedRows = document.querySelectorAll(`.${className}`);
+        nestedRows.forEach(row => {
+            row.classList.add('hidden');
+            const nestedIcons = row.querySelectorAll('.toggle-icon[data-target]');
+            nestedIcons.forEach(nestedIcon => {
+                const nestedClass = nestedIcon.dataset.target;
+                nestedIcon.textContent = '▶'; // Reset icon to collapsed state
+                hideNestedRows(nestedClass); // Recursively hide deeper nested rows
+            });
+        });
+    }
+
+
+
+    function openModal(action, level, parentId, parentName) {
+        const modal = new bootstrap.Modal(document.getElementById('resourceModal'));
+        const modalTitle = document.getElementById('resourceModalLabel');
+        const modalAddBody = document.getElementById('modalAddBody');
+        const modalDeleteBody = document.getElementById('modalDeleteBody');
+        const modalAddButton = document.getElementById('modalAddButton');
+        const modalDeleteButton = document.getElementById('modalDeleteButton');
+        const addLevel = document.getElementById('addLevel');
+        const parentItemName = document.getElementById('parentItemName');
+        const itemName = document.getElementById('itemName');
+        const modalParentType = document.getElementById('modalParentType');
+        const modalParentId = document.getElementById('modalParentId');
+
+        modalAddBody.classList.add('hidden');
+        modalDeleteBody.classList.add('hidden');
+        modalAddButton.classList.add('hidden');
+        modalDeleteButton.classList.add('hidden');
+
+        if (action === 'add') {
+            modalTitle.textContent = `Add ${level}`;
+            modalAddBody.classList.remove('hidden');
+            modalAddButton.classList.remove('hidden');
+            addLevel.textContent = level;
+            parentItemName.textContent = parentName;
+            modalParentType.value = level;
+            modalParentId.value = parentId;
+        } else if (action === 'delete') {
+            modalTitle.textContent = `Delete ${level}`;
+            modalDeleteBody.classList.remove('hidden');
+            modalDeleteButton.classList.remove('hidden');
+            itemName.textContent = parentName;
+            modalParentType.value = level;
+            modalParentId.value = parentId;
+        }
+
+        modal.show();
+    }
+</script>
+
+{% endblock %}
