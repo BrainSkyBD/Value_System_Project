@@ -40,7 +40,7 @@ class DateTimeEncoder(DjangoJSONEncoder):
 def estimate_assemblies(request):
     try:
         # Retrieve the latest company details for the user
-        company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+        company_details_record = request.user.company_details
         
         if not company_details_record:
             # Handle case where no company details are found
@@ -76,7 +76,7 @@ def estimate_assemblies(request):
 
 @login_required
 def company_assembly_record(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     if request.method == "POST":
         list_resourses_ids_json = request.POST.get('list_resourses_ids')
         try:
@@ -121,7 +121,7 @@ def company_assembly_record(request):
 
 @login_required
 def assemblies_list(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     filter_Estimation_Assemblies = Estimation_Assemblies_Table.objects.filter(Company_Details=company_details_record)
     context = {'filter_Estimation_Assemblies':filter_Estimation_Assemblies}
     return render(request, "assembliesApp/assemblies_list.html", context)
@@ -142,7 +142,7 @@ def assemblies_Delete(request, pk):
 
 @login_required
 def Assemblies_Code_L1_module(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     if request.method == "POST":
         Assemblies_Code_L1 = request.POST.get('Assemblies_Code_L1')
         var_Assemblies_Code_L1 = Assemblies_Code_L1_Table(
@@ -158,7 +158,7 @@ def Assemblies_Code_L1_module(request):
 
 @login_required
 def Assemblies_Code_L2_module(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     if request.method == "POST":
         Assemblies_Code_L2 = request.POST.get('Assemblies_Code_L2')
         Assemblies_Code_L1_id = request.POST.get('Assemblies_Code_L1')
@@ -178,7 +178,7 @@ def Assemblies_Code_L2_module(request):
 
 @login_required
 def Assemblies_Code_L3_module(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     if request.method == "POST":
         Assemblies_Code_L1_id = request.POST.get('Assemblies_Code_L1')
         Assemblies_Code_L2_id = request.POST.get('Assemblies_Code_L2')
@@ -237,7 +237,7 @@ def Assemblies_Desplay(request):
 
 
 def Assemblies_Management(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     print('company_details_record')
     print(company_details_record)
     if request.method == "POST":

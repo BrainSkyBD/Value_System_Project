@@ -10,12 +10,12 @@ from django.contrib import messages
 from .models import CompanyDetailsTable, CompanyResourcesTable, Resource_Code_L1_Table, Resource_Code_L2_Table, Resource_Code_L3_Table
 from authenticationApp.models import User
 from django.http import JsonResponse
-
+from django.shortcuts import render, get_object_or_404, redirect
 
 @login_required
 def company_settings(request):
     # Retrieve the latest company details for the current user
-    company_details = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details = request.user.company_details
 
     if request.method == "POST":
         # Extract POST data
@@ -117,7 +117,7 @@ def create_project(request):
         print('assign_user_lists')
         print(assign_user_lists)
 
-        company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+        company_details_record = request.user.company_details
 
         # Create a new ProjectTable instance
         project = ProjectTable(
@@ -142,11 +142,52 @@ def create_project(request):
 
 @login_required
 def list_project(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     all_project_filter = ProjectTable.objects.filter(Company_Details=company_details_record)
     # print(all_project_filter)
     context = {'all_project_filter':all_project_filter}
     return render(request, "companyApp/project_list.html", context)
+
+
+
+@login_required
+def view_project(request, project_id):
+    project = get_object_or_404(ProjectTable, id=project_id)
+    return render(request, 'companyApp/view_project.html', {'project': project})
+
+@login_required
+def edit_project(request, project_id):
+    project = get_object_or_404(ProjectTable, id=project_id)
+    
+    if request.method == 'POST':
+        project.Project_Name = request.POST.get('project_name')
+        project.Project_Start_Date = request.POST.get('project_start_date')
+        project.Short_Description = request.POST.get('short_description')
+        project.Default_Workflow = request.POST.get('default_workflow')
+        project.Note_book = request.POST.get('note_book')
+        
+        assign_user_lists = request.POST.getlist('assign_user_lists')
+        project.Assigned_User.set(assign_user_lists)
+        
+        project.save()
+        return redirect('list_project')
+    
+    filter_users = User.objects.filter(created_by=request.user)
+    context = {
+        'project': project,
+        'filter_users': filter_users
+    }
+    return render(request, "companyApp/edit_project.html", context)
+
+@login_required
+def delete_project(request, project_id):
+    project = get_object_or_404(ProjectTable, id=project_id)
+    if request.method == 'POST':
+        project.delete()
+        messages.success(request, "Project deleted successfully.")
+        return redirect('list_project')
+    return render(request, 'companyApp/delete_project.html', {'project': project})
+
 
     
 @login_required
@@ -166,7 +207,11 @@ def create_user(request):
         if password != confirm_password:
             messages.error(request, "Passwords do not match!")
             return redirect('create_user')  # Redirect back to the form
-        company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+        company_details_record = request.user.company_details
+
+        if User.objects.filter(username=email):
+            messages.error(request, "Email is already in use!")
+            return redirect('create_user')
         # Create a new User instance
         user = User(
             username=email,
@@ -188,15 +233,46 @@ def create_user(request):
 
 @login_required
 def user_list(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
-    filter_users = User.objects.filter(company_details = company_details_record)
+    company_details_record = request.user.company_details
+    
+    filter_users = User.objects.filter(company_details = company_details_record).exclude()
     context = {'filter_users':filter_users}
     return render(request, "companyApp/user_list.html", context)
 
 
 
+@login_required
+def view_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    return render(request, 'companyApp/view_user.html', {'user': user})
+
+@login_required
+def edit_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        user.first_name = request.POST.get('first_name')
+        user.last_name = request.POST.get('last_name')
+        user.email = request.POST.get('email')
+        user.phone_number = request.POST.get('phone_number')
+        user.user_role = request.POST.get('user_role')
+        user.save()
+        messages.success(request, "User updated successfully.")
+        return redirect('user_list')
+    return render(request, 'companyApp/edit_user.html', {'user': user})
+
+@login_required
+def delete_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        user.delete()
+        messages.success(request, "User deleted successfully.")
+        return redirect('user_list')
+    return render(request, 'companyApp/delete_user.html', {'user': user})
+
+
+
 def Resource_Code_L1_module(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     if request.method == "POST":
         Resource_Code_L1 = request.POST.get('Resource_Code_L1')
         var_Resource_Code_L1 = Resource_Code_L1_Table(
@@ -212,7 +288,7 @@ def Resource_Code_L1_module(request):
 
 
 def Resource_Code_L2_module(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     if request.method == "POST":
         Resource_Code_L2 = request.POST.get('Resource_Code_L2')
         Resource_Code_L1_id = request.POST.get('Resource_Code_L1')
@@ -232,7 +308,7 @@ def Resource_Code_L2_module(request):
 
 
 def Resource_Code_L3_module(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     if request.method == "POST":
         Resource_Code_L1_id = request.POST.get('Resource_Code_L1')
         Resource_Code_L2_id = request.POST.get('Resource_Code_L2')
@@ -282,7 +358,7 @@ def get_resource_code_l3(request):
 
 @login_required
 def Create_Resource_Dictionary(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     if request.method == 'POST':
         Resource_Name = request.POST.get('Resource_Name')
         Resources_Category = request.POST.get('Resources_Category')
@@ -316,7 +392,7 @@ def Create_Resource_Dictionary(request):
 
 @login_required
 def List_Resource_Dictionary(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     filter_resoures = CompanyResourcesTable.objects.filter(Company_Details = company_details_record)
     context = {'filter_resoures':filter_resoures}
     return render(request, "companyApp/List_Resource_Dictionary.html", context)
@@ -343,7 +419,7 @@ def Resource_Delete(request, pk):
 
 
 def Resource_Management(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     print('company_details_record')
     print(company_details_record)
     if request.method == "POST":

@@ -1741,6 +1741,7 @@ class MainContractDetail(models.Model):
             ).aggregate(total=Sum('Unit_Cost'))['total'] or 0
 
             resource_budget_cost = resourse_unit_cost * float(budget_quantity)
+            resource_budget_cost = round(resource_budget_cost, 2)
 
             resource_usage[resoures_level_1_record.Resource_Code_L1] = resource_budget_cost
             total_actual_earned_cost_var = total_actual_earned_cost_var + resource_budget_cost

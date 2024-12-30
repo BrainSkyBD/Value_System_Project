@@ -45,7 +45,7 @@ def clean_decimal(value):
 
 @login_required
 def save_contract(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     if request.method == 'POST':
         print(request.POST)
         contract_name = request.POST.get('contract_name')
@@ -71,7 +71,7 @@ def save_contract(request):
         if not rows:
             return JsonResponse({'status': 'error', 'message': 'No rows provided'}, status=400)
 
-        company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+        company_details_record = request.user.company_details
 
         if not company_details_record:
             return JsonResponse({'status': 'error', 'message': 'No company details found for the user'}, status=400)
@@ -157,7 +157,7 @@ def save_contract(request):
 
 @login_required
 def contract_list(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     contracts = MainContract.objects.filter(company_details=company_details_record).order_by('-id')
     
     return render(request, 'contractApp/contract_list.html', {'contracts': contracts})
@@ -253,7 +253,7 @@ def view_contract(request, contract_id):
 
     filter_subcontracts = SubContractTable.objects.filter(contract_value=contract)
     # subcontract_total_cost = sum(subcontract.contract_total_price for subcontract in filter_subcontracts)
-    subcontract_total_cost = sum(detail.total_Sub_Contract_Cost_Calculation() for detail in contract_details)
+    # subcontract_total_cost = sum(detail.total_Sub_Contract_Cost_Calculation() for detail in contract_details)
 
     filter_expense = ExpenseTable.objects.filter(contract_value=contract)
     expense_total_cost = sum(expense.total_cost for expense in filter_expense)
@@ -282,7 +282,7 @@ def view_contract(request, contract_id):
         'filter_expense':filter_expense,
         'total_cost':total_cost,
         'filter_subcontracts':filter_subcontracts,
-        'subcontract_total_cost':subcontract_total_cost,
+        # 'subcontract_total_cost':subcontract_total_cost,
         'expense_total_cost':expense_total_cost,
         'store_total_cost':store_total_cost,
         'Sum_Total_Actual_Resources_Cost':Sum_Total_Actual_Resources_Cost,
@@ -312,7 +312,7 @@ def delete_contract(request, contract_id):
 
 # @login_required
 # def create_contract(request):
-#     company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+#     company_details_record = request.user.company_details
 
 #     filter_Estimation_Assemblies_Table = Estimation_Assemblies_Table.objects.filter(Company_Details=company_details_record)
 #     filter_Estimation_Assemblies_list = list(filter_Estimation_Assemblies_Table.values('id', 'Assembly_Name', 'Unit_of_Measure', 'Assemblies_Code_L1__Assemblies_Code_L1', 'Assemblies_Code_L2__Assemblies_Code_L2', 'Assemblies_Code_L3__Assemblies_Code_L3', 'Assembly_Unit_Cost'))
@@ -325,7 +325,7 @@ def delete_contract(request, contract_id):
 
 @login_required
 def create_contract(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     filter_Estimation_Assemblies_Table = Estimation_Assemblies_Table.objects.filter(Company_Details=company_details_record)
 
     # Gather assemblies and resource totals
@@ -352,7 +352,7 @@ def create_contract(request):
 
 
 def Contract_Management(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     print('company_details_record')
     print(company_details_record)
     if request.method == "POST":
@@ -423,7 +423,7 @@ def Contract_Management(request):
 
 
 def Contract_Management_pro(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
 
     my_contracts = MainContract.objects.filter(company_details=company_details_record)
     data = []
@@ -470,7 +470,7 @@ def Contract_Management_pro(request):
 
 
 def Contract_Management_main(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
 
     # my_contracts = MainContract.objects.filter(company_details=company_details_record)
     my_contracts = MainContract.objects.filter(company_details=company_details_record).order_by('-id').prefetch_related(
@@ -486,7 +486,7 @@ def Contract_Management_main(request):
 
 
 def contract_assembly_resource_details_management(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
 
     # my_contracts = MainContract.objects.filter(company_details=company_details_record)
     my_contracts = MainContract.objects.filter(company_details=company_details_record).order_by('-id').prefetch_related(
@@ -506,7 +506,7 @@ def contract_assembly_resource_details_management(request):
 
 @login_required
 def create_subcontract(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     filter_Estimation_Assemblies_Table = Estimation_Assemblies_Table.objects.filter(Company_Details=company_details_record)
 
     # Gather assemblies and resource totals
@@ -562,7 +562,7 @@ def save_subcontract(request):
         if not rows:
             return JsonResponse({'status': 'error', 'message': 'No rows provided'}, status=400)
 
-        company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+        company_details_record = request.user.company_details
 
         if not company_details_record:
             return JsonResponse({'status': 'error', 'message': 'No company details found for the user'}, status=400)
@@ -620,7 +620,7 @@ def save_subcontract(request):
 
 @login_required
 def subcontract_list(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     contracts = SubContractTable.objects.filter(company_details=company_details_record).order_by('-id')
     
     return render(request, 'contractApp/subcontract_list.html', {'contracts': contracts})
@@ -628,7 +628,7 @@ def subcontract_list(request):
 
 
 def SubContract_Management(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     print('company_details_record')
     print(company_details_record)
     if request.method == "POST":
@@ -698,7 +698,7 @@ def SubContract_Management(request):
 
     
 def SubContract_Management_main(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
 
     my_contracts = SubContractTable.objects.filter(company_details=company_details_record).order_by('-id').prefetch_related(
         'details__assembly_value__Assemblies_Code_L1',

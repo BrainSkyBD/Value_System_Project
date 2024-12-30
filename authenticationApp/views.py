@@ -68,7 +68,7 @@ def signup_func(request):
             myuser = User.objects.create_user(sign_email, sign_email, sign_password)
             myuser.first_name = sign_first_name
             myuser.last_name = sign_last_name
-            myuser.is_active = True
+            myuser.is_active = False
             myuser.save()
             
             var_CompanyDetails = CompanyDetailsTable(
@@ -81,7 +81,7 @@ def signup_func(request):
             var_CompanyDetails.save()
             myuser.company_details = var_CompanyDetails
             myuser.save()
-            messages.success(request, 'Account Created Successfully !!!')
+            messages.success(request, 'Your account is pending. Admin will contact you and approve your account!')
 
             return redirect('login_func')
 

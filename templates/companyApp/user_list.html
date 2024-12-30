@@ -24,6 +24,7 @@
               <th>User Role</th>
               <th>Created By</th>
               <th>Created At</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -34,7 +35,45 @@
               <td>{{ user.last_name }}</td>
               <td>{{ user.email }}</td>
               <td>{{ user.phone_number }}</td>
-              <td>{{ user.phone_number }}</td>
+              <td>{{ user.User_Role }}</td>
+              
+              <td>
+                  <a href="{% url 'view_user' user.id %}">View</a> |
+                  <a href="{% url 'edit_user' user.id %}">Edit</a> |
+
+                  <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalCenter{{user.id}}" style="color:white;">Delete</a>
+                
+        
+                <!-- Modal -->
+                <div class="modal fade" id="modalCenter{{user.id}}" tabindex="-1" style="display: none;" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalCenterTitle">Deletion</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h1>Delete User</h1>
+                                <p>Are you sure you want to delete?<br>User Name: {{ user.username }}</p>
+                                <div class="modal-footer">
+                                  
+                                    <form method="post" action="{% url 'delete_user' user.id %}" method="post" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        Close
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">Yes Confirm</button>
+                                    </form>
+                                    
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                  
+              </td>
               <td>{{ user.created_by }}</td>
               <td>{{ user.created_at }}</td>
             </tr>

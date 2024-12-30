@@ -44,7 +44,7 @@ class DateTimeEncoder(DjangoJSONEncoder):
 
 # @login_required
 # def calculate_expenses(request):
-#     company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+#     company_details_record = request.user.company_details
 #     filter_users_Resource_Code_L3 = Resource_Code_L3_Table.objects.filter(Company_Details=company_details_record)
 
 #     # Filter resources 
@@ -68,7 +68,7 @@ class DateTimeEncoder(json.JSONEncoder):
 
 @login_required
 def calculate_expenses(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
 
     
     # Filter main contract 
@@ -88,7 +88,7 @@ def calculate_expenses(request):
 @login_required
 def fetch_assemblies_by_contract(request, contract_id):
     print(f'Getting assemblies for Contract ID: {contract_id}')
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
 
     if not company_details_record:
         return JsonResponse({'error': 'Company details not found'}, status=404)
@@ -143,7 +143,7 @@ def fetch_assemblies_by_contract(request, contract_id):
 @login_required
 def fetch_resorce_by_assemblies(request, assembly_id):
     print(f'Getting resoures for assembly ID: {assembly_id}')
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
 
     if not company_details_record:
         return JsonResponse({'error': 'Company details not found'}, status=404)
@@ -181,7 +181,7 @@ def fetch_resorce_by_assemblies(request, assembly_id):
 @csrf_exempt
 def save_expense(request):
     print("saving expense ...")
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     if request.method == 'POST':
         try:
             # print(request.body)
@@ -230,7 +230,7 @@ def save_expense(request):
 @login_required
 # Read/ List Expenses
 def expense_list(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     expenses = ExpenseTable.objects.filter(Company_Details=company_details_record).order_by('-id')
     return render(request, "expenseApp/expense_list.html", {"expenses": expenses})
 
@@ -250,7 +250,7 @@ def delete_expense(request, pk):
 
 @login_required
 def expenses_management(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
 
     level1_resources = Resource_Code_L1_Table.objects.all()
     data = []

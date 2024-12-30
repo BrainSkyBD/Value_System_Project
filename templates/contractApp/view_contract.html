@@ -520,7 +520,7 @@
                 <td>$ {{ detail.func_Assembly_Invoices_total_revenue }}</td>
                 <td>{{ detail.contract_quantity }}</td>
                 <td>{{ detail.calculate_remaining_quantity }}</td>
-                <td>{{ detail.func_Assembly_Invoices_remain_revenue }}</td>
+                <td>$ {{ detail.func_Assembly_Invoices_remain_revenue }}</td>
                 
                 <td>$ {{ detail.total_price }}</td>
                 {% comment %}
@@ -603,6 +603,7 @@
               <td ></td>
               <td ></td>
               <td ></td>
+              <td ></td>
               <td >$ {{ contract.calculate_total_price }}</td>
               
             </tr>
@@ -641,7 +642,7 @@
         <tfoot>
           <tr>
               <td><strong>Total</strong></td>
-              <td><b>$ {{ subcontract_total_cost }}</b></td>
+              <td><b>$ {{ contract.calculate_total_subcontract_usage_cost }}</b></td>
               <td><b>$ {{ expense_total_cost }}</b></td>
               <td><b>$ {{ store_total_cost }}</b></td>
               <td><b>$ {{ Sum_Total_Actual_Resources_Cost }}</b></td>
@@ -675,7 +676,8 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="6"><strong>Total</strong></td>
+                <td><strong>Total</strong></td>
+                <td colspan="{{ filter_resoures_level_1|length }}"></td>
                 <td><b>$ {{ contract.calculate_total_actual_cost }}</b></td>
             </tr>
         </tfoot>
@@ -710,7 +712,8 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="6"><strong>Total</strong></td>
+                <td><strong>Total</strong></td>
+                <td colspan="{{ filter_resoures_level_1|length }}"></td>
                 <td><b>$ {{ contract.calculate_total_subcontract_usage_cost }}</b></td>
             </tr>
         </tfoot>
@@ -744,7 +747,8 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="6"><strong>Total</strong></td>
+                <td><strong>Total</strong></td>
+                <td colspan="{{ filter_resoures_level_1|length }}"></td>
                 <td><b>$ {{ contract.calculate_total_actual_expense_cost }}</b></td>
             </tr>
         </tfoot>
@@ -777,7 +781,8 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="6"><strong>Total</strong></td>
+                <td><strong>Total</strong></td>
+                <td colspan="{{ filter_resoures_level_1|length }}"></td>
                 <td><b>$ {{ contract.calculate_total_actual_store_cost }}</b></td>
             </tr>
         </tfoot>
@@ -809,7 +814,8 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="6"><strong>Total</strong></td>
+                <td><strong>Total</strong></td>
+                <td colspan="{{ filter_resoures_level_1|length }}"></td>
                 <td><b>$ {{ contract.calculate_total_earned_cost_by_resource_list }}</b></td>
             </tr>
         </tfoot>
@@ -840,7 +846,8 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="6"><strong>Total</strong></td>
+                <td><strong>Total</strong></td>
+                <td colspan="{{ filter_resoures_level_1|length }}"></td>
                 <td><b>$ {{ contract.calculate_total_contract_resource_variance_to_date_calculation }}</b></td>
             </tr>
         </tfoot>
@@ -871,7 +878,8 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="6"><strong>Total</strong></td>
+                <td><strong>Total</strong></td>
+                <td colspan="{{ filter_resoures_level_1|length }}"></td>
                 <td><b>$ {{ contract.calculate_total_contract_ETC_remaining_calculation }}</b></td>
             </tr>
         </tfoot>
@@ -902,7 +910,8 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="6"><strong>Total</strong></td>
+                <td><strong>Total</strong></td>
+                <td colspan="{{ filter_resoures_level_1|length }}"></td>    
                 <td><b>$ {{ contract.calculate_total_contract_resource_estimate_at_completion_calculation }}</b></td>
             </tr>
         </tfoot>
@@ -934,7 +943,8 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="6"><strong>Total</strong></td>
+                <td><strong>Total</strong></td>
+                <td colspan="{{ filter_resoures_level_1|length }}"></td>
                 <td><b>$ {{ contract.calculate_total_contract_VAC_remaining_calculation }}</b></td>
             </tr>
         </tfoot>

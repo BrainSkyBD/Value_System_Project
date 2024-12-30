@@ -44,7 +44,7 @@ class DateTimeEncoder(DjangoJSONEncoder):
 
 # @login_required
 # def calculate_store(request):
-#     company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+#     company_details_record = request.user.company_details
 #     filter_users_Resource_Code_L3 = Resource_Code_L3_Table.objects.filter(Company_Details=company_details_record)
 
 #     # Filter resources 
@@ -68,7 +68,7 @@ class DateTimeEncoder(json.JSONEncoder):
 
 @login_required
 def calculate_stores(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
 
     
     # Filter main contract 
@@ -90,7 +90,7 @@ def calculate_stores(request):
 @login_required
 def fetch_assemblies_by_contract(request, contract_id):
     print(f'Getting assemblies for Contract ID: {contract_id}')
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
 
     if not company_details_record:
         return JsonResponse({'error': 'Company details not found'}, status=404)
@@ -146,7 +146,7 @@ def fetch_assemblies_by_contract(request, contract_id):
 def fetch_resorce_by_assemblies(request, assembly_id):
     print('--------------------------------------------------------')
     print(f'Getting resources for assembly ID: {assembly_id}')
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
 
     if not company_details_record:
         return JsonResponse({'error': 'Company details not found'}, status=404)
@@ -179,7 +179,7 @@ def fetch_resorce_by_assemblies(request, assembly_id):
 
 # def fetch_resorce_by_assemblies(request, assembly_id):
 #     print(f'Getting resoures for assembly ID: {assembly_id}')
-#     company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+#     company_details_record = request.user.company_details
 
 #     if not company_details_record:
 #         return JsonResponse({'error': 'Company details not found'}, status=404)
@@ -217,7 +217,7 @@ def fetch_resorce_by_assemblies(request, assembly_id):
 @csrf_exempt
 def save_store(request):
     print("saving store ...")
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     if request.method == 'POST':
         try:
             # print(request.body)
@@ -286,7 +286,7 @@ def save_store(request):
 # Read/ List stores
 @login_required
 def store_list(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     stores = StoreTable.objects.filter(Company_Details=company_details_record).order_by('-id')
     print(stores)
     return render(request, "storeApp/store_list.html", {"stores": stores})
@@ -295,7 +295,7 @@ def store_list(request):
 # Read/ List stores
 @login_required
 def stock_in_list(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     stores = StoreTable.objects.filter(Company_Details=company_details_record, stock_trasaction_status="Stock-In").order_by('-id')
     print(stores)
     return render(request, "storeApp/stock_in_list.html", {"stores": stores})
@@ -304,7 +304,7 @@ def stock_in_list(request):
 # Read/ List stores
 @login_required
 def stock_out_list(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
     stores = StoreTable.objects.filter(Company_Details=company_details_record, stock_trasaction_status="Stock-Out").order_by('-id')
     print(stores)
     return render(request, "storeApp/stock_out_list.html", {"stores": stores})
@@ -324,7 +324,7 @@ def delete_store(request, pk):
 
 @login_required
 def store_management(request):
-    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    company_details_record = request.user.company_details
 
     level1_resources = Resource_Code_L1_Table.objects.all()
     data = []
