@@ -56,6 +56,14 @@ class MainContract(models.Model):
         total = self.details.aggregate(Sum('total_price'))['total_price__sum']
         total = round(total, 2)
         return total if total is not None else 0
+
+    def func_mainContract_total_Invoices_total_revenue(self):
+        total_revenue = MainContractInvoiceDetailsTable.objects.filter(
+            main_contract_invoice__invoice_contract_row=self
+        ).aggregate(total_revenue=Sum('Invoice_Revenue'))['total_revenue']
+        if total_revenue:
+            total_revenue = round(total_revenue,  2)
+        return total_revenue or 0
     
     def calculate_total_resource_budget_cost(self):
         total_sum = 0

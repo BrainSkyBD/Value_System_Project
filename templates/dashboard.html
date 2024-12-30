@@ -2,6 +2,7 @@
 {% load static %}
 {% block dashboard_active %}active{% endblock %}
 {% block content %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 <div class="container-xxl flex-grow-1 container-p-y">
   <div class="row">
@@ -10,7 +11,7 @@
         <div class="d-flex align-items-end row">
           <div class="col-sm-7">
             <div class="card-body">
-              <h5 class="card-title text-primary">Congratulations John! 🎉</h5>
+              <h5 class="card-title text-primary">Welcome {{request.user.first_name}} {{request.user.last_name}}! 🎉</h5>
               <p class="mb-4">
                 You have done <span class="fw-bold">72%</span> more sales today. Check your new badge in
                 your profile.
@@ -111,9 +112,11 @@
         <div class="row row-bordered g-0">
           <div class="col-md-8">
             <h5 class="card-header m-0 me-2 pb-3">Total Revenue</h5>
-            <div id="totalRevenueChart" class="px-2"></div>
+            <div>
+            {{ graph_html|safe }}
+            </div>
           </div>
-          <div class="col-md-4">
+          <!-- <div class="col-md-4">
             <div class="card-body">
               <div class="text-center">
                 <div class="dropdown">
@@ -158,7 +161,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
