@@ -82,6 +82,12 @@
                 <div data-i18n="Analytics">Dashboard</div>
               </a>
             </li>
+            <li class="menu-item {% block contract_assembly_resource_details_management_active %}{% endblock %}">
+              <a href="{% url 'contract_assembly_resource_details_management' %}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-layout"></i>
+                <div data-i18n="Analytics">Contract-Assembly-Resource-Pivot</div>
+              </a>
+            </li>
 
 
             <li class="menu-header small text-uppercase">
@@ -319,6 +325,7 @@
                         <div data-i18n="Alerts">Contract Management</div>
                       </a>
                     </li>
+                    
                 </ul>
             </li>
 
@@ -333,7 +340,7 @@
                         <div data-i18n="Vertical Form">Create Sub-Contract</div>
                     </a>
                     </li>
-                    <li class="menu-item">
+                    <li class="menu-item {% block List_subcontract_active %}{% endblock %}">
                     <a href="{% url 'subcontract_list' %}" class="menu-link">
                         <div data-i18n="Horizontal Form">Sub-Contract Table</div>
                     </a>
@@ -355,11 +362,16 @@
                     <div data-i18n="Form Layouts">Expenses Management</div>
                 </a>
                 <ul class="menu-sub">
-                    <li class="menu-item {% block Calculate_Expenses_active %}{% endblock %}">
-                    <a href="{% url 'calculate_expenses' %}" class="menu-link">
-                        <div data-i18n="Vertical Form">Calculate Expenses</div>
+                    <li class="menu-item {% block Expenses_Management_Table_active %}{% endblock %}">
+                    <a href="{% url 'expenses_management' %}" class="menu-link">
+                        <div data-i18n="Vertical Form">Expenses Management</div>
                     </a>
                     </li>
+                    <li class="menu-item {% block Calculate_Expenses_active %}{% endblock %}">
+                      <a href="{% url 'calculate_expenses' %}" class="menu-link">
+                          <div data-i18n="Vertical Form">Calculate Expenses</div>
+                      </a>
+                      </li>
                     <li class="menu-item {% block expense_list_active %}{% endblock %}">
                     <a href="{% url 'expense_list' %}" class="menu-link">
                         <div data-i18n="Horizontal Form">Expense Table</div>
@@ -369,41 +381,39 @@
             </li>
 
 
-            <li class="menu-header small text-uppercase"><span class="menu-header-text">Store</span></li>
-            <li class="menu-item">
-                <a href="javascript:void(0);" class="menu-link menu-toggle">
-                    <i class="menu-icon tf-icons bx bx-detail"></i>
-                    <div data-i18n="Form Layouts">Expenses</div>
-                </a>
-                <ul class="menu-sub">
-                    <li class="menu-item">
-                    <a href="form-layouts-vertical.html" class="menu-link">
-                        <div data-i18n="Vertical Form">Create</div>
-                    </a>
-                    </li>
-                    <li class="menu-item">
-                    <a href="form-layouts-horizontal.html" class="menu-link">
-                        <div data-i18n="Horizontal Form">List</div>
-                    </a>
-                    </li>
-                </ul>
-            </li>
+            <li class="menu-header small text-uppercase"><span class="menu-header-text">Store App</span></li>
+            
 
-            <li class="menu-item">
+            <li class="menu-item {% block store_active %}{% endblock %}">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons bx bx-detail"></i>
                     <div data-i18n="Form Layouts">Store</div>
                 </a>
                 <ul class="menu-sub">
-                    <li class="menu-item">
-                    <a href="form-layouts-vertical.html" class="menu-link">
-                        <div data-i18n="Vertical Form">Create</div>
-                    </a>
+                    <li class="menu-item {% block store_management_active %}{% endblock %}">
+                      <a href="{% url 'store_management' %}" class="menu-link">
+                          <div data-i18n="Vertical Form">Store Management</div>
+                      </a>
                     </li>
-                    <li class="menu-item">
-                    <a href="form-layouts-horizontal.html" class="menu-link">
-                        <div data-i18n="Horizontal Form">List</div>
-                    </a>
+                    <li class="menu-item {% block store_create_active %}{% endblock %}">
+                      <a href="{% url 'calculate_stores' %}" class="menu-link">
+                          <div data-i18n="Vertical Form">Calculate Store</div>
+                      </a>
+                    </li>
+                    <li class="menu-item {% block stock_in_list_active %}{% endblock %}">
+                      <a href="{% url 'stock_in_list' %}" class="menu-link">
+                          <div data-i18n="Horizontal Form">Stock-In List</div>
+                      </a>
+                    </li>
+                    <li class="menu-item {% block stock_out_list_active %}{% endblock %}">
+                      <a href="{% url 'stock_out_list' %}" class="menu-link">
+                          <div data-i18n="Horizontal Form">Stock-Out List</div>
+                      </a>
+                    </li>
+                    <li class="menu-item {% block store_list_active %}{% endblock %}">
+                      <a href="{% url 'store_list' %}" class="menu-link">
+                          <div data-i18n="Horizontal Form">Store List</div>
+                      </a>
                     </li>
                 </ul>
             </li>
@@ -543,15 +553,19 @@
 
           <!-- Content wrapper -->
           <div class="content-wrapper">
-            <!-- Content -->
+            
             {% if messages %}
-            {% for message in messages %}
-            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-warning{% endif %} alert-dismissible fade show" role="alert">
-              <strong>{{ message }}</strong>
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <!-- Content -->
+            <div class="container-xxl container-p-y">
+              {% for message in messages %}
+              <div class="alert {% if message.tags %}{% if message.tags == 'error' %}alert-danger{% elif message.tags == 'sucess' %}alert-success{% else %}alert-info{% endif %}{% else %}alert-warning{% endif %} alert-dismissible fade show" role="alert">
+                <strong>{{ message }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+              {% endfor %}
             </div>
-            {% endfor %}
             {% endif %}
+            
 
             {% block content %}{% endblock %}
 

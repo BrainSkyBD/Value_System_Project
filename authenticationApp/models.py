@@ -7,7 +7,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 import hashlib
 
-
 class User(AbstractUser):
     phone_number = models.CharField(max_length=255, default='', blank=True, null=True)
     User_Role_Option = (
@@ -16,6 +15,7 @@ class User(AbstractUser):
         ('Viewer', 'Viewer'),
     )
     User_Role = models.CharField(max_length=255, choices=User_Role_Option, default='Admin')
+    company_details = models.ForeignKey('companyApp.CompanyDetailsTable', on_delete=models.CASCADE, null=True, blank=True, default=None)
     # Self-referencing ForeignKey for 'created_by'
     created_by = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='created_users')
     # Automatically store the time when the user is created

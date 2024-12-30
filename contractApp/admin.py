@@ -1,6 +1,47 @@
 from django.contrib import admin
-from .models import MainContract, MainContractDetail
-from .models import SubContractTable, SubContractDetail
+from .models import MainContract, MainContractDetail, MainContractBudgetCostTable, SubContractTable, SubContractDetail, MainContractInvoiceTable
+
+from .models import MainContractInvoiceTable, MainContractInvoiceDetailsTable, SubContractInvoiceTable, SubContractInvoiceDetailsTable
+
+
+@admin.register(MainContractInvoiceTable)
+class MainContractInvoiceTableAdmin(admin.ModelAdmin):
+    list_display = ('id', 'invoice_contract_row', 'created_at', 'updated_at')
+    list_filter = ('created_at', 'updated_at')
+    search_fields = ('invoice_contract_row__id',)
+    ordering = ('-created_at',)
+    date_hierarchy = 'created_at'
+
+
+@admin.register(MainContractInvoiceDetailsTable)
+class MainContractInvoiceDetailsTableAdmin(admin.ModelAdmin):
+    list_display = ('id', 'main_contract_invoice', 'main_contract_assembly', 'Invoice_Quantity', 'Invoice_Revenue', 'created_at', 'updated_at')
+    list_filter = ('created_at', 'updated_at')
+    search_fields = ('main_contract_invoice__id', 'main_contract_assembly__id')
+    ordering = ('-created_at',)
+    date_hierarchy = 'created_at'
+
+
+
+
+@admin.register(SubContractInvoiceTable)
+class SubContractInvoiceTableAdmin(admin.ModelAdmin):
+    list_display = ('id', 'invoice_contract_row', 'created_at', 'updated_at')
+    list_filter = ('created_at', 'updated_at')
+    search_fields = ('invoice_contract_row__id',)
+    ordering = ('-created_at',)
+    date_hierarchy = 'created_at'
+
+
+@admin.register(SubContractInvoiceDetailsTable)
+class SubContractInvoiceDetailsTableAdmin(admin.ModelAdmin):
+    list_display = ('id', 'sub_contract_invoice', 'sub_contract_assembly', 'Invoice_Quantity', 'Invoice_Revenue', 'created_at', 'updated_at')
+    list_filter = ('created_at', 'updated_at')
+    search_fields = ('sub_contract_invoice__id', 'sub_contract_assembly__id')
+    ordering = ('-created_at',)
+    date_hierarchy = 'created_at'
+
+
 
 
 class MainContractDetailInline(admin.TabularInline):
@@ -64,3 +105,15 @@ class SubContractDetailAdmin(admin.ModelAdmin):
     list_display = ('sub_contract', 'comb_assem_code', 'assembly_value', 'item_description', 'unit', 'unit_cost', 'subcontract_quantity', 'subcontract_total_price')
     list_filter = ('sub_contract', 'assembly_value')
     search_fields = ('comb_assem_code', 'item_description', 'unit')
+
+    
+
+@admin.register(MainContractBudgetCostTable)
+class MainContractBudgetCostAdmin(admin.ModelAdmin):
+    list_display = ('contract_details', 'Resource_Code', 'budget_unit_rates', 'budget_cost', 'created_at', 'updated_at')
+    list_filter = ('contract_details', 'Resource_Code', 'created_at', 'updated_at')
+    search_fields = ('contract_details__name', 'Resource_Code__name', 'budget_unit_rates', 'budget_cost')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'updated_at')
+
+

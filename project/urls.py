@@ -32,6 +32,7 @@ urlpatterns = [
     path('', include('assembliesApp.urls')),
     path('', include('contractApp.urls')),
     path('', include('expenseApp.urls')),
+    path('', include('storeApp.urls')),
     path('authentication/', include('authenticationApp.urls')),
 ]
 if settings.DEBUG:

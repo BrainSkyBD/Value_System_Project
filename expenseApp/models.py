@@ -1,9 +1,10 @@
 from django.db import models
-
+from companyApp.models import CompanyDetailsTable
 
 
 
 class ExpenseTable(models.Model):
+    Company_Details = models.ForeignKey(CompanyDetailsTable, on_delete=models.CASCADE, null=True, blank=True)
     comb_assem_code = models.CharField(max_length=255)
     contract_value = models.ForeignKey('contractApp.MainContract', on_delete=models.CASCADE)
     assembly_value = models.ForeignKey('assembliesApp.Estimation_Assemblies_Table', on_delete=models.CASCADE)

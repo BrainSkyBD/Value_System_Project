@@ -2,7 +2,7 @@ from django.db import models
 from companyApp.models import CompanyDetailsTable, CompanyResourcesTable
 import uuid
 from django.db.models import Sum
-
+from datetime import datetime
 # Create your models here.
 class Assemblies_Code_L1_Table(models.Model):
     class Meta:
@@ -12,6 +12,9 @@ class Assemblies_Code_L1_Table(models.Model):
     Assemblies_Code_L1 = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def filter_assemblies_level_2_list(self):
+        return Assemblies_Code_L2_Table.objects.filter(Assemblies_Code_L1=self)
 
 
 class Assemblies_Code_L2_Table(models.Model):
@@ -23,6 +26,9 @@ class Assemblies_Code_L2_Table(models.Model):
     Assemblies_Code_L2 = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def filter_assemblies_level_3_list(self):
+        return Assemblies_Code_L3_Table.objects.filter(Assemblies_Code_L2=self)
 
 
 class Assemblies_Code_L3_Table(models.Model):
@@ -51,6 +57,8 @@ class Estimation_Assemblies_Table(models.Model):
     # Quantity = models.CharField(max_length=255, null=True, blank=True)
     Assembly_Unit_Cost = models.CharField(max_length=255, null=True, blank=True)
     # Total_Cost = models.CharField(max_length=255, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
 
     def __str__(self):
@@ -79,11 +87,12 @@ class Estimation_Assemblies_Table(models.Model):
 
         return resource_code_totals
 
+    
 
         
 class Estimation_Assemblies_Resource_Details_Table(models.Model):
     Company_Details = models.ForeignKey(CompanyDetailsTable, on_delete=models.CASCADE, null=True, blank=True)
-    Estimation_Assemblies = models.ForeignKey(Estimation_Assemblies_Table, on_delete=models.CASCADE, null=True, blank=True)
+    Estimation_Assemblies = models.ForeignKey(Estimation_Assemblies_Table, on_delete=models.CASCADE, null=True, blank=True, related_name="estimation_assemblies_resourcedetailstable")
     Resource_record = models.ForeignKey(CompanyResourcesTable, on_delete=models.CASCADE, max_length=255, null=True, blank=True)
     Resource_Budget_Unit_Cost = models.CharField(max_length=255, null=True, blank=True, default="")
     Quantity = models.CharField(max_length=255, null=True, blank=True, default="")

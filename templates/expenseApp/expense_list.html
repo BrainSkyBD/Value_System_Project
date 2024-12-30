@@ -72,6 +72,10 @@
                     </div>
                 </td>
             </tr>
+            {% empty %}
+            <tr>
+              <td colspan="8" class="text-center text-muted">No Expenses Yet</td>
+            </tr>
             {% endfor %}
           </tbody>
         </table>

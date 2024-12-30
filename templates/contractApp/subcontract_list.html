@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block Company_Contract_active %}active open{% endblock %}
-{% block contract_list_active %}active{% endblock %}
+{% block Company_SubContract_active %}active open{% endblock %}
+{% block List_subcontract_active %}active{% endblock %}
 {% block title %}Create User{% endblock %}
 {% block content %}
 <meta name="csrf-token" content="{{ csrf_token }}">
@@ -21,10 +21,10 @@
             {% for contract in contracts %}
             <tr>
                 <td>{{ contract.subcontract_name }}</td>
-                <td>{{ contract.company_details }}</td>
+                <td>{{ contract.company_details.Company_Legal_Name }}</td>
                 <td>
                     <!-- Add any actions you want, such as viewing details or editing -->
-                    <a href="{% url 'view_contract' contract.id %}" class="btn btn-info">View</a>
+                    <a href="{% url 'view_subcontract' contract.id %}" class="btn btn-info">View</a>
                     <a href="#" id="deleteContractButton" class="btn btn-danger" onclick="deleteContract({{ contract.id }})">Delete Contract</a>
                 </td>
             </tr>

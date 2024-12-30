@@ -21,11 +21,7 @@
             <form method="POST" action="" onsubmit="event.preventDefault(); calculateValues();">
                 {% csrf_token %}
                 <div class="row">
-                    <!-- Comb-Assem-Code -->
-                    <div class="mb-3 col-md-12">
-                        <label class="col-form-label" for="Comb_Assem_Code">Comb-Assem-Code</label>
-                        <input type="text" class="form-control" id="Comb_Assem_Code" name="Comb_Assem_Code" placeholder="Comb-Assem-Code" required>
-                    </div>
+                    
         
                     <!-- Main Contract Selection -->
                     <div class="mb-3 col-md-4">
@@ -71,6 +67,13 @@
                             <ul class="dropdown-menu w-100" style="margin-top: 40px; max-height: 200px; overflow-y: auto;" id="resourceDropdown"></ul>
                         </div>
                     </div>
+
+
+                    <!-- Comb-Assem-Code -->
+                    <div class="mb-3 col-md-12">
+                        <label class="col-form-label" for="Comb_Assem_Code">Comb-Assem-Code</label>
+                        <input type="text" class="form-control" id="Comb_Assem_Code" name="Comb_Assem_Code" placeholder="Comb-Assem-Code" required readonly>
+                    </div>
         
                     
         
@@ -82,7 +85,7 @@
         
                     <!-- Contract Quantity -->
                     <div class="mb-3 col-md-6">
-                        <label class="col-form-label" for="Contract_Quantity">Contract Quantity</label>
+                        <label class="col-form-label" for="Contract_Quantity">Actual Quantity</label>
                         <input type="number" class="form-control" id="Contract_Quantity" name="Contract_Quantity" placeholder="Enter Contract Quantity" required>
                     </div>
         
@@ -305,6 +308,7 @@
                         const resourceName = resource.Resource_Code_L3  || 'Unnamed resource';
                         const unitOfMeasure = resource.Unit_of_Measure || 'N/A';
                         
+
                         const li = document.createElement('li');
                         const a = document.createElement('a');
                         a.classList.add('dropdown-item');
@@ -321,6 +325,7 @@
                     resourceInput.value = resource.Resource_Code_L3;
                     resourceDropdown.classList.remove('show');
                     budgetUnitCostInput.value = parseFloat(resource.Budget_Unit_Cost) || 0; // Populate Budget Unit Cost
+                    document.getElementById('Comb_Assem_Code').value = resource.Resource_Name;
 
                     document.getElementById('hiddenresourceInputValue').value=resource.Resource_Code_L3;
                     document.getElementById('hiddenresourceInputId').value=resource.id;

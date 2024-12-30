@@ -84,96 +84,137 @@
                     <div class="container mt-4">
                         <!-- Add Level 1 Button -->
                         <button class="btn btn-primary add-button float-end" onclick="openModal('add', 'level1', null, null)">Add +</button>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Assemblies Code</th>
-                                    <th>Company</th>
-                                    <th>Actions</th>
-                                    <th>Created At</th>
-                                    <th>Updated At</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for level1 in data %}
-                                <!-- Level 1 Row -->
-                                <tr class="level1-row">
-                                    <td>
-                                        {% if level1.level2|length > 0 %}
-                                        <span class="toggle-icon" data-target="level1-{{ level1.level1.id }}" onclick="toggleRows(this, 'level1-{{ level1.level1.id }}')">▶</span>
-                                        {% endif %}
-                                        {{ level1.level1.Assemblies_Code_L1 }} 
-
-                                        {% if level1.level2|length > 0 %}
-                                        <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-secondary-rgb), var(--bs-bg-opacity, 1)) !important;"> &nbsp;({{ level1.level2|length }})&nbsp;</small>
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ level1.level1.Company_Details.Company_Legal_Name }}</td>
-                                    <td>
-                                        <!-- Add Level 2 -->
-                                        <button class="icon-btn" onclick="openModal('add', 'level2', {{ level1.level1.id }}, '{{ level1.level1.Assemblies_Code_L1 }}')">
-                                            <i class="fas fa-plus-circle"></i>
-                                        </button>
-                                        <!-- Delete Level 1 -->
-                                        <button class="icon-btn" onclick="openModal('delete', 'level1', {{ level1.level1.id }}, '{{ level1.level1.Assemblies_Code_L1 }}')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                    <td>{{ level1.level1.created_at }}</td>
-                                    <td>{{ level1.level1.updated_at }}</td>
-                                </tr>
-                                <!-- Level 2 Rows -->
-                                {% for level2 in level1.level2 %}
-                                <tr class="hidden level1-{{ level1.level1.id }} level2-row">
-                                    <td class="nested">
-                                        <span style="margin-left: 26px;">
-                                            {% if level2.level3|length > 0 %}
-                                            <span class="toggle-icon" data-target="level2-{{ level2.level2.id }}" onclick="toggleRows(this, 'level2-{{ level2.level2.id }}')">▶</span>
+                        <div class="table-responsive text-nowrap" style="width: 100%;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Assemblies Code/Assemblies Name</th>
+                                        <th>Company</th>
+                                        <th>Unit of Measure</th>
+                                        <th>Assembly Unit Cost</th>
+                                        <th>Actions</th>
+                                        <th>Created At</th>
+                                        <th>Updated At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for level1 in data %}
+                                    <!-- Level 1 Row -->
+                                    <tr class="level1-row">
+                                        <td>
+                                            {% if level1.level2|length > 0 %}
+                                            <span class="toggle-icon" data-target="level1-{{ level1.level1.id }}" onclick="toggleRows(this, 'level1-{{ level1.level1.id }}')">▶</span>
                                             {% endif %}
-                                            {{ level2.level2.Assemblies_Code_L2 }}
-
-                                            {% if level2.level3|length > 0 %}
-                                            <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important;"> &nbsp;({{ level2.level3|length }})&nbsp;</small>
+                                            {{ level1.level1.Assemblies_Code_L1 }}
+                                            {% if level1.level2|length > 0 %}
+                                            <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-secondary-rgb), var(--bs-bg-opacity, 1)) !important;"> &nbsp;({{ level1.level2|length }})&nbsp;</small>
                                             {% endif %}
-                                        </span>
-                                    </td>
-                                    <td>{{ level2.level2.Company_Details.Company_Legal_Name }}</td>
-                                    <td>
-                                        <!-- Add Level 3 -->
-                                        <button class="icon-btn" onclick="openModal('add', 'level3', {{ level2.level2.id }}, '{{ level2.level2.Assemblies_Code_L2 }}')">
-                                            <i class="fas fa-plus-circle"></i>
-                                        </button>
-                                        <!-- Delete Level 2 -->
-                                        <button class="icon-btn" onclick="openModal('delete', 'level2', {{ level2.level2.id }}, '{{ level2.level2.Assemblies_Code_L2 }}')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                    <td>{{ level2.level2.created_at }}</td>
-                                    <td>{{ level2.level2.updated_at }}</td>
-                                </tr>
-                                <!-- Level 3 Rows -->
-                                {% for level3 in level2.level3 %}
-                                <tr class="hidden level2-{{ level2.level2.id }} level3-row">
-                                    <td class="nested nested-2">
-                                        <span style="margin-left: 72px;">
-                                            {{ level3.Assemblies_Code_L3 }}
-                                        </span>
-                                    </td>
-                                    <td>{{ level3.Company_Details.Company_Legal_Name }}</td>
-                                    <td>
-                                        <!-- Delete Level 3 -->
-                                        <button class="icon-btn" onclick="openModal('delete', 'level3', {{ level3.id }}, '{{ level3.Assemblies_Code_L3 }}')">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                    <td>{{ level3.created_at }}</td>
-                                    <td>{{ level3.updated_at }}</td>
-                                </tr>
-                                {% endfor %}
-                                {% endfor %}
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                                        </td>
+                                        <td>{{ level1.level1.Company_Details.Company_Legal_Name }}</td>
+                                        <td> - </td>
+                                        <td> - </td>
+                                        <td>
+                                            <!-- Add Level 2 -->
+                                            <button class="icon-btn" onclick="openModal('add', 'level2', {{ level1.level1.id }}, '{{ level1.level1.Assemblies_Code_L1 }}')">
+                                                <i class="fas fa-plus-circle"></i>
+                                            </button>
+                                            <!-- Delete Level 1 -->
+                                            <button class="icon-btn" onclick="openModal('delete', 'level1', {{ level1.level1.id }}, '{{ level1.level1.Assemblies_Code_L1 }}')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                        <td>{{ level1.level1.created_at }}</td>
+                                        <td>{{ level1.level1.updated_at }}</td>
+                                    </tr>
+
+                                    <!-- Level 2 Rows -->
+                                    {% for level2 in level1.level2 %}
+                                    <tr class="hidden level1-{{ level1.level1.id }} level2-row">
+                                        <td class="nested">
+                                            <span style="margin-left: 26px;">
+                                                {% if level2.level3|length > 0 %}
+                                                <span class="toggle-icon" data-target="level2-{{ level2.level2.id }}" onclick="toggleRows(this, 'level2-{{ level2.level2.id }}')">▶</span>
+                                                {% endif %}
+                                                {{ level2.level2.Assemblies_Code_L2 }}
+                                                {% if level2.level3|length > 0 %}
+                                                <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important;"> &nbsp;({{ level2.level3|length }})&nbsp;</small>
+                                                {% endif %}
+                                            </span>
+                                        </td>
+                                        <td>{{ level2.level2.Company_Details.Company_Legal_Name }}</td>
+                                        <td> - </td>
+                                        <td> - </td>
+                                        <td>
+                                            <!-- Add Level 3 -->
+                                            <button class="icon-btn" onclick="openModal('add', 'level3', {{ level2.level2.id }}, '{{ level2.level2.Assemblies_Code_L2 }}')">
+                                                <i class="fas fa-plus-circle"></i>
+                                            </button>
+                                            <!-- Delete Level 2 -->
+                                            <button class="icon-btn" onclick="openModal('delete', 'level2', {{ level2.level2.id }}, '{{ level2.level2.Assemblies_Code_L2 }}')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                        <td>{{ level2.level2.created_at }}</td>
+                                        <td>{{ level2.level2.updated_at }}</td>
+                                    </tr>
+
+                                    <!-- Level 3 Rows -->
+                                    {% for level3 in level2.level3 %}
+                                    <tr class="hidden level2-{{ level2.level2.id }} level3-row">
+                                        <td class="nested nested-2">
+                                            <span style="margin-left: 52px;">
+                                                
+                                                <span class="toggle-icon" data-target="assemblies-{{ level3.assembly.id }}" onclick="toggleRows(this, 'assemblies-{{ level3.assembly.id }}')">▶</span>
+                                                
+                                                {{ level3.assembly.Assemblies_Code_L3 }}
+                                            </span>
+                                        </td>
+                                        <td>{{ level3.assembly.Company_Details.Company_Legal_Name }}</td>
+                                        <td> - </td>
+                                        <td> - </td>
+                                        <td>
+                                            <!-- Delete Level 3 -->
+                                            <button class="icon-btn" onclick="openModal('delete', 'level3', {{ level3.assembly.id }}, '{{ level3.assembly.Assemblies_Code_L3 }}')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                        <td>{{ level3.assembly.created_at }}</td>
+                                        <td>{{ level3.assembly.updated_at }}</td>
+                                    </tr>
+
+                                    <!-- Company Assemblies Rows -->
+                                    {% for assembly in level3.assemblies %}
+                                    <tr class="hidden assemblies-{{ level3.assembly.id }}" style="background: #873a95;
+    color: white;">
+                                        <td class="nested nested-3">
+                                            <span style="margin-left: 92px;">
+                                                {{ assembly.Assembly_Name }}
+                                            </span>
+                                        </td>
+                                        <td></td>
+                                        <td>{{ assembly.Unit_of_Measure }}</td>
+                                        <td>$ {{ assembly.Assembly_Unit_Cost }}</td>
+                                        <td> - </td>
+                                        <td>{{ assembly.created_at }}</td>
+                                        <td>{{ assembly.updated_at }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr class="hidden assemblies-{{ level3.assembly.id }}"  style="background: #873a95; color: white;">
+                                        <td colspan="7" class="text-muted"><span style="margin-left: 92px; font-style: italic;">No Assembly available</span></td>
+                                    </tr>
+                                    {% endfor %}
+
+                                    {% endfor %}
+                                    {% endfor %}
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="7" class="text-center text-muted"><i>No Assemblies</i></td>
+                                    </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -222,16 +263,32 @@
         rows.forEach(row => {
             row.classList.toggle('hidden', !isHidden);
             if (!isHidden) {
+                // Find all nested toggle icons within this row
                 const nestedIcons = row.querySelectorAll('.toggle-icon[data-target]');
                 nestedIcons.forEach(nestedIcon => {
                     const nestedClass = nestedIcon.dataset.target;
                     const nestedRows = document.querySelectorAll(`.${nestedClass}`);
                     nestedRows.forEach(nestedRow => nestedRow.classList.add('hidden'));
                     nestedIcon.textContent = '▶';
+                    // Recursively hide deeper nested rows and reset icons
+                    hideNestedRows(nestedClass);
                 });
             }
         });
         icon.textContent = isHidden ? '▼' : '▶';
+    }
+
+    function hideNestedRows(className) {
+        const nestedRows = document.querySelectorAll(`.${className}`);
+        nestedRows.forEach(row => {
+            row.classList.add('hidden');
+            const nestedIcons = row.querySelectorAll('.toggle-icon[data-target]');
+            nestedIcons.forEach(nestedIcon => {
+                const nestedClass = nestedIcon.dataset.target;
+                nestedIcon.textContent = '▶'; // Reset icon to collapsed state
+                hideNestedRows(nestedClass); // Recursively hide deeper nested rows
+            });
+        });
     }
 
     function openModal(action, level, parentId, parentName) {

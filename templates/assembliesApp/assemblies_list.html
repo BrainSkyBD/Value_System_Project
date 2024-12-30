@@ -11,7 +11,11 @@
   
     <!-- Responsive Table -->
     <div class="card">
-      <h5 class="card-header">Resource List</h5>
+      <div class="card-header d-flex align-items-center justify-content-between">
+        <h5 class="mb-0">Resource List</h5>
+        <small class="text-muted float-end"><a class="btn btn-warning" href="{% url 'estimate_assemblies' %}">Estimate Assemblies</a></small>
+      </div>
+      <h5 class="card-header"></h5>
       <div class="table-responsive text-nowrap">
         <table class="table table-bordered">
           <thead>
@@ -23,7 +27,7 @@
               <th>Assemblies Code L2</th>
               <th>Assemblies Code L3</th>
               <th>Assembly Unit Cost</th>
-              <th>Total Cost</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -36,7 +40,38 @@
               <td>{{ assemblies.Assemblies_Code_L2.Assemblies_Code_L2 }}</td>
               <td>{{ assemblies.Assemblies_Code_L3.Assemblies_Code_L3 }}</td>
               <td>${{ assemblies.Assembly_Unit_Cost }}</td>
-              <td>${{ assemblies.Total_Cost }}</td>
+              <td>
+                  <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalCenter{{assemblies.id}}" style="color:white;">Delete</a>
+                  
+          
+                  <!-- Modal -->
+                  <div class="modal fade" id="modalCenter{{assemblies.id}}" tabindex="-1" style="display: none;" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h5 class="modal-title" id="modalCenterTitle">Deletion</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                  <h1>Delete assemblies</h1>
+                                  <p>Are you sure you want to delete?<br>Assembly Name: {{ assemblies.Assembly_Name }}</p>
+                                  <div class="modal-footer">
+                                      <form method="post" action="/assemblies_Delete/{{assemblies.id}}/">
+                                          {% csrf_token %}
+                                          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                          Close
+                                          </button>
+                                          <button type="submit" class="btn btn-primary">Yes Confirm</button>
+                                      </form>
+                                      
+                                  </div>
+                                  
+                              </div>
+                              
+                          </div>
+                      </div>
+                  </div>
+              </td>
             </tr>
             {% empty %}
             <tr>

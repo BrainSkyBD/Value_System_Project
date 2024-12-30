@@ -21,12 +21,7 @@
             <form method="POST" action="" onsubmit="event.preventDefault(); calculateValues();">
                 {% csrf_token %}
                 <div class="row">
-                    <!-- Project Name -->
-                    <div class="mb-3 col-md-6">
-                        <label class=" col-form-label" for="Comb_Assem_Code">Comb-Assem-Code</label>
-                        <input type="text" class="form-control" id="Comb_Assem_Code" name="Comb_Assem_Code" placeholder="Comb-Assem-Code" required>
-                    </div>
-            
+                    
                     <div class="mb-3 col-md-6">
                         <label class="col-form-label" for="Resource_Name">Choose Assembly Name</label><br>
                         <div class="input-group mb-3">
@@ -38,6 +33,11 @@
                             </button>
                             <ul class="dropdown-menu w-100" id="dropdownMenu" style="margin-top: 42px;"></ul>
                         </div>
+                    </div>
+                    
+                    <div class="mb-3 col-md-6">
+                        <label class=" col-form-label" for="Comb_Assem_Code">Comb-Assem-Code</label>
+                        <input type="text" class="form-control" id="Comb_Assem_Code" name="Comb_Assem_Code" placeholder="Comb-Assem-Code" required readonly>
                     </div>
                     
                     <!-- Container to display resource totals for the selected assembly, hidden by default -->
@@ -121,7 +121,8 @@
                                 <th>Comb-Assem-Code</th>
                                 <th>Choose Assembly Name</th>
                                 <th>Unit</th>
-                                <th>Unit Cost</th>
+                                <th>Unit Costs</th>
+                                <th>Contract Quantity</th>
                                 <th>Budget Quantity</th>
                                 <th>Budget Costs</th>
                                 <th>Markup</th>
@@ -190,11 +191,12 @@
                     dropdownMenu.innerHTML = ''; // Clear existing items
             
                     items.forEach(item => {
+                        console.log(item);
                         const li = document.createElement('li');
                         const aTag = document.createElement('a');
                         aTag.classList.add('dropdown-item');
                         aTag.href = "#";
-                        aTag.innerHTML = `${item.assembly_name} (${item.unit_of_measure})`;
+                        aTag.innerHTML = `${item.Assemblies_Code_L3} (${item.unit_of_measure})`;
                         
                         aTag.addEventListener('click', (e) => {
                             e.preventDefault();
@@ -202,6 +204,7 @@
                             // Set input field to selected assembly name
                             numberInput.value = item.assembly_name;
                             numberInput_id.value = item.id;
+                            document.getElementById('Comb_Assem_Code').value=`${item.Assemblies_Code_L1}-${item.Assemblies_Code_L2}-${item.Assemblies_Code_L3}`;
                             
                             // Display resource code totals for the selected assembly
                             displayResourceCodeTotals(item.id);
@@ -269,7 +272,9 @@
                 // Function to perform the calculations and update the table
                 function calculateValues() {
                     const selectedAssemblyName = numberInput.value;
+                    console.log(selectedAssemblyName)
                     const assembly = assembliesData.find(a => a.assembly_name === selectedAssemblyName);
+                    console.log(assembly)
             
                     if (!assembly) {
                         alert('Please select a valid assembly name.');
@@ -345,7 +350,7 @@
                     numberInputCell.textContent = numberInputValue; // Add the value to the cell
                     newRow.insertBefore(numberInputCell, combAssemCodeCell.nextSibling); // Insert after the Comb_Assem_Code column
 
-                    newRow.removeChild(newRow.children[2]);
+                    // newRow.removeChild(newRow.children[2]);
 
                     // Create new <td> elements
                     // const newTdAt3rd = document.createElement('td');
@@ -374,6 +379,18 @@
             
                     actionCell.appendChild(removeButton);
                     newRow.appendChild(actionCell);
+
+                    // Add the new column at the end
+                    const newColumnCell = document.createElement('td');
+                    newColumnCell.textContent = document.getElementById('Item_Description').value;
+                    newColumnCell.style.display = 'none'; 
+                    newRow.appendChild(newColumnCell);
+
+                    // Add the new column at the end
+                    const assemblies_id_const = document.createElement('td');
+                    assemblies_id_const.textContent = document.getElementById('numberInput_id').value;
+                    assemblies_id_const.style.display = 'none'; 
+                    newRow.appendChild(assemblies_id_const);
                     
                     contractTableBody.appendChild(newRow);
                     updateTotals();
@@ -392,10 +409,10 @@
                         console.log(cells)
                         console.log(cells.length)
                         if (cells.length >= 9) {
-                            totalBudgetCosts += parseFloat(cells[5].textContent.replace('$', '')) || 0;
-                            totalMarkupAmount += parseFloat(cells[7].textContent.replace('$', '')) || 0;
-                            totalTotalPrice += parseFloat(cells[9].textContent.replace('$', '')) || 0;
-                            totalTargetProfit += parseFloat(cells[10].textContent.replace('$', '')) || 0;
+                            totalBudgetCosts += parseFloat(cells[6].textContent.replace('$', '')) || 0;
+                            totalMarkupAmount += parseFloat(cells[8].textContent.replace('$', '')) || 0;
+                            totalTotalPrice += parseFloat(cells[10].textContent.replace('$', '')) || 0;
+                            totalTargetProfit += parseFloat(cells[11].textContent.replace('$', '')) || 0;
                         }
                     });
             
@@ -566,6 +583,8 @@
                     const rows = Array.from(contractTableBody.querySelectorAll('tr')).map(row => {
                         return Array.from(row.querySelectorAll('td')).map(cell => cell.textContent.trim()).join(',');
                     });
+                    console.log('rows')
+                    console.log(rows)
 
                     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
                     const data = new FormData();

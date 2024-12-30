@@ -113,7 +113,7 @@ def company_assembly_record(request):
                 Resource_Budget_Unit_Cost=resource_record_row.Budget_Unit_Cost,
                 Quantity=resource_id[1],
                 Unit_of_Measure=resource_id[2],
-                Unit_Cost=resource_record_row.Budget_Unit_Cost,
+                Unit_Cost=float(resource_record_row.Budget_Unit_Cost)*float(resource_id[1]),
             ).save()
         messages.success(request, "Assembly saved successfully!")
         return redirect('estimate_assemblies')
@@ -125,6 +125,19 @@ def assemblies_list(request):
     filter_Estimation_Assemblies = Estimation_Assemblies_Table.objects.filter(Company_Details=company_details_record)
     context = {'filter_Estimation_Assemblies':filter_Estimation_Assemblies}
     return render(request, "assembliesApp/assemblies_list.html", context)
+
+
+
+
+def assemblies_Delete(request, pk):
+    try:
+        get_assembly = Estimation_Assemblies_Table.objects.get(id=pk).delete()
+        messages.success(request, "Assembly Deleted Successfully!")
+        return redirect('assemblies_list')
+    except Exception as exc:
+        messages.success(request, f"{exc}")
+        return redirect('assemblies_list')
+
 
 
 @login_required
@@ -260,19 +273,26 @@ def Assemblies_Management(request):
 
         return redirect('Assemblies_Management')
 
-    level1_assemblies = Assemblies_Code_L1_Table.objects.all()
+    level1_assemblies = Assemblies_Code_L1_Table.objects.filter(Company_Details=company_details_record)
     data = []
     for level1 in level1_assemblies:
-        level2_assemblies = Assemblies_Code_L2_Table.objects.filter(Assemblies_Code_L1=level1)
+        level2_assemblies = Assemblies_Code_L2_Table.objects.filter(Company_Details=company_details_record, Assemblies_Code_L1=level1)
         level1_data = {
             'level1': level1,
             'level2': []
         }
         for level2 in level2_assemblies:
-            level3_assemblies = Assemblies_Code_L3_Table.objects.filter(Assemblies_Code_L2=level2)
+            level3_assemblies = Assemblies_Code_L3_Table.objects.filter(Company_Details=company_details_record, Assemblies_Code_L2=level2)
             level1_data['level2'].append({
                 'level2': level2,
-                'level3': level3_assemblies
+                # 'level3': level3_assemblies
+                'level3': [
+                    {
+                        'assembly': level3,
+                        'assemblies': Estimation_Assemblies_Table.objects.filter(Company_Details=company_details_record, Assemblies_Code_L3=level3)
+                    }
+                    for level3 in level3_assemblies
+                ]
             })
         data.append(level1_data)
 

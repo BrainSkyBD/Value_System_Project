@@ -3,7 +3,7 @@ from authenticationApp.models import User
 import uuid
 from ckeditor.fields import RichTextField
 # Create your models here.
-
+from django.db.models import Sum, F, Q 
 
     
 class CompanyDetailsTable(models.Model):
@@ -66,6 +66,76 @@ class Resource_Code_L1_Table(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
+    def total_expense_quantity_calculation(self):
+        from expenseApp.models import ExpenseTable
+        filter_expenses = ExpenseTable.objects.filter(
+            Company_Details=self.Company_Details,
+            resource_value__Resource_Code_L1=self
+        )
+        quantity = filter_expenses.aggregate(Sum('quantity'))['quantity__sum'] or 0
+        return round(quantity, 2)
+
+    def total_expense_quantity_calculation_price(self):
+        from expenseApp.models import ExpenseTable
+        filter_expenses = ExpenseTable.objects.filter(
+            Company_Details=self.Company_Details,
+            resource_value__Resource_Code_L1=self
+        )
+        total_cost = filter_expenses.aggregate(Sum('total_cost'))['total_cost__sum'] or 0
+        return round(total_cost, 2)
+
+
+    def total_stock_in_calculation(self):
+        print('level3')
+        from storeApp.models import StoreTable
+        stock_entries = StoreTable.objects.filter(
+            Company_Details=self.Company_Details,
+            stock_trasaction_status='Stock-In',
+            resource_value__Resource_Code_L1=self
+        )
+        quantity = stock_entries.aggregate(Sum('quantity'))['quantity__sum'] or 0
+        return round(quantity, 2)
+
+    def total_stock_out_calculation(self):
+        from storeApp.models import StoreTable
+        stock_entries = StoreTable.objects.filter(
+            Company_Details=self.Company_Details,
+            stock_trasaction_status='Stock-Out',
+            resource_value__Resource_Code_L1=self
+        )
+        quantity = stock_entries.aggregate(Sum('quantity'))['quantity__sum'] or 0
+        return round(quantity, 2)
+
+    def calculate_stock_availablity(self):
+        total_stock_in = self.total_stock_in_calculation()
+        total_stock_out = self.total_stock_out_calculation()
+        return total_stock_in - total_stock_out
+
+    def total_stock_in_calculation_price(self):
+        from storeApp.models import StoreTable
+        stock_entries = StoreTable.objects.filter(
+            Company_Details=self.Company_Details,
+            stock_trasaction_status='Stock-In',
+            resource_value__Resource_Code_L1=self
+        )
+        total_cost = stock_entries.aggregate(Sum('total_cost'))['total_cost__sum'] or 0
+        return round(total_cost, 2)
+
+    def total_stock_out_calculation_price(self):
+        from storeApp.models import StoreTable
+        stock_entries = StoreTable.objects.filter(
+            Company_Details=self.Company_Details,
+            stock_trasaction_status='Stock-Out',
+            resource_value__Resource_Code_L1=self
+        )
+        total_cost = stock_entries.aggregate(Sum('total_cost'))['total_cost__sum'] or 0
+        return round(total_cost, 2)
+
+    def filter_resource_level_2_list(self):
+        filter_resource_level_2 = Resource_Code_L2_Table.objects.filter(Resource_Code_L1=self)
+        return filter_resource_level_2
+
+
 class Resource_Code_L2_Table(models.Model):
     class Meta:
         verbose_name = "Resource Code Level 2"
@@ -75,6 +145,78 @@ class Resource_Code_L2_Table(models.Model):
     Resource_Code_L2 = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def total_expense_quantity_calculation(self):
+        from expenseApp.models import ExpenseTable
+        filter_expenses = ExpenseTable.objects.filter(
+            Company_Details=self.Company_Details,
+            resource_value__Resource_Code_L2=self
+        )
+        quantity = filter_expenses.aggregate(Sum('quantity'))['quantity__sum'] or 0
+        return round(quantity, 2)
+
+    def total_expense_quantity_calculation_price(self):
+        from expenseApp.models import ExpenseTable
+        filter_expenses = ExpenseTable.objects.filter(
+            Company_Details=self.Company_Details,
+            resource_value__Resource_Code_L2=self
+        )
+        print('expense level2')
+        print(filter_expenses)
+        total_cost = filter_expenses.aggregate(Sum('total_cost'))['total_cost__sum'] or 0
+        return round(total_cost, 2)
+
+
+
+    def total_stock_in_calculation(self):
+        print('level3')
+        from storeApp.models import StoreTable
+        stock_entries = StoreTable.objects.filter(
+            Company_Details=self.Company_Details,
+            stock_trasaction_status='Stock-In',
+            resource_value__Resource_Code_L2=self
+        )
+        quantity = stock_entries.aggregate(Sum('quantity'))['quantity__sum'] or 0
+        return round(quantity, 2)
+
+    def total_stock_out_calculation(self):
+        from storeApp.models import StoreTable
+        stock_entries = StoreTable.objects.filter(
+            Company_Details=self.Company_Details,
+            stock_trasaction_status='Stock-Out',
+            resource_value__Resource_Code_L2=self
+        )
+        quantity = stock_entries.aggregate(Sum('quantity'))['quantity__sum'] or 0
+        return round(quantity, 2)
+
+    def calculate_stock_availablity(self):
+        total_stock_in = self.total_stock_in_calculation()
+        total_stock_out = self.total_stock_out_calculation()
+        return total_stock_in - total_stock_out
+
+    def total_stock_in_calculation_price(self):
+        from storeApp.models import StoreTable
+        stock_entries = StoreTable.objects.filter(
+            Company_Details=self.Company_Details,
+            stock_trasaction_status='Stock-In',
+            resource_value__Resource_Code_L2=self
+        )
+        total_cost = stock_entries.aggregate(Sum('total_cost'))['total_cost__sum'] or 0
+        return round(total_cost, 2)
+
+    def total_stock_out_calculation_price(self):
+        from storeApp.models import StoreTable
+        stock_entries = StoreTable.objects.filter(
+            Company_Details=self.Company_Details,
+            stock_trasaction_status='Stock-Out',
+            resource_value__Resource_Code_L2=self
+        )
+        total_cost = stock_entries.aggregate(Sum('total_cost'))['total_cost__sum'] or 0
+        return round(total_cost, 2)
+    
+    def filter_resource_level_3_list(self):
+        filter_resource_level_3 = Resource_Code_L3_Table.objects.filter(Resource_Code_L2=self)
+        return filter_resource_level_3
 
 
 class Resource_Code_L3_Table(models.Model):
@@ -87,6 +229,71 @@ class Resource_Code_L3_Table(models.Model):
     Resource_Code_L3 = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+    def total_expense_quantity_calculation(self):
+        from expenseApp.models import ExpenseTable
+        filter_expenses = ExpenseTable.objects.filter(
+            Company_Details=self.Company_Details,
+            resource_value__Resource_Code_L3=self
+        )
+        quantity = filter_expenses.aggregate(Sum('quantity'))['quantity__sum'] or 0
+        return round(quantity, 2)
+
+    def total_expense_quantity_calculation_price(self):
+        from expenseApp.models import ExpenseTable
+        filter_expenses = ExpenseTable.objects.filter(
+            Company_Details=self.Company_Details,
+            resource_value__Resource_Code_L3=self
+        )
+        total_cost = filter_expenses.aggregate(Sum('total_cost'))['total_cost__sum'] or 0
+        return round(total_cost, 2)
+
+    def total_stock_in_calculation(self):
+        print('level3')
+        from storeApp.models import StoreTable
+        stock_entries = StoreTable.objects.filter(
+            Company_Details=self.Company_Details,
+            stock_trasaction_status='Stock-In',
+            resource_value__Resource_Code_L3=self
+        )
+        quantity = stock_entries.aggregate(Sum('quantity'))['quantity__sum'] or 0
+        return round(quantity, 2)
+
+    def total_stock_out_calculation(self):
+        from storeApp.models import StoreTable
+        stock_entries = StoreTable.objects.filter(
+            Company_Details=self.Company_Details,
+            stock_trasaction_status='Stock-Out',
+            resource_value__Resource_Code_L3=self
+        )
+        quantity = stock_entries.aggregate(Sum('quantity'))['quantity__sum'] or 0
+        return round(quantity, 2)
+
+    def calculate_stock_availablity(self):
+        total_stock_in = self.total_stock_in_calculation()
+        total_stock_out = self.total_stock_out_calculation()
+        return total_stock_in - total_stock_out
+
+    def total_stock_in_calculation_price(self):
+        from storeApp.models import StoreTable
+        stock_entries = StoreTable.objects.filter(
+            Company_Details=self.Company_Details,
+            stock_trasaction_status='Stock-In',
+            resource_value__Resource_Code_L3=self
+        )
+        total_cost = stock_entries.aggregate(Sum('total_cost'))['total_cost__sum'] or 0
+        return round(total_cost, 2)
+
+    def total_stock_out_calculation_price(self):
+        from storeApp.models import StoreTable
+        stock_entries = StoreTable.objects.filter(
+            Company_Details=self.Company_Details,
+            stock_trasaction_status='Stock-Out',
+            resource_value__Resource_Code_L3=self
+        )
+        total_cost = stock_entries.aggregate(Sum('total_cost'))['total_cost__sum'] or 0
+        return round(total_cost, 2)
 
 
 class CompanyResourcesTable(models.Model):
@@ -102,3 +309,59 @@ class CompanyResourcesTable(models.Model):
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+    
+    def total_expense_quantity_calculation(self):
+        from expenseApp.models import ExpenseTable
+        filter_expenses = ExpenseTable.objects.filter(resource_value=self, Company_Details=self.Company_Details)
+        quantity = filter_expenses.aggregate(Sum('quantity'))['quantity__sum'] or 0
+        return round(quantity, 2)
+
+    def total_expense_quantity_calculation_price(self):
+        from expenseApp.models import ExpenseTable
+        filter_expenses = ExpenseTable.objects.filter(resource_value=self, Company_Details=self.Company_Details)
+        total_cost = filter_expenses.aggregate(Sum('total_cost'))['total_cost__sum'] or 0
+        return round(total_cost, 2)
+
+
+    def total_stock_in_calculation(self):
+        from storeApp.models import StoreTable
+        company = self.Company_Details
+        store_entries = StoreTable.objects.filter(resource_value=self, Company_Details=company, stock_trasaction_status='Stock-In')
+        quantity = store_entries.aggregate(Sum('quantity'))['quantity__sum'] or 0
+        return round(quantity, 2)
+
+    
+    def total_stock_out_calculation(self):
+        from storeApp.models import StoreTable
+        company = self.Company_Details
+        store_entries = StoreTable.objects.filter(resource_value=self, Company_Details=company, stock_trasaction_status='Stock-Out')
+        quantity = store_entries.aggregate(Sum('quantity'))['quantity__sum'] or 0
+        return round(quantity, 2)
+
+    
+    def calculate_stock_availablity(self):
+        total_stock_in_calculation = self.total_stock_in_calculation()
+        total_stock_out_calculation = self.total_stock_out_calculation()
+        stock_availability = total_stock_in_calculation - total_stock_out_calculation
+        return stock_availability
+
+
+    def total_stock_in_calculation_price(self):
+        from storeApp.models import StoreTable
+        company = self.Company_Details
+        store_entries = StoreTable.objects.filter(resource_value=self, Company_Details=company, stock_trasaction_status='Stock-In')
+        total_cost = store_entries.aggregate(Sum('total_cost'))['total_cost__sum'] or 0
+        return round(total_cost, 2)
+
+    
+    def total_stock_out_calculation_price(self):
+        from storeApp.models import StoreTable
+        company = self.Company_Details
+        store_entries = StoreTable.objects.filter(resource_value=self, Company_Details=company, stock_trasaction_status='Stock-Out')
+        total_cost = store_entries.aggregate(Sum('total_cost'))['total_cost__sum'] or 0
+        return round(total_cost, 2)
+
+
+    

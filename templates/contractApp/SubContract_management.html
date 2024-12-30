@@ -69,7 +69,7 @@
 </style>
 
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Assemblies/</span> Create Assemblies</h4>
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Sub-Contracts/</span> Create Sub-Contract</h4>
 
     <!-- Basic Layout & Basic with Icons -->
     <div class="row">
@@ -77,8 +77,8 @@
         <div class="col-xxl">
             <div class="card mb-4">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="mb-0">Assemblies Form</h5>
-                    <small class="text-muted float-end">New Assemblies</small>
+                    <h5 class="mb-0">Sub-Contract Table</h5>
+                    <small class="text-muted float-end">New Sub-Contracts</small>
                 </div>
                 <div class="card-body">
                     <div class="container mt-4">
@@ -156,18 +156,44 @@
                                 <tr class="hidden level2-{{ level2.level2.id }} level3-row">
                                     <td class="nested nested-2">
                                         <span style="margin-left: 72px;">
-                                            {{ level3.Assemblies_Code_L3 }}
+                                            <span class="toggle-icon" data-target="assemblies-{{ level3.assembly.id }}" onclick="toggleRows(this, 'assemblies-{{ level3.assembly.id }}')">▶</span>
+                                            {{ level3.assembly.Assemblies_Code_L3 }}
                                         </span>
                                     </td>
-                                    <td>{{ level3.Company_Details.Company_Legal_Name }}</td>
+                                    <td>{{ level3.assembly.Company_Details.Company_Legal_Name }}</td>
                                     <td>
                                         <!-- Delete Level 3 -->
-                                        <button class="icon-btn" onclick="openModal('delete', 'level3', {{ level3.id }}, '{{ level3.Assemblies_Code_L3 }}')">
+                                        <button class="icon-btn" onclick="openModal('delete', 'level3', {{ level3.assembly.id }}, '{{ level3.assembly.Assemblies_Code_L3 }}')">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </td>
-                                    <td>{{ level3.created_at }}</td>
-                                    <td>{{ level3.updated_at }}</td>
+                                    <td>{{ level3.assembly.created_at }}</td>
+                                    <td>{{ level3.assembly.updated_at }}</td>
+                                </tr>
+                                <!-- CompanyAssembliesTable Rows -->
+                                <tr class="hidden assemblies-{{ level3.assembly.id }}">
+                                    <td colspan="5">
+                                        <table class="table table-bordered table-sm" style="margin-left: 10%; width: 90%; margin-top: 0px;">
+                                            <thead>
+                                                <tr>
+                                                    <th>Sub-Contract Name</th>
+                                                    <th>Contract Total Price</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for subcontract in level3.sub_contracts %}
+                                                <tr>
+                                                    <td>{{ subcontract.subcontract_name }}</td>
+                                                    <td>{{ subcontract.contract_total_price }}</td>
+                                                </tr>
+                                                {% empty %}
+                                                <tr>
+                                                    <td colspan="5" class="text-center text-muted">No Contract available</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                                 {% endfor %}
@@ -222,16 +248,32 @@
         rows.forEach(row => {
             row.classList.toggle('hidden', !isHidden);
             if (!isHidden) {
+                // Find all nested toggle icons within this row
                 const nestedIcons = row.querySelectorAll('.toggle-icon[data-target]');
                 nestedIcons.forEach(nestedIcon => {
                     const nestedClass = nestedIcon.dataset.target;
                     const nestedRows = document.querySelectorAll(`.${nestedClass}`);
                     nestedRows.forEach(nestedRow => nestedRow.classList.add('hidden'));
                     nestedIcon.textContent = '▶';
+                    // Recursively hide deeper nested rows and reset icons
+                    hideNestedRows(nestedClass);
                 });
             }
         });
         icon.textContent = isHidden ? '▼' : '▶';
+    }
+
+    function hideNestedRows(className) {
+        const nestedRows = document.querySelectorAll(`.${className}`);
+        nestedRows.forEach(row => {
+            row.classList.add('hidden');
+            const nestedIcons = row.querySelectorAll('.toggle-icon[data-target]');
+            nestedIcons.forEach(nestedIcon => {
+                const nestedClass = nestedIcon.dataset.target;
+                nestedIcon.textContent = '▶'; // Reset icon to collapsed state
+                hideNestedRows(nestedClass); // Recursively hide deeper nested rows
+            });
+        });
     }
 
     function openModal(action, level, parentId, parentName) {

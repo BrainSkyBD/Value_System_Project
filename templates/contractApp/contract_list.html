@@ -21,7 +21,7 @@
             {% for contract in contracts %}
             <tr>
                 <td>{{ contract.contract_name }}</td>
-                <td>{{ contract.company_details }}</td>
+                <td>{{ contract.company_details.Company_Legal_Name }}</td>
                 <td>
                     <!-- Add any actions you want, such as viewing details or editing -->
                     <a href="{% url 'view_contract' contract.id %}" class="btn btn-info">View</a>

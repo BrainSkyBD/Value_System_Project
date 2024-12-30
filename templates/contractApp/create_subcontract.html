@@ -18,15 +18,10 @@
             <small class="text-muted float-end">New Resource</small>
           </div>
           <div class="card-body">
-            <form method="POST" action="" onsubmit="event.preventDefault(); calculateValues();">
+            <form method="POST" action="{% url 'save_subcontract' %}" onsubmit="event.preventDefault(); calculateValues();">
                 {% csrf_token %}
                 <div class="row">
-                    <!-- Project Name -->
-                    <div class="mb-3 col-md-12">
-                        <label class=" col-form-label" for="Comb_Assem_Code">Comb-Assem-Code</label>
-                        <input type="text" class="form-control" id="Comb_Assem_Code" name="Comb_Assem_Code" placeholder="Comb-Assem-Code" required>
-                    </div>
-            
+                    
                     <!-- <div class="mb-3 col-md-6">
                         <label class="col-form-label" for="Resource_Name">Choose Assembly Name</label><br>
                         <div class="input-group mb-3">
@@ -67,7 +62,11 @@
                             <ul class="dropdown-menu w-100" style="margin-top: 40px; max-height: 200px; overflow-y: auto;" id="assemblyDropdown"></ul>
                         </div>
                     </div>
-                    
+                    <div class="mb-3 col-md-12">
+                        <label class=" col-form-label" for="Comb_Assem_Code">Comb-Assem-Code</label>
+                        <input type="text" class="form-control" id="Comb_Assem_Code" name="Comb_Assem_Code" placeholder="Comb-Assem-Code" required readonly>
+                    </div>
+            
                     <!-- Container to display resource totals for the selected assembly, hidden by default -->
                     <div id="resourceTotalsContainer" class="mb-3 col-md-12" style="display: none;">
                         <label class="col-form-label" for="Resource_Totals">Resource Code Totals</label>
@@ -293,11 +292,13 @@
             
                 // Assembly selection
                 function selectAssembly(assembly) {
+                    console.log(assembly)
                     assemblyInput.value = assembly.assembly_name;
                     assemblyDropdown.classList.remove('show');
 
                     document.getElementById('hiddenassemblyInputValue').value=assembly.assembly_name;
                     document.getElementById('hiddenassemblyInputId').value=assembly.id;
+                    document.getElementById('Comb_Assem_Code').value=`${assembly.assembly_name}`;
                 }
                 
             
@@ -531,6 +532,18 @@
             
                     actionCell.appendChild(removeButton);
                     newRow.appendChild(actionCell);
+
+                    // Add the new column at the end
+                    const newColumnCell = document.createElement('td');
+                    newColumnCell.textContent = document.getElementById('Item_Description').value;
+                    newColumnCell.style.display = 'none'; 
+                    newRow.appendChild(newColumnCell);
+
+                    // Add the new column at the end
+                    const assemblies_id_const = document.createElement('td');
+                    assemblies_id_const.textContent = document.getElementById('hiddenassemblyInputId').value;
+                    assemblies_id_const.style.display = 'none'; 
+                    newRow.appendChild(assemblies_id_const);
                     
                     contractTableBody.appendChild(newRow);
                     updateTotals();
@@ -546,7 +559,7 @@
                         console.log(cells)
                         console.log(cells.length)
                         if (cells.length >= 4) {
-                            totalTotalPrice += parseFloat(cells[2].textContent.replace('$', '')) || 0;
+                            totalTotalPrice += parseFloat(cells[3].textContent.replace('$', '')) || 0;
                         }
                     });
             
@@ -600,7 +613,7 @@
                         body: data,
                     }).then(response => {
                         if (response.ok) {
-                            window.location.href = '{% url "contract_list" %}';
+                            window.location.href = '{% url "subcontract_list" %}';
                         } else {
                             alert('An error occurred while saving the contract.');
                             saveButton.textContent = 'Save Contract';

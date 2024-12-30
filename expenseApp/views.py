@@ -30,7 +30,7 @@ from .models import ExpenseTable
 import json
 
 from django.shortcuts import render, get_object_or_404, redirect
-
+from companyApp.models import Resource_Code_L3_Table, CompanyDetailsTable, CompanyResourcesTable, Resource_Code_L2_Table, Resource_Code_L1_Table
 
 
 # Custom JSON encoder to handle datetime objects
@@ -181,6 +181,7 @@ def fetch_resorce_by_assemblies(request, assembly_id):
 @csrf_exempt
 def save_expense(request):
     print("saving expense ...")
+    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
     if request.method == 'POST':
         try:
             # print(request.body)
@@ -210,6 +211,7 @@ def save_expense(request):
             # print(total_cost)
 
             expense = ExpenseTable.objects.create(
+                Company_Details=company_details_record,
                 comb_assem_code=comb_assem_code,
                 contract_value=MainContract.objects.get(id=contract_value),
                 assembly_value=Estimation_Assemblies_Table.objects.get(id=assembly_value),
@@ -225,16 +227,54 @@ def save_expense(request):
 
 
 
-
+@login_required
 # Read/ List Expenses
 def expense_list(request):
-    expenses = ExpenseTable.objects.all().order_by('-id')
+    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    expenses = ExpenseTable.objects.filter(Company_Details=company_details_record).order_by('-id')
     return render(request, "expenseApp/expense_list.html", {"expenses": expenses})
 
+
+
 # Delete an Expense
+@login_required
 def delete_expense(request, pk):
     expense = get_object_or_404(ExpenseTable, pk=pk)
     if request.method == "POST":
         expense.delete()
         return redirect("expense_list")
     return render(request, "expenseApp/delete_expense.html", {"expense": expense})
+
+
+
+
+@login_required
+def expenses_management(request):
+    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+
+    level1_resources = Resource_Code_L1_Table.objects.all()
+    data = []
+    for level1 in level1_resources:
+        level2_resources = Resource_Code_L2_Table.objects.filter(Resource_Code_L1=level1)
+        level1_data = {
+            'level1': level1,
+            'level2': []
+        }
+        for level2 in level2_resources:
+            level3_resources = Resource_Code_L3_Table.objects.filter(Resource_Code_L2=level2)
+            level1_data['level2'].append({
+                'level2': level2,
+                'level3': [
+                    {
+                        'resource': level3,
+                        'resources': CompanyResourcesTable.objects.filter(Resource_Code_L3=level3)
+                    }
+                    for level3 in level3_resources
+                ]
+            })
+        data.append(level1_data)
+
+    context = {
+        'data': data
+    }
+    return render(request, 'expenseApp/expenses_management.html', context)

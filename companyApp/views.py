@@ -166,7 +166,7 @@ def create_user(request):
         if password != confirm_password:
             messages.error(request, "Passwords do not match!")
             return redirect('create_user')  # Redirect back to the form
-
+        company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
         # Create a new User instance
         user = User(
             username=email,
@@ -178,6 +178,7 @@ def create_user(request):
             created_by = request.user
         )
         user.password = make_password(password)  # Hash the password before saving
+        user.company_details = company_details_record
         user.save()
 
         messages.success(request, "User successfully registered!")
@@ -187,7 +188,8 @@ def create_user(request):
 
 @login_required
 def user_list(request):
-    filter_users = User.objects.filter(created_by = request.user)
+    company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
+    filter_users = User.objects.filter(company_details = company_details_record)
     context = {'filter_users':filter_users}
     return render(request, "companyApp/user_list.html", context)
 
@@ -252,6 +254,7 @@ def Resource_Code_L3_module(request):
 
 def get_resource_code_l2(request):
     resource_code_l1_id = request.GET.get("resource_code_l1_id")
+    print(resource_code_l1_id)
     resource_code_l2_options = Resource_Code_L2_Table.objects.filter(
         Resource_Code_L1_id=resource_code_l1_id
     ).values("id", "Resource_Code_L2")
@@ -327,6 +330,17 @@ def Resource_Desplay(request):
 
 
 
+def Resource_Delete(request, pk):
+    try:
+        get_resource = CompanyResourcesTable.objects.get(id=pk).delete()
+        messages.success(request, "Resource Deleted Successfully!")
+        return redirect('List_Resource_Dictionary')
+    except Exception as exc:
+        messages.success(request, f"{exc}")
+        return redirect('List_Resource_Dictionary')
+
+
+
 
 def Resource_Management(request):
     company_details_record = CompanyDetailsTable.objects.filter(User=request.user).last()
@@ -365,19 +379,25 @@ def Resource_Management(request):
 
         return redirect('Resource_Management')
 
-    level1_resources = Resource_Code_L1_Table.objects.all()
+    level1_resources = Resource_Code_L1_Table.objects.filter(Company_Details=company_details_record)
     data = []
     for level1 in level1_resources:
-        level2_resources = Resource_Code_L2_Table.objects.filter(Resource_Code_L1=level1)
+        level2_resources = Resource_Code_L2_Table.objects.filter(Company_Details=company_details_record, Resource_Code_L1=level1)
         level1_data = {
             'level1': level1,
             'level2': []
         }
         for level2 in level2_resources:
-            level3_resources = Resource_Code_L3_Table.objects.filter(Resource_Code_L2=level2)
+            level3_resources = Resource_Code_L3_Table.objects.filter(Company_Details=company_details_record, Resource_Code_L2=level2)
             level1_data['level2'].append({
                 'level2': level2,
-                'level3': level3_resources
+                'level3': [
+                    {
+                        'resource': level3,
+                        'resources': CompanyResourcesTable.objects.filter(Company_Details=company_details_record, Resource_Code_L3=level3)
+                    }
+                    for level3 in level3_resources
+                ]
             })
         data.append(level1_data)
 

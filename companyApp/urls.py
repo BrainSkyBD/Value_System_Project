@@ -24,6 +24,7 @@ urlpatterns = [
     # resource dictionary
     path('Create-Resource-Dictionary/', views.Create_Resource_Dictionary, name="Create_Resource_Dictionary"),
     path('List-Resource-Dictionary/', views.List_Resource_Dictionary, name="List_Resource_Dictionary"),
+    path('Resource_Delete/<int:pk>/', views.Resource_Delete, name="Resource_Delete"),
     path('Resource_Desplay/', views.Resource_Desplay, name="Resource_Desplay"),
     path('Resource_Management/', views.Resource_Management, name="Resource_Management"),
 ]
