@@ -129,9 +129,14 @@ USE_TZ = True
 
 # srtatic settings
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Define the directory where static files will be collected
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+
+
+
 
 # for image upload
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
