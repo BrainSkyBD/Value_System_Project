@@ -398,6 +398,47 @@ def List_Resource_Dictionary(request):
     return render(request, "companyApp/List_Resource_Dictionary.html", context)
 
 
+
+@login_required
+def edit_resource(request, pk):
+    company_details_record = request.user.company_details
+    if request.method == 'POST':
+        get_resource_record_id = request.POST.get('get_resource_record_id')
+        get_resource_record = CompanyResourcesTable.objects.filter(id=get_resource_record_id).last()
+
+        Resource_Name = request.POST.get('Resource_Name')
+        Resources_Category = request.POST.get('Resources_Category')
+        Resource_Code_L1_id = request.POST.get('Resource_Code_L1')
+        Resource_Code_L2_id = request.POST.get('Resource_Code_L2')
+        Resource_Code_L3_id = request.POST.get('Resource_Code_L3')
+        Unit_of_Measure = request.POST.get('Unit_of_Measure')
+        Budget_Unit_Cost = request.POST.get('Budget_Unit_Cost')
+
+        # Retrieve related records
+        get_Resource_Code_L1_record = Resource_Code_L1_Table.objects.filter(id=Resource_Code_L1_id).last()
+        get_Resource_Code_L2_record = Resource_Code_L2_Table.objects.filter(id=Resource_Code_L2_id).last()
+        get_Resource_Code_L3_record = Resource_Code_L3_Table.objects.filter(id=Resource_Code_L3_id).last()
+
+        # Update the resource record
+        get_resource_record.Resource_Name = Resource_Name
+        get_resource_record.Resource_Code_L1 = get_Resource_Code_L1_record
+        get_resource_record.Resource_Code_L2 = get_Resource_Code_L2_record
+        get_resource_record.Resource_Code_L3 = get_Resource_Code_L3_record
+        get_resource_record.Unit_of_Measure = Unit_of_Measure
+        get_resource_record.Budget_Unit_Cost = Budget_Unit_Cost
+
+        # Save the updated record
+        get_resource_record.save()
+
+        messages.success(request, "Resources successfully Updated!")
+        return redirect('List_Resource_Dictionary')
+
+    get_resource_record = CompanyResourcesTable.objects.filter(id=pk).last()
+    filter_company_Resource_Code_L1_query = Resource_Code_L1_Table.objects.filter(Company_Details = company_details_record)
+    context = {'filter_company_Resource_Code_L1_query':filter_company_Resource_Code_L1_query, 'get_resource_record':get_resource_record}
+    return render(request, "companyApp/Edit_Resource_Dictionary.html", context)
+
+
 def Resource_Desplay(request):
     resource_codes_level_1 = Resource_Code_L1_Table.objects.prefetch_related(
         'resource_code_l2_table_set__resource_code_l3_table_set'

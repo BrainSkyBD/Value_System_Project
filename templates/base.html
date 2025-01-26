@@ -168,7 +168,7 @@
                     <div data-i18n="Alerts">Resource Management</div>
                   </a>
                 </li>
-
+                {% comment %}
                 <li class="menu-item {% block Resource_Code_L1_active %}{% endblock %}">
                   <a href="{% url 'Resource_Code_L1_module' %}" class="menu-link">
                     <div data-i18n="Accordion">Resource Code L1</div>
@@ -190,7 +190,7 @@
                     <div data-i18n="Alerts">Resource Desplay</div>
                   </a>
                 </li>
-
+                {% endcomment %}
                 
                 
               </ul>
@@ -238,7 +238,7 @@
                     <div data-i18n="Alerts">Assemblies Management</div>
                   </a>
                 </li>
-
+                {% comment %}
                 <li class="menu-item {% block Assemblies_Code_L1_active %}{% endblock %}">
                   <a href="{% url 'Assemblies_Code_L1_module' %}" class="menu-link">
                     <div data-i18n="Accordion">Assemblies Code L1</div>
@@ -260,7 +260,7 @@
                     <div data-i18n="Alerts">Assemblies Desplay</div>
                   </a>
                 </li>
-                
+                {% endcomment %}
               </ul>
             </li>
             <li class="menu-item {% block Company_Assemblies_active %}{% endblock %}">
@@ -281,6 +281,8 @@
                 </li>
               </ul>
             </li>
+
+            {% comment %}
             <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-detail"></i>
@@ -299,6 +301,7 @@
                 </li>
               </ul>
             </li>
+            {% endcomment %}
             <!-- Tables -->
             
             <!-- Misc -->

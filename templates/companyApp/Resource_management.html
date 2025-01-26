@@ -118,12 +118,10 @@
                                             <button class="icon-btn" onclick="openModal('add', 'level2', {{ level1.level1.id }}, '{{ level1.level1.Resource_Code_L1 }}')">
                                                 <i class="fas fa-plus-circle"></i>
                                             </button>
-                                            {% comment %}
                                             <!-- Delete Level 1 -->
                                             <button class="icon-btn" onclick="openModal('delete', 'level1', {{ level1.level1.id }}, '{{ level1.level1.Resource_Code_L1 }}')">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
-                                            {% endcomment %}
                                         </td>
                                         <td>{{ level1.level1.created_at }}</td>
                                         <td>{{ level1.level1.updated_at }}</td>

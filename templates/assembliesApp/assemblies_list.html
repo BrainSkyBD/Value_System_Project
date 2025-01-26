@@ -41,6 +41,8 @@
               <td>{{ assemblies.Assemblies_Code_L3.Assemblies_Code_L3 }}</td>
               <td>${{ assemblies.Assembly_Unit_Cost }}</td>
               <td>
+                  <a class="btn btn-info btn-sm" href="{% url 'edit_assembly' assemblies.id %}" style="color:white;">Edit</a>
+
                   <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalCenter{{assemblies.id}}" style="color:white;">Delete</a>
                   
           

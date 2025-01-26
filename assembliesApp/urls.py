@@ -6,6 +6,7 @@ urlpatterns = [
     path('estimate-assemblies/', views.estimate_assemblies, name="estimate_assemblies"),
     path('company_assembly_record', views.company_assembly_record, name="company_assembly_record"),
     path('assemblies_list', views.assemblies_list, name="assemblies_list"),
+    path('edit_assembly/<int:pk>/', views.edit_assembly, name="edit_assembly"),
     path('assemblies_Delete/<int:pk>/', views.assemblies_Delete, name="assemblies_Delete"),
 
     path('Assemblies_Code_L1_module/', views.Assemblies_Code_L1_module, name="Assemblies_Code_L1_module"),

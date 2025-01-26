@@ -128,6 +128,46 @@ def assemblies_list(request):
 
 
 
+@login_required
+def edit_assembly(request, pk):
+    try:
+        # Retrieve the latest company details for the user
+        company_details_record = request.user.company_details
+        
+        if not company_details_record:
+            # Handle case where no company details are found
+            return render(request, "assembliesApp/error.html", {"message": "No company details found for the user."})
+
+        get_assembly_record = Estimation_Assemblies_Table.objects.filter(id=pk).last()
+        filter_Estimation_Assemblies_Resource_Details = Estimation_Assemblies_Resource_Details_Table.objects.filter(Estimation_Assemblies=get_assembly_record)
+        
+        # Filter resources and assemblies related to the company
+        filter_resources_query = CompanyResourcesTable.objects.filter(Company_Details=company_details_record).select_related('Resource_Code_L3')
+        filter_company_Assemblies_Code_L1_query = Assemblies_Code_L1_Table.objects.filter(Company_Details=company_details_record)
+        
+        # Convert the QuerySets to lists of dictionaries
+        filter_resources_list = list(filter_resources_query.values('id', 'Unit_of_Measure', 'Resource_Code_L1__Resource_Code_L1', 'Resource_Code_L2__Resource_Code_L2', 'Resource_Code_L3__Resource_Code_L3', 'Resource_Name', 'Budget_Unit_Cost'))
+        # filter_resources_list = list(filter_resources_query.values())
+        filter_company_Assemblies_Code_L1_query_list = list(filter_company_Assemblies_Code_L1_query.values())
+        
+        # Use the custom JSON encoder to handle datetime objects
+        filter_resources_json = json.dumps(filter_resources_list, cls=DateTimeEncoder)
+        filter_company_Assemblies_Code_L1_query_json = json.dumps(filter_company_Assemblies_Code_L1_query_list, cls=DateTimeEncoder)
+        
+        context = {
+            'filter_resources': filter_resources_query,
+            'filter_resources_json': filter_resources_json,
+            'filter_company_Assemblies_Code_L1_query': filter_company_Assemblies_Code_L1_query,
+            'filter_company_Assemblies_Code_L1_query_json': filter_company_Assemblies_Code_L1_query_json,
+            'get_assembly_record':get_assembly_record,
+            'filter_Estimation_Assemblies_Resource_Details':filter_Estimation_Assemblies_Resource_Details
+        }
+        return render(request, "assembliesApp/edit_estimate_assemblies.html", context)
+    
+    except Exception as e:
+        # Handle unexpected errors
+        return render(request, "assembliesApp/error.html", {"message": str(e)})
+
 
 def assemblies_Delete(request, pk):
     try:
