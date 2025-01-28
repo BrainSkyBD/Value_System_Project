@@ -9,6 +9,9 @@ urlpatterns = [
     path('edit_assembly/<int:pk>/', views.edit_assembly, name="edit_assembly"),
     path('assemblies_Delete/<int:pk>/', views.assemblies_Delete, name="assemblies_Delete"),
 
+
+
+
     path('delete-resource/', views.delete_resource, name='delete_resource'),
 
     path('Assemblies_Code_L1_module/', views.Assemblies_Code_L1_module, name="Assemblies_Code_L1_module"),
