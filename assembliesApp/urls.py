@@ -9,6 +9,7 @@ urlpatterns = [
     path('edit_assembly/<int:pk>/', views.edit_assembly, name="edit_assembly"),
     path('assemblies_Delete/<int:pk>/', views.assemblies_Delete, name="assemblies_Delete"),
 
+# wewe
     path('Assemblies_Code_L1_module/', views.Assemblies_Code_L1_module, name="Assemblies_Code_L1_module"),
     path('Assemblies_Code_L2_module/', views.Assemblies_Code_L2_module, name="Assemblies_Code_L2_module"),
     path('Assemblies_Code_L3_module/', views.Assemblies_Code_L3_module, name="Assemblies_Code_L3_module"),
