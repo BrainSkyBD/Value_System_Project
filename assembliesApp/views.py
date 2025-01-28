@@ -140,7 +140,8 @@ def edit_assembly(request, pk):
 
         get_assembly_record = Estimation_Assemblies_Table.objects.filter(id=pk).last()
         filter_Estimation_Assemblies_Resource_Details = Estimation_Assemblies_Resource_Details_Table.objects.filter(Estimation_Assemblies=get_assembly_record)
-        
+
+
         # Filter resources and assemblies related to the company
         filter_resources_query = CompanyResourcesTable.objects.filter(Company_Details=company_details_record).select_related('Resource_Code_L3')
         filter_company_Assemblies_Code_L1_query = Assemblies_Code_L1_Table.objects.filter(Company_Details=company_details_record)
@@ -177,6 +178,28 @@ def assemblies_Delete(request, pk):
     except Exception as exc:
         messages.success(request, f"{exc}")
         return redirect('assemblies_list')
+
+
+def delete_resource(request):
+    if request.method == 'POST':
+        print('sohel')
+        try:
+            data = json.loads(request.body)
+            resource_id = data.get('resource_id')
+            print('resource_idresource_id')
+            print(data)
+            print(resource_id)
+
+            # Delete the resource from the database
+            # Example:
+            # ResourceModel.objects.filter(id=resource_id).delete()
+
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
 
 
 

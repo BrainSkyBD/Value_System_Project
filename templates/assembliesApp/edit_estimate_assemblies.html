@@ -162,31 +162,47 @@
             <!-- Resource Selection and Quantity Input -->
             
           
-          <table id="resourceTable" class="table table-bordered" style="display: none;">
-            <thead>
+          <table id="resourceTable" class="table table-bordered">
+              <thead>
                 <tr>
-                    <th>Resource Name</th>
-                    <th>Resource Code L1</th>
-                    <th>Resource Code L2</th>
-                    <th>Resource Code L3</th>
-                    <th>Quantity</th>
-                    <th>Unit Cost</th>
-                    <th>Total Cost</th>
+                  <th>Resource Name</th>
+                  <th>Resource Code L1</th>
+                  <th>Resource Code L2</th>
+                  <th>Resource Code L3</th>
+                  <th>Quantity</th>
+                  <th>Unit Cost</th>
+                  <th>Total Cost</th>
+                  <th>Actions</th>
                 </tr>
-            </thead>
-            <tbody id="resourceTableBody">
-                <!-- Rows will be added here dynamically -->
-            </tbody>
-            <tfoot>
+              </thead>
+              <tbody id="resourceTableBody">
+                {% for exist_resource in filter_Estimation_Assemblies_Resource_Details %}
                 <tr>
-                    <td colspan="6" style="text-align: right;"><strong>Total Cost:</strong></td>
-                    <td>$<span id="totalCost">0.00</span></td>
+                  <td>{{ exist_resource.Resource_record.Resource_Name }}</td>
+                  <td>{{ exist_resource.Resource_record.Resource_Code_L1.Resource_Code_L1 }}</td>
+                  <td>{{ exist_resource.Resource_record.Resource_Code_L2.Resource_Code_L2 }}</td>
+                  <td>{{ exist_resource.Resource_record.Resource_Code_L3.Resource_Code_L3 }}</td>
+                  <td>{{ exist_resource.Quantity }} {{ exist_resource.Unit_of_Measure }}</td>
+                  <td>${{ exist_resource.Resource_Budget_Unit_Cost }}</td>
+                  <td class="row-total">${{ exist_resource.Unit_Cost }}</td>
+                  <td>
+                    <button type="button" class="btn btn-danger btn-sm delete-row" data-id="{{ exist_resource.id}}">Delete</button>
+                  </td>
                 </tr>
-            </tfoot>
-          </table>
+                {% endfor %}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="6" style="text-align: right;"><strong>Total Cost:</strong></td>
+                  <td colspan="2">$<span id="totalCost">0.00</span></td>
+                </tr>
+              </tfoot>
+            </table>
+
+
 
           <!-- Button to submit or process the resources -->
-          <div class="text-center mt-3" id="div_save_button" style="display: none;">
+          <div class="text-center mt-3" id="div_save_button" style="display: block;">
             
             <div class="mt-3">
               <!-- Button trigger modal -->
@@ -205,7 +221,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                        
+
 
 
                         <div class="row g-2 mt-3">
@@ -408,14 +424,11 @@
     </script>
 
 
-
   <script>
     let totalCost = 0;
 
 function addItem() {
-    // Get selected resource and quantity
     const resourceSelect = document.getElementById('numberInput');
-    // const selectedOption = resourceSelect.options[resourceSelect.selectedIndex];
     const selectedOption = resourceSelect;
     const resourceName = selectedOption.getAttribute('data-name');
     const unitCost = parseFloat(selectedOption.getAttribute('data-price')) || 0;
@@ -431,37 +444,28 @@ function addItem() {
         return;
     }
 
-    // Show the table if it's hidden
     const table = document.getElementById('resourceTable');
     if (table.style.display === 'none') {
         table.style.display = 'table';
     }
 
-    // Calculate the total cost for this item
     const itemTotalCost = unitCost * quantity;
-
-    // Add a new row to the table
     const tableBody = document.getElementById('resourceTableBody');
 
-
-
     let list_resourses_ids = document.getElementById('list_resourses_ids').value;
-    // Check if the input value is empty
     if (list_resourses_ids === "") {
         list_resourses_ids = [];
     } else {
-            try {
-                // Try to parse the input value as JSON
-                list_resourses_ids = JSON.parse(list_resourses_ids);
-                if (!Array.isArray(list_resourses_ids)) {
-                    throw new Error("Input is not an array");
-                }
-            } catch (e) {
-                console.error("Invalid JSON input. Initializing to an empty array.");
-                list_resourses_ids = [];
+        try {
+            list_resourses_ids = JSON.parse(list_resourses_ids);
+            if (!Array.isArray(list_resourses_ids)) {
+                throw new Error("Input is not an array");
             }
+        } catch (e) {
+            console.error("Invalid JSON input. Initializing to an empty array.");
+            list_resourses_ids = [];
         }
-
+    }
 
     const newRow = document.createElement('tr');
     newRow.innerHTML = `
@@ -471,32 +475,46 @@ function addItem() {
         <td>${resourceCodeL3}</td>
         <td>${quantity.toFixed(2)} ${unitOfMeasure}</td>
         <td>$${unitCost.toFixed(2)}</td>
-        <td>$${itemTotalCost.toFixed(2)}</td>
+        <td class="row-total">$${itemTotalCost.toFixed(2)}</td>
+        <td><button type="button" class="btn btn-danger btn-sm delete-row" >Delete</button></td>
     `;
     tableBody.appendChild(newRow);
 
-    console.log(resourceCode_id)
-    console.log('resourceCode_id')
+    newRow.querySelector(".delete-row").addEventListener("click", function () {
+        newRow.remove(); // Remove the row from the table
+        calculateTotalCost(); // Recalculate the total cost dynamically
+    });
 
-
-
-    // Update the overall total cost
-    totalCost += itemTotalCost;
-    document.getElementById('totalCost').innerText = `${totalCost.toFixed(2)}`;
-
-    resource_quantity = [resourceCode_id, quantity.toFixed(2), totalCost.toFixed(2)]
-    // Example of appending an item to the list
-    list_resourses_ids.push(resource_quantity);
-    // Store the array back to the input as a JSON string
+    list_resourses_ids.push([resourceCode_id, quantity.toFixed(2), itemTotalCost.toFixed(2)]);
     document.getElementById('list_resourses_ids').value = JSON.stringify(list_resourses_ids);
 
-
-    // Reset the form for the next entry
-    resourceSelect.selectedIndex = 0;
-    document.getElementById('resourceQuantity').value = 1.0;
-
-    document.getElementById('div_save_button').style.display = 'block';
+    calculateTotalCost(); // Recalculate the total cost dynamically
+    resetForm(); // Reset the form
 }
+
+function resetForm() {
+    document.getElementById('numberInput').selectedIndex = 0;
+    document.getElementById('resourceQuantity').value = 1.0;
+}
+
+function calculateTotalCost() {
+    let totalCost = 0;
+    document.querySelectorAll("#resourceTableBody .row-total").forEach((row) => {
+        const rowTotal = parseFloat(row.textContent.replace("$", "")) || 0;
+        totalCost += rowTotal;
+    });
+    document.getElementById('totalCost').innerText = `${totalCost.toFixed(2)}`;
+}
+
+
+
+
+//sohel add start
+
+
+//sohel add end
+
+
 
 
 function show_existing_records() {
@@ -618,7 +636,8 @@ function show_existing_records() {
         <td>${resourceCodeL3}</td>
         <td>${quantity.toFixed(2)} ${unitOfMeasure}</td>
         <td>$${unitCost.toFixed(2)}</td>
-        <td>$${itemTotalCost.toFixed(2)}</td>
+        <td class="row-total">$${itemTotalCost.toFixed(2)}</td>
+        <td><button type="button" class="btn btn-danger btn-sm delete-row">Delete</button></td>
     `;
     tableBody.appendChild(newRow);
 
@@ -628,8 +647,8 @@ function show_existing_records() {
 
 
     // Update the overall total cost
-    totalCost += itemTotalCost;
-    document.getElementById('totalCost').innerText = `${totalCost.toFixed(2)}`;
+    //totalCost += itemTotalCost;
+    //document.getElementById('totalCost').innerText = `${totalCost.toFixed(2)}`;
 
     resource_quantity = [resourceCode_id, quantity.toFixed(2), totalCost.toFixed(2)]
     // Example of appending an item to the list
@@ -639,12 +658,82 @@ function show_existing_records() {
 
 
     // Reset the form for the next entry
-    resourceSelect.selectedIndex = 0;
-    document.getElementById('resourceQuantity').value = 1.0;
+    //resourceSelect.selectedIndex = 0;
+    //document.getElementById('resourceQuantity').value = 1.0;
 
     document.getElementById('div_save_button').style.display = 'block';
 }
 
   </script>
+
+
+
+  <script>
+
+      // Delete row function
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('delete-row')) {
+            const button = event.target;
+            const row = button.closest('tr');
+            const resourceId = button.getAttribute('data-id');
+
+            // Send an AJAX request to delete from the database
+            if (confirm("Are you sure you want to delete this item?")) {
+                fetch('/delete-resource/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken') // For Django CSRF protection
+                    },
+                    body: JSON.stringify({ resource_id: resourceId })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Remove the row from the table
+                            row.remove();
+
+                            // Update the total cost
+                            const itemTotalCost = parseFloat(row.children[6].innerText.replace('$', ''));
+                            totalCost -= itemTotalCost;
+                            document.getElementById('totalCost').innerText = `${totalCost.toFixed(2)}`;
+
+                            calculateTotalCost();
+
+                            alert("Item deleted successfully!");
+                        } else {
+                            alert("Failed to delete item: " + data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error deleting resource:", error);
+                        alert("An error occurred while deleting the item.");
+                    });
+            }
+        }
+    });
+
+    // Function to get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+  </script>
+
+
+
+
+
 {% endblock %}
 
