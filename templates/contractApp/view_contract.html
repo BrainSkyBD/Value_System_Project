@@ -20,7 +20,587 @@
   <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Contract /</span> Contract: {{ contract.contract_name }}</h4>
 
 
-  <!-- Responsive Table -->
+
+  <div class="card">
+    <h5 class="card-header">Contract (Assembly List) </h5>
+    <div class="table-responsive text-nowrap">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <td colspan="10"></td>
+            <td colspan="5" style="background: #78943c; color: black; text-align: center;">MARKUP & PRICE</td>
+            <td colspan="6" style="background: #e0ecf4; color: black; text-align: center;">BUDGET UNIT RATES</td>
+            <td colspan="6" style="background: #08b454; color: black; text-align: center;">BUDGET UNIT RATES</td>
+            <td colspan="5" style="background: #ffffff; color: black; text-align: center;">ACTUAL COSTS BY TRANSACTION</td>
+            <td colspan="6" style="background: #e09494; color: black; text-align: center;">ACTUAL COSTS: TOTAL: RESOURCE CODE</td>
+            <td colspan="6" style="background: #e09494; color: black; text-align: center;">ACTUAL COSTS: SUBCONTRACTS</td>					
+            <td colspan="6" style="background: #f1b6b6; color: black; text-align: center;">ACTUAL COSTS: EXPENSES</td>
+            <td colspan="6" style="background: #e09494; color: black; text-align: center;">ACTUAL COSTS: STORE</td>
+            <td colspan="6" style="background: #0874c4; color: black; text-align: center;">EARNED COSTS</td>
+            <td colspan="6" style="background: #e8dcec; color: black; text-align: center;">VARIANCE TO DATE</td>
+            <td colspan="6" style="background: #fffccc; color: black; text-align: center;">ETC (REMAINING)</td>
+            <td colspan="6" style="background: #e0ecf4; color: black; text-align: center;">Estimate At Completion (EAC)</td>
+            <td colspan="6" style="background: #e8dcec; color: black; text-align: center;">VAC</td>
+            <td colspan="7" style="background: #ffffff; color: black; text-align: center;">
+              Main Contract Invoice
+
+              <small class="text-muted float-end">
+                <a class="btn btn-warning " data-bs-toggle="modal" data-bs-target="#modal_maincontract_invoice_table" style="color:white;">All Invoices</a>
+        
+                
+                          
+                  <!-- Modal -->
+                  <div class="modal fade" id="modal_maincontract_invoice_table" tabindex="-1" style="display: none;" aria-hidden="true">
+                      <div class="modal-dialog modal-xl" role="document">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h5 class="modal-title" id="modalCenterTitle">Invoice</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                <div class="card mt-4">
+                                  <h5 class="card-header">Invoice List</h5>
+                                  <div class="table-responsive text-nowrap">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr class="text-nowrap">
+                                                <th>#</th>
+                                                <th>Invoice</th>
+                                                <th>Action</th>
+                                                <th>DateTime</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% if filter_main_contract_invoice %}
+                                            {% for invoice in filter_main_contract_invoice %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>#INV{{ invoice.id }}</td>
+                                                <td>
+                                                    <button class="btn btn-success btn-sm btn-details" data-target="details_table_tr{{ invoice.id }}" style="color:white;">See details</button>
+                                                </td>
+                                                <td>{{ invoice.created_at }}</td>
+                                            </tr>
+                                            <tr style="display: none;" id="details_table_tr{{ invoice.id }}">
+                                                <td colspan="4">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                            <tr class="text-nowrap">
+                                                                <th>#</th>
+                                                                <th>Assembly Name</th>
+                                                                <th>Invoice Quantity</th>
+                                                                <th>Invoice Revenue</th>
+                                                                <th>DateTime</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% if invoice.filter_MainContractInvoiceDetails %}
+                                                            {% for detail in invoice.filter_MainContractInvoiceDetails %}
+                                                            <tr>
+                                                                <td>{{ forloop.counter }}</td>
+                                                                <td>{{ detail.main_contract_assembly.assembly_name }}</td>
+                                                                <td>{{ detail.Invoice_Quantity }}</td>
+                                                                <td>$ {{ detail.Invoice_Revenue }}</td>
+                                                                <td>{{ detail.created_at }}</td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                            {% else %}
+                                                            <tr>
+                                                                <td colspan="5" class="text-center text-muted">No Invoices</td>
+                                                            </tr>
+                                                            {% endif %}
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="4" class="text-center text-muted">No Invoices</td>
+                                            </tr>
+                                            {% endif %}
+                                        </tbody>
+                                    </table>
+                                    
+                                    
+                                  </div>
+                                </div>
+        
+                                  
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                      Close
+                                      </button>
+                                      
+                                  </div>
+                                  
+                              </div>
+                              
+                          </div>
+                      </div>
+                  </div>
+        
+        
+        
+        
+                <a class="btn btn-success " data-bs-toggle="modal" data-bs-target="#modal_maincontract_invoice" style="color:white;">Add Invoice</a>
+                          
+                  <!-- Modal -->
+                  <div class="modal fade" id="modal_maincontract_invoice" tabindex="-1" style="display: none;" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" role="document">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h5 class="modal-title" id="modalCenterTitle">Invoice</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                  <h1>Main Contract Invoice</h1>
+                                  
+        
+                                  <div class="scrollable-div">
+                                    <div class="table-responsive text-nowrap">
+                                      <form method="POST" action="{% url 'create_invoice' %}">
+                                        <input type="hidden" name="contract_id" value="{{ contract.id }}">
+                                        {% csrf_token %}
+                                        <table class="table table-bordered">
+                                          <thead>
+                                            <tr class="text-nowrap">
+                                              <th>Assembly Name</th>
+                                              <th>Contract Quantity</th>
+                                              <th>Cumulative Quantity</th>
+                                              <th>Remain Quantity</th>
+                                              <th>Unit Price</th>
+                                              <th>Invoice Quantity</th>
+                                              <th>Invoice Revenue</th>
+                                              <th>Next Remain Quantity</th>
+                                              <th>Remain Revenue</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {% for detail in contract_details %}
+                                              <tr>
+                                                <td>{{ detail.assembly_name }}</td>
+                                                <td>{{ detail.contract_quantity }}</td>
+                                                <td>{{ detail.func_Assembly_Invoices_total_quantity }}</td>
+                                                
+                                                <td id="remaining_quantity_{{ detail.id }}">{{ detail.calculate_remaining_quantity }}</td>
+                                                <td id="unit_price_{{ detail.id }}">{{ detail.unit_price }}</td>
+                                                
+                                                <td id="">
+                                                  <input type="number" class="form-control" id="invoice_qty_{{ detail.id }}" name="invoice_qty_{{ forloop.counter }}" 
+                                                         oninput="func_calculate('{{ detail.id }}')" value="0" placeholder="Inv Qty">
+                                                  <input type="hidden" name="contract_details_id_{{ forloop.counter }}" value="{{ detail.id }}">
+                                                </td>
+                                                
+                                                <td id="show_invoice_revenue{{ detail.id }}">0</td>
+                                                <td id="after_remain_quantity{{ detail.id }}">{{ detail.calculate_remaining_quantity }}</td>
+                                                <td id="remain_revenue{{ detail.id }}">$ {{ detail.func_Assembly_Invoices_remain_revenue }}</td>
+                                              </tr>
+                                            {% endfor %}
+                                          </tbody>
+                                        </table>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                      </form>
+                                    </div>
+                                  </div>
+        
+                                  <script>
+                                    function func_calculate(detail_id) {
+                                      
+                                      detail_id = parseFloat(detail_id)
+                                      // Get the input quantity
+                                      var invoiceQty = parseFloat(document.getElementById('invoice_qty_' + detail_id).value) || 0;
+                                      
+                                      // Get remaining quantity and unit price
+                                      var remainingQuantity = parseFloat(document.getElementById('remaining_quantity_' + detail_id).textContent) || 0;
+                                      var unitPrice = parseFloat(document.getElementById('unit_price_' + detail_id).textContent) || 0;
+                                      console.log(invoiceQty)
+                                      console.log(remainingQuantity)
+                                      if (invoiceQty > remainingQuantity){
+                                        console.log('input is big')
+                                        invoiceQty = remainingQuantity;
+                                        document.getElementById('invoice_qty_' + detail_id).value = remainingQuantity;
+        
+                                      }
+                                      // Calculate invoice revenue
+                                      var invoiceRevenue = invoiceQty * unitPrice;
+                                      console.log('invoiceRevenue');
+                                      console.log(invoiceRevenue);
+                                      
+                                      // Update the "show_invoice_revenue" field
+                                      document.getElementById('show_invoice_revenue' + detail_id).textContent = invoiceRevenue.toFixed(2);
+                                      
+                                      // Update remaining quantity (adjusting for the input quantity)
+                                      var updatedRemainingQuantity = remainingQuantity - invoiceQty;
+                                      console.log(updatedRemainingQuantity)
+                                      document.getElementById('after_remain_quantity' + detail_id).innerHTML = updatedRemainingQuantity.toFixed(2);
+                                      
+                                      // Update the remaining revenue
+                                      var remainingRevenue = updatedRemainingQuantity * unitPrice;
+                                      document.getElementById('remain_revenue' + detail_id).textContent = '$ ' + remainingRevenue.toFixed(2);
+                                    }
+                                  </script>
+        
+        
+                                  {% comment %}
+                                  <form id="project_form" method="POST" action="{% url 'create_invoice' %}" enctype="multipart/form-data">
+                                      {% csrf_token %}
+                                      <div class="row">
+                                        <div class="mb-3 col-md-12">
+                                            <label for="Resource_Code_L1" class="form-label">Choose Assembly</label>
+                                            <select class="form-select" id="contract_details_id" name="contract_details_id" required="">
+                                                <option value="">-- Select --</option>
+                                                {% for detail in contract_details %}
+                                                <option value="{{ detail.id }}">{{ detail.assembly_name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                          <!-- quantity -->
+                                          <div class="mb-3 col-md-12">
+                                              <label for="note_book" class="form-label">Invoice Quantity</label>
+                                              <input class="form-control" type="number" id="invoice_quantity" name="invoice_quantity">
+                                              <input type="hidden" id="contract_id" name="contract_id" value="{{ contract.id }}">
+                                          </div>
+                                          
+                                      </div>
+                                  
+                                      <!-- Submit Button -->
+                                      <div class="mt-3">
+                                          <button type="submit" class="btn btn-primary">Create Invoice</button>
+                                      </div>
+                                  </form>
+                                  {% endcomment %}
+        
+        
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                      Close
+                                      </button>
+                                      
+                                  </div>
+                                  
+                              </div>
+                              
+                          </div>
+                      </div>
+                  </div>
+              </small>
+            </td>
+
+          </tr>
+          <tr class="text-nowrap">
+            <th>Comb-Assem-Code</th>
+            <th>Assembly Code L1</th>
+            <th>Assembly Code L2</th>
+            <th>Assembly Code L3</th>
+            <th>Item Description</th>
+            <th>Contract Quantity</th>
+            <th>Budget Quantity</th>
+            <th>Unit</th>
+            <th>Unit Cost</th>
+
+            
+            
+            <th>Budget Costs</th>
+            <th>Markup</th>
+            <th>Markup Amount</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+            <th>Target Profit</th>
+
+
+            <!-- budget unit rates  -->
+            {% for resource_l1 in filter_resoures_level_1 %}
+            <th>{{ resource_l1.Resource_Code_L1 }}</th>
+            {% endfor %}
+            <th>Total <br>Unit Rates</th>
+
+
+
+            <!-- budget cost -->
+            {% for resource_l1 in filter_resoures_level_1 %}
+            <th>{{ resource_l1.Resource_Code_L1 }}</th>
+            {% endfor %}
+            <th>Total <br>Budget Cost</th>
+
+
+            <!-- ACTUAL COSTS BY TRANSACTION  -->
+            <th>Assembly Name</th>
+            <th>Actual Sub Contract Cost</th>
+            <th>Actual Expenses Cost</th>
+            <th>Actual Store Cost</th>
+            <th>Total Actual Resources Cost</th>
+
+
+            <!-- ACTUAL COSTS: TOTAL: RESOURCE CODE  -->
+            {% for resource_l1 in filter_resoures_level_1 %}
+            <th>{{ resource_l1.Resource_Code_L1 }}</th>
+            {% endfor %}
+            <th>Actual Total  Cost</th>
+
+
+            <!-- ACTUAL COSTS: SUBCONTRACTS  -->
+            {% for resource_l1 in filter_resoures_level_1 %}
+            <th>{{ resource_l1.Resource_Code_L1 }}</th>
+            {% endfor %}
+            <th>Actual Subcontract <br>Total  Cost</th>
+
+            <!-- ACTUAL COSTS: EXPENSES  -->
+            {% for resource_l1 in filter_resoures_level_1 %}
+            <th>{{ resource_l1.Resource_Code_L1 }}</th>
+            {% endfor %}
+            <th>Actual Expense <br>Total  Cost</th>
+
+            <!-- ACTUAL COSTS: STORE  -->
+            {% for resource_l1 in filter_resoures_level_1 %}
+            <th>{{ resource_l1.Resource_Code_L1 }}</th>
+            {% endfor %}
+            <th>Actual Store <br>Total  Cost</th>
+
+            <!-- EARNED COSTS -->
+            {% for resource_l1 in filter_resoures_level_1 %}
+            <th>{{ resource_l1.Resource_Code_L1 }}</th>
+            {% endfor %}
+            <th>Earned <br>Total  Cost</th>
+
+            <!-- VARIANCE TO DATE -->
+            {% for resource_l1 in filter_resoures_level_1 %}
+            <th>{{ resource_l1.Resource_Code_L1 }}</th>
+            {% endfor %}
+            <th>Total <br>Variance To Date</th>
+
+            <!-- ETC (REMAINING) -->
+            {% for resource_l1 in filter_resoures_level_1 %}
+            <th>{{ resource_l1.Resource_Code_L1 }}</th>
+            {% endfor %}
+            <th>Total <br>ETC (REMAINING)</th>
+
+
+            <!-- Estimate At Completion (EAC) -->
+            {% for resource_l1 in filter_resoures_level_1 %}
+            <th>{{ resource_l1.Resource_Code_L1 }}</th>
+            {% endfor %}
+            <th>Total <br>EAC</th>
+
+
+            <!-- VAC -->
+            {% for resource_l1 in filter_resoures_level_1 %}
+            <th>{{ resource_l1.Resource_Code_L1 }}</th>
+            {% endfor %}
+            <th>Total <br>VAC</th>
+
+            <!-- Main Contract Invoice -->
+            <th>Earned %</th>
+            <th>Earned To-date<br> Quantity</th>
+            <th>Earned Revenue</th>
+            <th>Contract Quantity</th>
+            <th>Remain Quantity</th>
+            <th>Remain Revenue</th>
+            <th>Revenue To-date</th>
+            
+
+            
+          </tr>
+        </thead>
+        <tbody>
+          {% for detail in contract_details %}
+            <tr>
+              <td><span class="badge badge-primary" style="background: #0070ff;">{{ detail.comb_assem_code }}</span></td>
+              <td>{{ detail.assembly_row.Assemblies_Code_L1.Assemblies_Code_L1 }}</td>
+              <td>{{ detail.assembly_row.Assemblies_Code_L2.Assemblies_Code_L2 }}</td>
+              <td>{{ detail.assembly_row.Assemblies_Code_L3.Assemblies_Code_L3 }}</td>
+              <td>{{ detail.item_description }}</td>
+
+              <td>{{ detail.contract_quantity }}</td>
+              <td>{{ detail.budget_quantity }}</td>
+              <td>{{ detail.unit }}</td>
+              <td>$ {{ detail.unit_cost }}</td>
+              <td>$ {{ detail.budget_costs }}</td>
+              <td>{{ detail.markup }}%</td>
+              <td>$ {{ detail.markup_amount }}</td>
+              <td>$ {{ detail.unit_price }}</td>
+              <td>$ {{ detail.total_price }}</td>
+              <td>$ {{ detail.target_profit }}</td>
+
+              <!-- budget unit rates  -->
+              {% for resource, unit_rate in detail.contract_budget_unit_rates_calculation.items %}
+              <td>$ {% if unit_rate %}{{ unit_rate }}{% else %}0{% endif %}</td>
+              {% endfor %}
+
+              <!-- budget cost  -->
+              {% for resource, earned_cost in detail.contract_resource_budget_cost_calculation.items %}
+              <td>$ {% if earned_cost %}{{ earned_cost }}{% else %}0{% endif %}</td>
+              {% endfor %}
+
+
+              <!-- ACTUAL COSTS BY TRANSACTION  -->
+              <td><span class="badge badge-primary" style="background: #0070ff;">{{ detail.assembly_row.Assembly_Name }}</span> </td>
+              <td>$ {{ detail.Actual_Sub_Contract_Cost_Calculation }}</td>
+              <td>$ {{ detail.Actual_Expenses_Cost_Calculation }}</td>
+              <td>$ {{ detail.Actual_Store_Cost_Calculation }}</td>
+              <td>$ {{ detail.Total_Actual_Resources_Cost }}</td>
+
+
+              <!-- ACTUAL COSTS: TOTAL: RESOURCE CODE  -->
+              {% for resource, revenue in detail.actual_cost_total_resource_code_calculation.items %}
+                  <td>${% if revenue %}{{ revenue }}{% else %}0{% endif %}</td>
+              {% endfor %}
+
+              <!-- ACTUAL COSTS: SUBCONTRACTS  -->
+              {% for resource, revenue in detail.actual_cost_subcontracts_resource_list.items %}
+                  <td>${% if revenue %}{{ revenue }}{% else %}0{% endif %}</td>
+              {% endfor %}
+
+
+              <!-- ACTUAL COSTS: EXPENSES  -->
+              {% for resource, expense in detail.actual_cost_expense_resource_list.items %}
+              <td>${% if expense %}{{ expense }}{% else %}0{% endif %}</td>
+              {% endfor %}
+
+              <!-- ACTUAL COSTS: STORE  -->
+              {% for resource, store in detail.actual_cost_store_resource_list.items %}
+              <td>${% if store %}{{ store }}{% else %}0{% endif %}</td>
+              {% endfor %}
+
+              <!-- EARNED COSTS -->
+              {% for resource, earned_cost in detail.earned_cost_by_resource_list.items %}
+              <td>$ {% if earned_cost %}{{ earned_cost }}{% else %}0{% endif %}</td>
+              {% endfor %}
+
+              <!-- VARIANCE TO DATE -->
+              {% for resource, resource_variance in detail.contract_resource_variance_to_date_calculation.items %}
+              <td>$ {% if resource_variance %}{{ resource_variance }}{% else %}0{% endif %}</td>
+              {% endfor %}
+
+              <!-- ETC (REMAINING) -->
+              {% for resource, etc_value in detail.contract_ETC_remaining_calculation.items %}
+              <td>$ {% if etc_value %}{{ etc_value }}{% else %}0{% endif %}</td>
+              {% endfor %}
+
+              <!-- Estimate At Completion (EAC) -->
+              {% for resource, eac_value in detail.contract_resource_estimate_at_completion_calculation.items %}
+              <td>$ {% if eac_value %}{{ eac_value }}{% else %}0{% endif %}</td>
+              {% endfor %}
+
+              <!-- VAC -->
+              {% for resource, vac_value in detail.contract_VAC_remaining_calculation.items %}
+              <td>$ {% if vac_value %}{{ vac_value }}{% else %}0{% endif %}</td>
+              {% endfor %}
+
+              <!-- Main Contract Invoice -->
+              <td>{{ detail.calculate_percentage_of_contract_quantity }}%</td>
+              <td>{{ detail.func_Assembly_Invoices_total_quantity }}</td>
+              <td>$ {{ detail.func_Assembly_Invoices_total_revenue }}</td>
+              <td>{{ detail.contract_quantity }}</td>
+              <td>{{ detail.calculate_remaining_quantity }}</td>
+              <td>$ {{ detail.func_Assembly_Invoices_remain_revenue }}</td>
+              
+              <td>$ {{ detail.total_price }}</td>
+
+              
+              
+
+
+            </tr>
+          {% endfor %}
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><b>{{ contract.get_contract_total_contract_quantity }}</b></td>
+              <td><b>{{ contract.get_contract_total_budget_quantity }}</b></td>
+              <td></td>
+              <td><b>$ {{ contract.get_contract_total_unit_cost }}</b></td>
+              
+              <td><b>$ {{ contract.contract_total_budget_costs }}</b></td>
+              <td></td>
+              <td><b>$ {{ contract.contract_total_markup_amount }}</b></td>
+              <td><b>$ {{ contract.get_contract_total_unit_price }}</b></td>
+              <td><b>$ {{ contract.contract_total_price }}</b></td>
+              <td><b>$ {{ contract.contract_total_target_profit }}</b></td>
+
+
+
+              <!-- budget unit rates  -->
+              <td colspan="6"><strong></strong></td>
+
+              <!-- budget cost  -->
+              <td colspan="5"><strong>Total</strong></td>
+              <td><b>$ {{ contract.calculate_total_resource_budget_cost }}</b></td>
+
+
+              <!-- ACTUAL COSTS BY TRANSACTION  -->
+              <td><strong>Total</strong></td>
+              <td><b>$ {{ contract.calculate_total_subcontract_usage_cost }}</b></td>
+              <td><b>$ {{ expense_total_cost }}</b></td>
+              <td><b>$ {{ store_total_cost }}</b></td>
+              <td><b>$ {{ Sum_Total_Actual_Resources_Cost }}</b></td>
+
+
+              <!-- ACTUAL COSTS: TOTAL: RESOURCE CODE  -->
+              <td colspan="{{ filter_resoures_level_1|length }}"><strong></strong></td>
+              <td><b>$ {{ contract.calculate_total_actual_cost }}</b></td>
+
+              <!-- ACTUAL COSTS: SUBCONTRACTS  -->
+              <td colspan="{{ filter_resoures_level_1|length }}"></td>
+              <td><b>$ {{ contract.calculate_total_subcontract_usage_cost }}</b></td>
+
+              <!-- ACTUAL COSTS: EXPENSES  -->
+              <td colspan="{{ filter_resoures_level_1|length }}"></td>
+              <td><b>$ {{ contract.calculate_total_actual_expense_cost }}</b></td>
+
+              <!-- ACTUAL COSTS: STORE  -->
+              <td colspan="{{ filter_resoures_level_1|length }}"></td>
+              <td><b>$ {{ contract.calculate_total_actual_store_cost }}</b></td>
+
+              <!-- EARNED COSTS -->
+              <td colspan="{{ filter_resoures_level_1|length }}"></td>
+              <td><b>$ {{ contract.calculate_total_earned_cost_by_resource_list }}</b></td>
+
+              <!-- VARIANCE TO DATE -->
+              <td colspan="{{ filter_resoures_level_1|length }}"></td>
+              <td><b>$ {{ contract.calculate_total_contract_resource_variance_to_date_calculation }}</b></td>
+
+
+              <!-- ETC (REMAINING) -->
+              <td colspan="{{ filter_resoures_level_1|length }}"></td>
+              <td><b>$ {{ contract.calculate_total_contract_ETC_remaining_calculation }}</b></td>
+
+              <!-- Estimate At Completion (EAC) -->
+              <td colspan="{{ filter_resoures_level_1|length }}"></td>    
+              <td><b>$ {{ contract.calculate_total_contract_resource_estimate_at_completion_calculation }}</b></td>
+
+              <!-- VAC -->
+              <td colspan="{{ filter_resoures_level_1|length }}"></td>
+              <td><b>$ {{ contract.calculate_total_contract_VAC_remaining_calculation }}</b></td>
+
+              <!-- Main Contract Invoice -->
+              <td ></td>
+              <td ></td>
+              <td >$ {{ contract.func_mainContract_total_Invoices_total_revenue }}</td>
+              <td ></td>
+              <td ></td>
+              <td ></td>
+              <td >$ {{ contract.calculate_total_price }}</td>
+
+
+
+            </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+  <hr>
+
+
+
+  {% comment %}
+
   <div class="card">
     <h5 class="card-header">Contract (Assembly List) </h5>
     <div class="table-responsive text-nowrap">
@@ -79,8 +659,8 @@
       </table>
     </div>
   </div>
-  <!--/ Responsive Table -->
 
+  
 
   {% if main_contract_budget_costs %}
   <div class="card mt-4">
@@ -116,7 +696,7 @@
     </div>
   </div>
   {% endif %}
-
+  
   
   <div class="card mt-4">
     <h5 class="card-header" style="background: #c0d3e7; color: black;">BUDGET UNIT RATES</h5>
@@ -143,6 +723,7 @@
       </table>
     </div>
   </div>
+  
 
   <div class="card mt-4">
     <h5 class="card-header" style="background: #20b734; color: black;">BUDGET COSTS</h5>
@@ -175,7 +756,6 @@
       </table>
     </div>
   </div>
-
 
 
   {% if filter_expense %}
@@ -218,7 +798,7 @@
   </div>
   {% endif %}
 
-
+  
   {% if filter_subcontracts %}
   <div class="card mt-4">
     <h5 class="card-header">Subcontract List</h5>
@@ -249,7 +829,7 @@
   </div>
   {% endif %}
 
-
+  
   <div class="card mt-4">
     <div class="card-header d-flex align-items-center justify-content-between">
       <h5 class="mb-0">Main Contract Invoice</h5>
@@ -451,34 +1031,7 @@
                           </script>
 
 
-                          {% comment %}
-                          <form id="project_form" method="POST" action="{% url 'create_invoice' %}" enctype="multipart/form-data">
-                              {% csrf_token %}
-                              <div class="row">
-                                <div class="mb-3 col-md-12">
-                                    <label for="Resource_Code_L1" class="form-label">Choose Assembly</label>
-                                    <select class="form-select" id="contract_details_id" name="contract_details_id" required="">
-                                        <option value="">-- Select --</option>
-                                        {% for detail in contract_details %}
-                                        <option value="{{ detail.id }}">{{ detail.assembly_name }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                  <!-- quantity -->
-                                  <div class="mb-3 col-md-12">
-                                      <label for="note_book" class="form-label">Invoice Quantity</label>
-                                      <input class="form-control" type="number" id="invoice_quantity" name="invoice_quantity">
-                                      <input type="hidden" id="contract_id" name="contract_id" value="{{ contract.id }}">
-                                  </div>
-                                  
-                              </div>
                           
-                              <!-- Submit Button -->
-                              <div class="mt-3">
-                                  <button type="submit" class="btn btn-primary">Create Invoice</button>
-                              </div>
-                          </form>
-                          {% endcomment %}
 
 
                           <div class="modal-footer">
@@ -523,72 +1076,7 @@
                 <td>$ {{ detail.func_Assembly_Invoices_remain_revenue }}</td>
                 
                 <td>$ {{ detail.total_price }}</td>
-                {% comment %}
-                <td>
-                    <a class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modal_maincontract_invoice_single_table{{ detail.id }}" style="color:white;">Invoice List</a>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="modal_maincontract_invoice_single_table{{ detail.id }}" tabindex="-1" style="display: none;" aria-hidden="true">
-                        <div class="modal-dialog modal-xl" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="modalCenterTitle">Invoice</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                  <div class="card mt-4">
-                                    <h5 class="card-header">Invoice List</h5>
-                                    <div class="table-responsive text-nowrap">
-                                      <table class="table table-bordered">
-                                        <thead>
-                                          <tr class="text-nowrap">
-                                            <th>#</th>
-                                            <th>Invoice Quantity</th>
-                                            <th>Invoice Revenue</th>
-                                            <th>DateTime</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          {% if detail.filter_contract_assembly_invoices %}
-                                          {% for invoice in detail.filter_contract_assembly_invoices %}
-                                            <tr>
-                                              <td>{{ forloop.counter }}</td>
-                                              <td>{{ invoice.Invoice_Quantity }}</td>
-                                              <td>$ {{ invoice.Invoice_Revenue }}</td>
-                                              <td>$ {{ invoice.created_at }}</td>
-                                            </tr>
-                                          {% endfor %}
-                                          <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td><b>$ {{ detail.func_Assembly_Invoices_total_revenue }}</b></td>
-                                            <td></td>
-                                          </tr>
-                                          {% else %}
-                                          <tr>
-                                            <td colspan="4" class="text-center text-muted">No Invoices</td>
-                                          </tr>
-                                          {% endif %}
-                                        </tbody>
-                                      </table>
-                                    </div>
-                                  </div>
-
-                                    
-                                    <div class="modal-footer">
-                                      <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                        Close
-                                        </button>
-                                        
-                                    </div>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </td>
-                {% endcomment %}
+                
               </tr>
               
             {% empty %}
@@ -612,7 +1100,9 @@
         </table>
     </div>
   </div>
-</div>
+  </div>
+
+  
 
   <div class="card mt-4">
     <h5 class="card-header">ACTUAL COSTS BY TRANSACTION				
@@ -919,7 +1409,6 @@
     </div>
   </div>
 
-
   <div class="card mt-4">
     <h5 class="card-header" style="background: #aeb3d1; color: rgb(0, 0, 0);">VAC</h5>
     <div class="table-responsive text-nowrap">
@@ -953,6 +1442,7 @@
   </div>
 
   
+  {% endcomment %}
 
 </div>
 
