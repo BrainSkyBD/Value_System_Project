@@ -486,12 +486,9 @@ function addItem() {
         }
     }
 
-    // Generate a unique identifier for this row
-    const uniqueId = String(Date.now());  // Use timestamp as a unique ID
-
     const newRow = document.createElement('tr');
     newRow.innerHTML = `
-        <td  data-code-l4="${resourceCode_id}" data-unique-id="${uniqueId}">${resourceName}</td>
+        <td  data-code-l4="${resourceCode_id}">${resourceName}</td>
         <td>${resourceCodeL1}</td>
         <td>${resourceCodeL2}</td>
         <td>${resourceCodeL3}</td>
@@ -502,9 +499,6 @@ function addItem() {
     `;
     tableBody.appendChild(newRow);
 
-    // Add resource to the list with the unique ID
-    list_resourses_ids.push([resourceCode_id, quantity.toFixed(2), itemTotalCost.toFixed(2), uniqueId, "new"]);
-    document.getElementById('list_resourses_ids').value = JSON.stringify(list_resourses_ids);
 
     // Debugging: Verify data-code-l4 is set correctly
     console.log('New Row:', newRow);
@@ -527,9 +521,9 @@ function addItem() {
 
 
     // Add resource to the list
-    //list_resourses_ids.push([resourceCode_id, quantity.toFixed(2), itemTotalCost.toFixed(2)]);
+    list_resourses_ids.push([resourceCode_id, quantity.toFixed(2), itemTotalCost.toFixed(2)]);
     // Update the hidden input field
-    //document.getElementById('list_resourses_ids').value = JSON.stringify(list_resourses_ids);
+    document.getElementById('list_resourses_ids').value = JSON.stringify(list_resourses_ids);
 
     calculateTotalCost(); // Recalculate the total cost dynamically
     resetForm(); // Reset the form
@@ -714,18 +708,16 @@ function show_existing_records() {
   <script>
 
 
-document.addEventListener('click', function (event) {
+
+    document.addEventListener('click', function (event) {
     if (event.target.classList.contains('delete-row')) {
         const button = event.target;
         const row = button.closest('tr');
         const resourceId = button.getAttribute('data-id'); // For existing rows
-        console.log("resourceId")
-        console.log(resourceId)
-        const resourceCode_id = row.querySelector('td').getAttribute('data-code-l4'); // Resource ID
-        const uniqueId = row.querySelector('td').getAttribute('data-unique-id'); // Unique ID
+        const resourceCode_id = row.querySelector('td').getAttribute('data-code-l4'); // For dynamically added rows
 
-        console.log('Resource ID:', resourceCode_id);
-        console.log('Unique ID:', uniqueId);
+        console.log('1111111111111')
+        console.log(resourceCode_id)
 
         // Get the list of resources
         let list_resourses_ids = JSON.parse(document.getElementById('list_resourses_ids').value || '[]');
@@ -747,14 +739,15 @@ document.addEventListener('click', function (event) {
                         // Remove the row from the table
                         row.remove();
 
-
                         // Update the total cost
                         const itemTotalCost = parseFloat(row.children[6].innerText.replace('$', ''));
                         totalCost -= itemTotalCost;
                         document.getElementById('totalCost').innerText = `${totalCost.toFixed(2)}`;
 
-                        // Remove the resource from the list using the unique ID
-                        list_resourses_ids = list_resourses_ids.filter(item => item[3] !== uniqueId);
+
+
+                        // Remove the resource from the list
+                        list_resourses_ids = list_resourses_ids.filter(item => item[0] !== resourceCode_id);
 
                         // Update the hidden input field
                         document.getElementById('list_resourses_ids').value = JSON.stringify(list_resourses_ids);
@@ -775,19 +768,21 @@ document.addEventListener('click', function (event) {
         } else {
             // Handle dynamically added rows (rows not yet saved in the database)
             row.remove();
+            console.log('ssssssssss');
 
-            // Remove the resource from the list using the unique ID
-            list_resourses_ids = list_resourses_ids.filter(item => item[3] !== uniqueId);
+            // Remove the resource from the list
+            list_resourses_ids = list_resourses_ids.filter(item => item[0] !== resourceCode_id);
 
             // Update the hidden input field
             document.getElementById('list_resourses_ids').value = JSON.stringify(list_resourses_ids);
 
             // Recalculate the total cost
             calculateTotalCost();
-            alert("Item deleted successfully!");
         }
     }
 });
+
+
 
 
 
@@ -881,34 +876,21 @@ document.addEventListener('click', function (event) {
 
   <script>
 
+
 document.addEventListener("DOMContentLoaded", function () {
     // Parse the list_resourses_ids from the hidden input field
     let list_resourses_ids = JSON.parse(document.getElementById('list_resourses_ids').value || '[]');
 
-    // Add data-code-l4 and data-unique-id to existing rows
+    // Add data-code-l4 to existing rows
     const existingRows = document.querySelectorAll("#resourceTableBody tr");
     existingRows.forEach((row, index) => {
         const firstTd = row.querySelector("td");
-        const deleteButton = row.querySelector(".delete-row");
         if (firstTd && list_resourses_ids[index]) {
-            // Get the resource ID and unique ID (use the saved item's ID from the database)
+            // Get the first value from the list_resourses_ids array (e.g., "1")
             const resourceId = list_resourses_ids[index][0];
-            const uniqueId = deleteButton.getAttribute('data-id'); // Use the saved item's ID as the unique ID
-
-            // Set the data-code-l4 and data-unique-id attributes
             firstTd.setAttribute("data-code-l4", resourceId);
-            firstTd.setAttribute("data-unique-id", uniqueId);
-
-            // Update the list_resourses_ids array with the unique ID
-            //list_resourses_ids[index].push(uniqueId);
-            list_resourses_ids[index].push(uniqueId, "existing");
         }
     });
-
-    // Update the hidden input field with the modified list_resourses_ids
-    document.getElementById('list_resourses_ids').value = JSON.stringify(list_resourses_ids);
-
-    console.log("Updated list_resourses_ids:", list_resourses_ids);
 });
 
 

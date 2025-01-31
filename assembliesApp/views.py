@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 # Create your views here.
 
-
+from django.shortcuts import get_object_or_404
 import json
 from django.shortcuts import render
 from .models import CompanyDetailsTable, CompanyResourcesTable, Assemblies_Code_L1_Table
@@ -119,6 +119,120 @@ def company_assembly_record(request):
         return redirect('estimate_assemblies')
 
 
+
+@login_required
+def save_edit_company_assembly_record(request):
+    # company_details_record = request.user.company_details
+    # if request.method == "POST":
+    #     list_resourses_ids_json = request.POST.get('list_resourses_ids')
+    #     get_assembly_record_id = request.POST.get('get_assembly_record_id')
+    #     try:
+    #         # Parse the JSON data
+    #         list_resourses_ids = json.loads(list_resourses_ids_json)
+    #     except json.JSONDecodeError:
+    #         list_resourses_ids = []
+    #     print(list_resourses_ids)
+    #     Assembly_Name = request.POST.get('Assembly_Name')
+    #     Assemblies_Code_L1_id = request.POST.get('Assemblies_Code_L1')
+    #     Assemblies_Code_L2_id = request.POST.get('Assemblies_Code_L2')
+    #     Assemblies_Code_L3_id = request.POST.get('Assemblies_Code_L3')
+    #     Unit_of_Measure = request.POST.get('Unit_of_Measure')
+    #     Assembly_Unit_Cost = request.POST.get('Assembly_Unit_Cost')
+    #     Total_Cost = request.POST.get('Total_Cost')
+    #
+    #     var_Estimation_Assemblies = Estimation_Assemblies_Table(
+    #         Company_Details=company_details_record,
+    #         Assembly_Name=Assembly_Name,
+    #         Assemblies_Code_L1=Assemblies_Code_L1_Table.objects.filter(id=Assemblies_Code_L1_id).last(),
+    #         Assemblies_Code_L2=Assemblies_Code_L2_Table.objects.filter(id=Assemblies_Code_L2_id).last(),
+    #         Assemblies_Code_L3=Assemblies_Code_L3_Table.objects.filter(id=Assemblies_Code_L3_id).last(),
+    #         Unit_of_Measure=Unit_of_Measure,
+    #         Assembly_Unit_Cost=Assembly_Unit_Cost,
+    #     )
+    #     var_Estimation_Assemblies.save()
+    #
+    #     for resource_id in list_resourses_ids:
+    #         resource_record_row = CompanyResourcesTable.objects.get(id=resource_id[0])
+    #         var_Estimation_Assemblies_Resource_Details = Estimation_Assemblies_Resource_Details_Table(
+    #             Company_Details=company_details_record,
+    #             Estimation_Assemblies=var_Estimation_Assemblies,
+    #             Resource_record=resource_record_row,
+    #             Resource_Budget_Unit_Cost=resource_record_row.Budget_Unit_Cost,
+    #             Quantity=resource_id[1],
+    #             Unit_of_Measure=resource_id[2],
+    #             Unit_Cost=float(resource_record_row.Budget_Unit_Cost)*float(resource_id[1]),
+    #         ).save()
+    #     messages.success(request, "Assembly saved successfully!")
+    #     return redirect('estimate_assemblies')
+
+    get_assembly_record_id = request.POST.get('get_assembly_record_id')
+    company_details_record = request.user.company_details
+    assembly = get_object_or_404(Estimation_Assemblies_Table, id=get_assembly_record_id, Company_Details=company_details_record)
+
+    if request.method == "POST":
+        # Parse the JSON data for resources
+        list_resourses_ids_json = request.POST.get('list_resourses_ids')
+        try:
+            list_resourses_ids = json.loads(list_resourses_ids_json)
+        except json.JSONDecodeError:
+            list_resourses_ids = []
+
+        e=request.POST.get('Assembly_Name')
+        eq=request.POST.get('Assemblies_Code_L1')
+        eqq=request.POST.get('Assemblies_Code_L2')
+        eee=request.POST.get('Assemblies_Code_L3')
+        sse=request.POST.get('Unit_of_Measure')
+        qwwe=request.POST.get('Assembly_Unit_Cost')
+
+        # Update the assembly record
+        assembly.Assembly_Name = request.POST.get('Assembly_Name')
+        assembly.Assemblies_Code_L1 = Assemblies_Code_L1_Table.objects.filter(
+            id=request.POST.get('Assemblies_Code_L1')).last()
+        assembly.Assemblies_Code_L2 = Assemblies_Code_L2_Table.objects.filter(
+            id=request.POST.get('Assemblies_Code_L2')).last()
+        assembly.Assemblies_Code_L3 = Assemblies_Code_L3_Table.objects.filter(
+            id=request.POST.get('Assemblies_Code_L3')).last()
+        assembly.Unit_of_Measure = request.POST.get('Unit_of_Measure')
+        assembly.Assembly_Unit_Cost = request.POST.get('Assembly_Unit_Cost')
+        assembly.save()
+
+        # Delete existing resource details for this assembly
+        # Estimation_Assemblies_Resource_Details_Table.objects.filter(Estimation_Assemblies=assembly).delete()
+
+        # Add new resource details
+        for resource_id in list_resourses_ids:
+            if resource_id[4] == "existing":
+                # exist_row = Estimation_Assemblies_Resource_Details_Table.objects.get(id=resource_id[3])
+                # exist_row.Quantity=resource_id[1]
+                # exist_row.Unit_of_Measure=resource_id[2]
+                # exist_row.Unit_Cost=float(resource_record_row.Budget_Unit_Cost) * float(resource_id[1])
+                # exist_row.save()
+                pass
+
+            if resource_id[4] == "new":
+                resource_record_row = CompanyResourcesTable.objects.get(id=resource_id[0])
+                Estimation_Assemblies_Resource_Details_Table.objects.create(
+                    Company_Details=company_details_record,
+                    Estimation_Assemblies=assembly,
+                    Resource_record=resource_record_row,
+                    Resource_Budget_Unit_Cost=resource_record_row.Budget_Unit_Cost,
+                    Quantity=resource_id[1],
+                    Unit_of_Measure=resource_id[2],
+                    Unit_Cost=float(resource_record_row.Budget_Unit_Cost) * float(resource_id[1]),
+                )
+
+        messages.success(request, "Assembly updated successfully!")
+        return redirect('estimate_assemblies')
+
+    return render(request, "assembliesApp/edit_estimate_assemblies.html", {
+        'assembly': assembly,
+        'filter_company_Assemblies_Code_L1_query': Assemblies_Code_L1_Table.objects.filter(
+            Company_Details=company_details_record),
+        'filter_Estimation_Assemblies_Resource_Details': Estimation_Assemblies_Resource_Details_Table.objects.filter(
+            Estimation_Assemblies=assembly),
+    })
+
+
 @login_required
 def assemblies_list(request):
     company_details_record = request.user.company_details
@@ -189,6 +303,8 @@ def delete_resource(request):
             print('resource_idresource_id')
             print(data)
             print(resource_id)
+
+            Estimation_Assemblies_Resource_Details_Table.objects.get(id=resource_id).delete()
 
             # Delete the resource from the database
             # Example:
