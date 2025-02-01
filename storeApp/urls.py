@@ -10,6 +10,10 @@ urlpatterns = [
 
     path("stores/", views.store_list, name="store_list"),
     path("stores/delete/<int:pk>/", views.delete_store, name="delete_store"),
+    path("stores/edit/<int:pk>/", views.edit_store, name="edit_store"),
+
+    path('save-edit-store/', views.save_edit_store, name='save_edit_store'),
+    
     
     path("stock_in_list/", views.stock_in_list, name="stock_in_list"),
     path("stock_out_list/", views.stock_out_list, name="stock_out_list"),
