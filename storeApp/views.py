@@ -214,6 +214,7 @@ def fetch_resorce_by_assemblies(request, assembly_id):
 #     return JsonResponse(resourse_list, safe=False)
 
 
+
 @csrf_exempt
 def save_store(request):
     print("saving store ...")
@@ -238,11 +239,18 @@ def save_store(request):
             quantity = request.POST.get('quantity')
             unit_cost = request.POST.get('unitCost')
             total_cost = request.POST.get('totalCost')
+
+            Calculate_Manual_Unit_Cost_name = request.POST.get('Calculate_Manual_Unit_Cost_name')
+
+            print(Calculate_Manual_Unit_Cost_name)
+            print('Calculate_Manual_Unit_Cost')
+            
             try:
                 get_resource_record = CompanyResourcesTable.objects.get(id=resource_value)
             except:
                 return JsonResponse({'message': f"Resource Not fount", 'id': store.id}, status=201)
             print(stock_trasaction_status)
+
             if stock_trasaction_status == "Stock-Out":
                 print("check")
                 total_stock_in_calculation_var = get_resource_record.calculate_stock_availablity()
@@ -263,6 +271,14 @@ def save_store(request):
             print(unit_cost)
             print(total_cost)
 
+            print('Calculate_Manual_Unit_Cost_name')
+            print(Calculate_Manual_Unit_Cost_name)
+
+            if Calculate_Manual_Unit_Cost_name == 'true':
+                Calculate_Manual_Unit_Cost_name = True
+            else:
+                Calculate_Manual_Unit_Cost_name = False
+
             store = StoreTable.objects.create(
                 Company_Details=company_details_record,
                 comb_assem_code=comb_assem_code,
@@ -272,7 +288,8 @@ def save_store(request):
                 resource_value=get_resource_record,
                 quantity=quantity,
                 unit_cost=unit_cost,
-                total_cost=total_cost
+                total_cost=total_cost,
+                Calculate_Manual_Unit_Cost = Calculate_Manual_Unit_Cost_name
             )
             print('saved store')
             return JsonResponse({'message': 'store saved successfully', 'id': store.id}, status=201)
@@ -318,6 +335,107 @@ def delete_store(request, pk):
         store.delete()
         return redirect("store_list")
     return render(request, "storeApp/delete_store.html", {"store": store})
+
+
+
+
+
+# Delete an store
+@login_required
+def edit_store(request, pk):
+    store = get_object_or_404(StoreTable, pk=pk)
+    company_details_record = request.user.company_details
+
+    
+    # Filter main contract 
+    filter_MainContract_query = MainContract.objects.filter(company_details=company_details_record)
+    filter_MainContract_list = list(filter_MainContract_query.values('id', 'contract_name'))
+    filter_MainContract_json = json.dumps(filter_MainContract_list, cls=DateTimeEncoder)
+
+    # Filter resources 
+    
+    
+    filter_resources_query = CompanyResourcesTable.objects.filter(Company_Details=company_details_record).select_related('Resource_Code_L3')
+    filter_resources_list = list(filter_resources_query.values('id', 'Unit_of_Measure', 'Resource_Code_L1__Resource_Code_L1', 'Resource_Code_L2__Resource_Code_L2', 'Resource_Code_L3__Resource_Code_L3', 'Resource_Name', 'Budget_Unit_Cost'))
+    filter_resources_json = json.dumps(filter_resources_list, cls=DateTimeEncoder)
+
+    context = {"store": store, 'company_details_record': company_details_record, 'filter_resources_json': filter_resources_json, 'filter_MainContract_json':filter_MainContract_json}
+    return render(request, "storeApp/edit_store.html", context)
+
+
+
+
+@csrf_exempt
+def save_edit_store(request):
+    print("saving store ...")
+    company_details_record = request.user.company_details
+    if request.method == 'POST':
+        try:
+            comb_assem_code = request.POST.get('combAssemCode')
+            stock_trasaction_status  = request.POST.get('stock_trasaction_status')
+            contract_value = request.POST.get('contractValue')
+            assembly_value = request.POST.get('assemblyValue')
+            resource_value = request.POST.get('resourceValue')
+            quantity = request.POST.get('quantity')
+            unit_cost = request.POST.get('unitCost')
+            total_cost = request.POST.get('totalCost')
+
+            Calculate_Manual_Unit_Cost_name = request.POST.get('Calculate_Manual_Unit_Cost_name')
+
+            print(Calculate_Manual_Unit_Cost_name)
+            print('Calculate_Manual_Unit_Cost')
+            
+            try:
+                get_resource_record = CompanyResourcesTable.objects.get(id=resource_value)
+            except:
+                return JsonResponse({'message': f"Resource Not fount", 'id': store.id}, status=201)
+            print(stock_trasaction_status)
+
+            if stock_trasaction_status == "Stock-Out":
+                print("check")
+                total_stock_in_calculation_var = get_resource_record.calculate_stock_availablity()
+                print(total_stock_in_calculation_var)
+                print(float(quantity))
+                if float(quantity) > total_stock_in_calculation_var:
+                    messages.error(request, f"Insuffient Stock. You requested stock quantity({quantity}) is more that available stock quantity ({total_stock_in_calculation_var})")
+                    # return redirect('calculate_stores')
+                    print(f"Insuffient Stock. You requested stock quantity({quantity}) is more that available stock quantity ({total_stock_in_calculation_var})")
+                    return JsonResponse({'message': f"Insuffient Stock. You requested stock quantity({quantity}) is more that available stock quantity ({total_stock_in_calculation_var})", 'id': store.id}, status=201)
+
+            print(comb_assem_code)
+            print(stock_trasaction_status)
+            print(contract_value)
+            print(assembly_value)
+            print(resource_value)
+            print(quantity)
+            print(unit_cost)
+            print(total_cost)
+
+            print('Calculate_Manual_Unit_Cost_name')
+            print(Calculate_Manual_Unit_Cost_name)
+
+            if Calculate_Manual_Unit_Cost_name == 'true':
+                Calculate_Manual_Unit_Cost_name = True
+            else:
+                Calculate_Manual_Unit_Cost_name = False
+
+            store = StoreTable.objects.create(
+                Company_Details=company_details_record,
+                comb_assem_code=comb_assem_code,
+                stock_trasaction_status=stock_trasaction_status,
+                contract_value=MainContract.objects.get(id=contract_value),
+                assembly_value=Estimation_Assemblies_Table.objects.get(id=assembly_value),
+                resource_value=get_resource_record,
+                quantity=quantity,
+                unit_cost=unit_cost,
+                total_cost=total_cost,
+                Calculate_Manual_Unit_Cost = Calculate_Manual_Unit_Cost_name
+            )
+            print('saved store')
+            return JsonResponse({'message': 'store saved successfully', 'id': store.id}, status=201)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
 

@@ -6,7 +6,7 @@
 {% block content %}
 
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Store/</span> Calculate Store</h4>
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Store/</span> Edit Store</h4>
 
     <!-- Basic Layout & Basic with Icons -->
     <div class="row">
@@ -26,15 +26,15 @@
                         <label for="stock_trasaction_status" class="col-form-label">Stock Trasaction Staus</label>
                         <select class="form-select" id="stock_trasaction_status" name="stock_trasaction_status" required="">
                             <option value="">-- Select --</option>
-                            <option value="Stock-In">Stock-In</option>
-                            <option value="Stock-Out">Stock-Out</option>
+                            <option value="Stock-In" {% if store.stock_trasaction_status == "Stock-In" %}selected{% endif %}>Stock-In</option>
+                            <option value="Stock-Out" {% if store.stock_trasaction_status == "Stock-Out" %}selected{% endif %}>Stock-Out</option>
                         </select>
                     </div>
 
                     <!-- Comb-Assem-Code -->
                     <div class="mb-3 col-md-6">
                         <label class="col-form-label" for="Comb_Assem_Code">Comb-Assem-Code</label>
-                        <input type="text" class="form-control" id="Comb_Assem_Code" name="Comb_Assem_Code" placeholder="Comb-Assem-Code" required readonly>
+                        <input type="text" class="form-control" id="Comb_Assem_Code" value="{% if store.comb_assem_code %}{{store.comb_assem_code}}{% endif %}" name="Comb_Assem_Code" placeholder="Comb-Assem-Code" required readonly>
                     </div>
                     
         
@@ -42,25 +42,30 @@
                     <div class="mb-3 col-md-4">
                         <label class="col-form-label" for="Contract_Name">Choose Contract</label>
                         <div class="input-group mb-3">
-                            <input type="hidden" id="hiddencontractInputValue">
-                            <input type="hidden" id="hiddencontractInputId">
+                            <input type="hidden" id="hiddencontractInputValue" value="{{store.contract_value.contract_name}}">
+                            <input type="hidden" id="hiddencontractInputId" value="{{store.contract_value.id}}">
                             
-                            <input type="text" class="form-control" id="contractInput" placeholder="Main Contract" autocomplete="off">
+                            <input type="text" class="form-control" id="contractInput" placeholder="Main Contract" value="{% if store.contract_value %}{{store.contract_value.contract_name}}{% endif %}" autocomplete="off">
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="contractDropdownButton">
                                 <span class="visually-hidden">Toggle Dropdown</span>
                             </button>
-                            <ul class="dropdown-menu w-100" style="margin-top: 40px; max-height: 200px; overflow-y: auto;" id="contractDropdown"></ul>
+                            <ul class="dropdown-menu w-100" style="margin-top: 40px; max-height: 200px; overflow-y: auto;" id="contractDropdown">
+                                
+                            </ul>
+                            
                         </div>
+
+                        
                     </div>
 
                     <!-- Assembly Selection -->
                     <div class="mb-3 col-md-4">
                         <label class="col-form-label" for="Assembly_Name">Choose Assembly Name</label>
                         <div class="input-group mb-3">
-                            <input type="hidden" id="hiddenassemblyInputValue">
-                            <input type="hidden" id="hiddenassemblyInputId">
+                            <input type="hidden" id="hiddenassemblyInputValue" value="{{store.assembly_value.Assembly_Name}}">
+                            <input type="hidden" id="hiddenassemblyInputId" value="{{store.assembly_value.id}}">
 
-                            <input type="text" class="form-control" id="assemblyInput" placeholder="Assembly Name" disabled>
+                            <input type="text" class="form-control" id="assemblyInput" value="{% if store.assembly_value %}{{store.assembly_value.Assembly_Name}}{% endif %}" placeholder="Assembly Name" disabled>
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="assemblyDropdownButton">
                                 <span class="visually-hidden">Toggle Dropdown</span>
                             </button>
@@ -72,10 +77,10 @@
                     <div class="mb-3 col-md-4">
                         <label class="col-form-label" for="Resource_Name">Choose Resource</label>
                         <div class="input-group mb-3">
-                            <input type="hidden" id="hiddenresourceInputValue">
-                            <input type="hidden" id="hiddenresourceInputId">
+                            <input type="hidden" id="hiddenresourceInputValue" value="{{store.resource_value.Resource_Name}}">
+                            <input type="hidden" id="hiddenresourceInputId" value="{{store.resource_value.id}}">
 
-                            <input type="text" class="form-control" id="resourceInput" placeholder="Resource Name" autocomplete="off" disabled>
+                            <input type="text" class="form-control" id="resourceInput" value="{% if store.resource_value %}{{store.resource_value.Resource_Name}}{% endif %}" placeholder="Resource Name" autocomplete="off" disabled>
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="resourceDropdownButton">
                                 <span class="visually-hidden">Toggle Dropdown</span>
                             </button>
@@ -91,35 +96,34 @@
                     <!-- Budget Unit Cost -->
                     <div class="mb-3 col-md-6">
                         <label class="col-form-label" for="Available_Quantity">Available Quantity</label>
-                        <input type="number" class="form-control" id="Available_Quantity" name="Available_Quantity" placeholder="0" required readonly>
+                        <input type="number" class="form-control" id="Available_Quantity" value="{% if store.resource_value.calculate_stock_availablity %}{{store.resource_value.calculate_stock_availablity}}{% endif %}" name="Available_Quantity" placeholder="0" required readonly>
                     </div>
 
                     <div class="mb-3 col-md-6">
                         <label class="col-form-label" for="Budget_Unit_Cost">Budget Unit Cost</label>
-                        <input type="number" class="form-control" id="Budget_Unit_Cost" name="Budget_Unit_Cost" placeholder="Budget Unit Cost" required readonly>
+                        <input type="number" class="form-control" id="Budget_Unit_Cost" name="Budget_Unit_Cost" value="{% if not store.Calculate_Manual_Unit_Cost %}{{store.unit_cost}}{% else %}{{store.resource_value.Budget_Unit_Cost}}{% endif %}" placeholder="Budget Unit Cost" required readonly>
                     </div>
         
                     <!-- Contract Quantity -->
                     <div class="mb-3 col-md-6">
                         <label class="col-form-label" for="Contract_Quantity">Stock-In Quantity</label>
-                        <input type="number" class="form-control" id="Contract_Quantity" name="Contract_Quantity" placeholder="Enter Contract Quantity" required>
+                        <input type="number" class="form-control" id="Contract_Quantity" name="Contract_Quantity"  value="{% if store.quantity %}{{store.quantity}}{% endif %}" placeholder="Enter Contract Quantity" required>
                     </div>
         
                     <!-- Manual Unit Cost -->
                     <div class="mb-3 col-md-6">
                         <label class="col-form-label" for="Manual_Unit_Cost">Manual Unit Cost</label>
-                        <input type="number" class="form-control" id="Manual_Unit_Cost" name="Manual_Unit_Cost" placeholder="Enter Manual Unit Cost">
+                        <input type="number" class="form-control" id="Manual_Unit_Cost" name="Manual_Unit_Cost" placeholder="Enter Manual Unit Cost" value="{% if store.Calculate_Manual_Unit_Cost %}{{store.unit_cost}}{% endif %}">
                     </div>
         
                     <!-- Checkbox for Manual Unit Cost -->
                     <div class="mb-3 col-md-12">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="Calculate_Manual_Unit_Cost_name" id="useManualUnitCost">
+                            <input class="form-check-input" name="Calculate_Manual_Unit_Cost_name" type="checkbox" id="useManualUnitCost" {% if store.Calculate_Manual_Unit_Cost %}checked{% endif %}>
                             <label class="form-check-label" for="useManualUnitCost">Calculate Manual Unit Cost</label>
                         </div>
                     </div>
                 </div>
-                
         
                 <div class="row justify-content-end">
                     <div>
@@ -354,7 +358,9 @@
                 // Calculate total cost
                 function calculateValues() {
                     const combAssemCode = document.getElementById('Comb_Assem_Code').value;
+
                     const Calculate_Manual_Unit_Cost_name = document.getElementById('useManualUnitCost').checked;
+
                     const quantity = parseFloat(contractQuantityInput.value) || 0;
                     const manualUnitCost = parseFloat(manualUnitCostInput.value) || 0;
                     const budgetUnitCost = parseFloat(budgetUnitCostInput.value) || 0;
@@ -496,6 +502,7 @@
 
                     // Prepare the data object
                     const data = new FormData();
+                    data.append('store_id', combAssemCode);
                     data.append('combAssemCode', combAssemCode);
                     data.append('Calculate_Manual_Unit_Cost_name', Calculate_Manual_Unit_Cost_name);
                     data.append('stock_trasaction_status', stock_trasaction_status);
@@ -510,7 +517,7 @@
                     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
                     data.append('csrfmiddlewaretoken', csrfToken);
 
-                    fetch('{% url "save_store" %}', {
+                    fetch('{% url "save_edit_store" %}', {
                         method: 'POST',
                         body: data,
                     })
