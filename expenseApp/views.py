@@ -202,6 +202,11 @@ def save_expense(request):
             unit_cost = request.POST.get('unitCost')
             total_cost = request.POST.get('totalCost')
 
+            Calculate_Manual_Unit_Cost_name = request.POST.get('Calculate_Manual_Unit_Cost_name')
+
+            print(Calculate_Manual_Unit_Cost_name)
+            print('Calculate_Manual_Unit_Cost')
+
             # print(comb_assem_code)
             # print(contract_value)
             # print(assembly_value)
@@ -209,6 +214,14 @@ def save_expense(request):
             # print(quantity)
             # print(unit_cost)
             # print(total_cost)
+
+            print('Calculate_Manual_Unit_Cost_name')
+            print(Calculate_Manual_Unit_Cost_name)
+
+            if Calculate_Manual_Unit_Cost_name == 'true':
+                Calculate_Manual_Unit_Cost_name = True
+            else:
+                Calculate_Manual_Unit_Cost_name = False
 
             expense = ExpenseTable.objects.create(
                 Company_Details=company_details_record,
@@ -218,7 +231,8 @@ def save_expense(request):
                 resource_value=CompanyResourcesTable.objects.get(id=resource_value),
                 quantity=quantity,
                 unit_cost=unit_cost,
-                total_cost=total_cost
+                total_cost=total_cost,
+                Calculate_Manual_Unit_Cost = Calculate_Manual_Unit_Cost_name
             )
             return JsonResponse({'message': 'Expense saved successfully', 'id': expense.id}, status=201)
         except Exception as e:
@@ -233,6 +247,78 @@ def expense_list(request):
     company_details_record = request.user.company_details
     expenses = ExpenseTable.objects.filter(Company_Details=company_details_record).order_by('-id')
     return render(request, "expenseApp/expense_list.html", {"expenses": expenses})
+
+
+
+
+# Edit an Expense
+@login_required
+def edit_expense(request, pk):
+    expense = get_object_or_404(ExpenseTable, pk=pk)
+
+    company_details_record = request.user.company_details
+    
+    # Filter main contract 
+    filter_MainContract_query = MainContract.objects.filter(company_details=company_details_record)
+    filter_MainContract_list = list(filter_MainContract_query.values('id', 'contract_name'))
+    filter_MainContract_json = json.dumps(filter_MainContract_list, cls=DateTimeEncoder)
+
+    # Filter resources 
+    filter_resources_query = CompanyResourcesTable.objects.filter(Company_Details=company_details_record).select_related('Resource_Code_L3')
+    filter_resources_list = list(filter_resources_query.values('id', 'Unit_of_Measure', 'Resource_Code_L1__Resource_Code_L1', 'Resource_Code_L2__Resource_Code_L2', 'Resource_Code_L3__Resource_Code_L3', 'Resource_Name', 'Budget_Unit_Cost'))
+    filter_resources_json = json.dumps(filter_resources_list, cls=DateTimeEncoder)
+
+    context = {'expense':expense, 'company_details_record': company_details_record, 'filter_resources_json': filter_resources_json, 'filter_MainContract_json':filter_MainContract_json}
+    return render(request, "expenseApp/edit_expenses.html", context)
+
+
+
+@csrf_exempt
+def save_expense(request):
+    print("saving expense ...")
+    company_details_record = request.user.company_details
+    if request.method == 'POST':
+        try:
+            expense_id = request.POST.get('expense_id')
+            comb_assem_code = request.POST.get('combAssemCode')
+            contract_value = request.POST.get('contractValue')
+            assembly_value = request.POST.get('assemblyValue')
+            resource_value = request.POST.get('resourceValue')
+            quantity = request.POST.get('quantity')
+            unit_cost = request.POST.get('unitCost')
+            total_cost = request.POST.get('totalCost')
+
+            Calculate_Manual_Unit_Cost_name = request.POST.get('Calculate_Manual_Unit_Cost_name')
+
+            print(Calculate_Manual_Unit_Cost_name)
+            print('Calculate_Manual_Unit_Cost')
+
+
+            print('Calculate_Manual_Unit_Cost_name')
+            print(Calculate_Manual_Unit_Cost_name)
+
+            if Calculate_Manual_Unit_Cost_name == 'true':
+                Calculate_Manual_Unit_Cost_name = True
+            else:
+                Calculate_Manual_Unit_Cost_name = False
+            
+            get_expense = ExpenseTable.objects.get(id=expense_id)
+            get_expense.Company_Details=company_details_record
+            get_expense.comb_assem_code=comb_assem_code
+            get_expense.contract_value=MainContract.objects.get(id=contract_value)
+            get_expense.assembly_value=Estimation_Assemblies_Table.objects.get(id=assembly_value)
+            get_expense.resource_value=CompanyResourcesTable.objects.get(id=resource_value)
+            get_expense.quantity=quantity
+            get_expense.unit_cost=unit_cost
+            get_expense.total_cost=total_cost
+            get_expense.Calculate_Manual_Unit_Cost = Calculate_Manual_Unit_Cost_name
+            get_expense.save()
+
+            
+            return JsonResponse({'message': 'Expense Updated successfully', 'id': get_expense.id}, status=201)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
 
@@ -252,7 +338,7 @@ def delete_expense(request, pk):
 def expenses_management(request):
     company_details_record = request.user.company_details
 
-    level1_resources = Resource_Code_L1_Table.objects.all()
+    level1_resources = Resource_Code_L1_Table.objects.filter(Company_Details=company_details_record)
     data = []
     for level1 in level1_resources:
         level2_resources = Resource_Code_L2_Table.objects.filter(Resource_Code_L1=level1)

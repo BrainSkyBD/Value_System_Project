@@ -2,7 +2,7 @@
 {% load static %}
 {% block Expenses_Management_active %}active open{% endblock %}
 {% block Calculate_Expenses_active %}active{% endblock %}
-{% block title %}Create User{% endblock %}
+{% block title %}Create Expense{% endblock %}
 {% block content %}
 
 <div class="container-xxl flex-grow-1 container-p-y">
@@ -98,7 +98,7 @@
                     <!-- Checkbox for Manual Unit Cost -->
                     <div class="mb-3 col-md-12">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="useManualUnitCost">
+                            <input class="form-check-input" type="checkbox"  name="Calculate_Manual_Unit_Cost_name" id="useManualUnitCost">
                             <label class="form-check-label" for="useManualUnitCost">Calculate Manual Unit Cost</label>
                         </div>
                     </div>
@@ -334,6 +334,7 @@
                 // Calculate total cost
                 function calculateValues() {
                     const combAssemCode = document.getElementById('Comb_Assem_Code').value;
+                    const Calculate_Manual_Unit_Cost_name = document.getElementById('useManualUnitCost').checked;
                     const quantity = parseFloat(contractQuantityInput.value) || 0;
                     const manualUnitCost = parseFloat(manualUnitCostInput.value) || 0;
                     const budgetUnitCost = parseFloat(budgetUnitCostInput.value) || 0;
@@ -492,6 +493,7 @@
                     console.log('saveExpense');
 
                     const combAssemCode = document.getElementById('Comb_Assem_Code').value;
+                    const Calculate_Manual_Unit_Cost_name = document.getElementById('useManualUnitCost').checked;
                     const contractValue = document.getElementById('hiddencontractInputId').value;
                     const assemblyValue = document.getElementById('hiddenassemblyInputId').value;
                     const resourceValue = document.getElementById('hiddenresourceInputId').value;
@@ -511,6 +513,7 @@
                     // Prepare the data object
                     const data = new FormData();
                     data.append('combAssemCode', combAssemCode);
+                    data.append('Calculate_Manual_Unit_Cost_name', Calculate_Manual_Unit_Cost_name);
                     data.append('contractValue', contractValue);
                     data.append('assemblyValue', assemblyValue);
                     data.append('resourceValue', resourceValue);
