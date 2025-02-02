@@ -10,6 +10,11 @@ urlpatterns = [
     path('create_invoice/', views.create_invoice, name='create_invoice'),
     path('contract/delete/<int:contract_id>/', views.delete_contract, name='delete_contract'),
 
+    path('contract-edit/<int:contract_id>/', views.edit_contract, name='edit_contract'),
+    path('save-edit-contract/', views.save_edit_contract, name='save_edit_contract'),
+    path('delete-contract-row/<int:row_id>/', views.delete_contract_row, name='delete_contract_row'),
+
+
     path('Contract_Management/', views.Contract_Management_main, name="Contract_Management"),
     path('contract_assembly_resource_details_management/', views.contract_assembly_resource_details_management, name="contract_assembly_resource_details_management"),
 

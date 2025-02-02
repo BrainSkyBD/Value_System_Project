@@ -1,0 +1,590 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block Company_Contract_active %}active open{% endblock %}
+{% block create_contract_active %}active{% endblock %}
+{% block title %}Create User{% endblock %}
+{% block content %}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Contract/</span> Create Contract</h4>
+
+    <!-- Basic Layout & Basic with Icons -->
+    <div class="row">
+      <!-- Basic Layout -->
+      <div class="col-xxl">
+        <div class="card mb-4">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="mb-0">Contract Form</h5>
+            <small class="text-muted float-end">New Resource</small>
+          </div>
+          <div class="card-body">
+            <form method="POST" action="" onsubmit="event.preventDefault(); calculateValues();">
+                {% csrf_token %}
+                <div class="row">
+                    
+                    <div class="mb-3 col-md-6">
+                        <label class="col-form-label" for="Resource_Name">Choose Assembly Name</label><br>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="numberInput" placeholder="Enter Assembly Name">
+                            <input type="hidden" class="form-control" id="numberInput_id" >
+
+                            
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton">
+                                <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu w-100" id="dropdownMenu" style="margin-top: 42px;"></ul>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 col-md-6">
+                        <label class=" col-form-label" for="Comb_Assem_Code">Comb-Assem-Code</label>
+                        <input type="text" class="form-control" id="Comb_Assem_Code" name="Comb_Assem_Code" placeholder="Comb-Assem-Code" required readonly>
+                    </div>
+                    
+                    <!-- Container to display resource totals for the selected assembly, hidden by default -->
+                    <div id="resourceTotalsContainer" class="mb-3 col-md-12" style="display: none;">
+                        <label class="col-form-label" for="Resource_Totals">Resource Code Totals</label>
+                        <!-- Dynamic inputs will be appended here -->
+                    </div>
+            
+                    <div class="mb-3 col-md-12">
+                        <label class=" col-form-label" for="Item_Description">Item Description</label>
+                        <textarea type="text" class="form-control" id="Item_Description" name="Item_Description" placeholder="" required></textarea>
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label class=" col-form-label" for="Contract_Quantity">Contract Quantity</label>
+                        <input type="number" class="form-control" id="Contract_Quantity" name="Contract_Quantity" placeholder="Enter Contract Quantity" required>
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label class=" col-form-label" for="Contract_Quantity">Budget Quantity</label>
+                        <input type="number" class="form-control" id="Budget_Quantity" name="Budget_Quantity" placeholder="Enter Budget Quantity" required>
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text">Markup (%)</span>
+                            <input type="number" id="Markup" class="form-control" placeholder="Markup Percentage" value="1.0" step="0.01" min="0">
+                        </div>
+                    </div>
+                </div>
+              
+                <div class="row justify-content-end">
+                    <div class="">
+                        <button type="submit" class="btn btn-primary">Calculate</button>
+                    </div>
+                </div>
+            
+                <!-- Table to display the results -->
+                <div id="resultsTable" class="mt-4" style="display: none;">
+                    <h4>MARKUP & PRICE</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Unit</th>
+                                <th>Unit Cost</th>
+                                <th>Contract Quantity</th>
+                                <th>Budget Quantity</th>
+                                <th>Budget Costs</th>
+                                <th>Markup(%)</th>
+                                <th>Markup Amount</th>
+                                <th>Unit Price</th>
+                                <th>Total Price</th>
+                                <th>Target Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTableBody"></tbody>
+                    </table>
+            
+                    <h4 class="mt-3">BUDGET UNIT RATES</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Resource Code</th>
+                                <th>BUDGET UNIT RATES</th>
+                                <th>Budget Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resourceCodeTableBody"></tbody>
+                    </table>
+            
+                    <div class="text-center" style="margin-top: 20px;">
+                        <button type="button" class="btn btn-secondary" onclick="addToContract()">Add to Contract</button>
+                    </div>
+                </div>
+            </form>
+            
+            <!-- New table to accumulate the results -->
+            <div id="contractTableContainer" class="mt-4" style="">
+                <div class="table-responsive text-nowrap">
+                    <h4>CONTRACT DETAILS</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Comb-Assem-Code</th>
+                                <th>Choose Assembly Name</th>
+                                <th>Unit</th>
+                                <th>Unit Costs</th>
+                                <th>Contract Quantity</th>
+                                <th>Budget Quantity</th>
+                                <th>Budget Costs</th>
+                                <th>Markup</th>
+                                <th>Markup Amount</th>
+                                <th>Unit Price</th>
+                                <th>Total Price</th>
+                                <th>Target Profit</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contractTableBody">
+
+                        {% for exist_main_contract_details in main_contract_details %}
+                            <tr>
+                              <td>{{ exist_main_contract_details.comb_assem_code }}</td>
+                              <td>{{ exist_main_contract_details.assembly_name }}</td>
+                              <td>{{ exist_main_contract_details.unit }}</td>
+                              <td>${{ exist_main_contract_details.unit_cost }}</td>
+                              <td>{{ exist_main_contract_details.contract_quantity }}</td>
+                              <td>{{ exist_main_contract_details.budget_quantity }}</td>
+                              <td>${{ exist_main_contract_details.budget_costs }}</td>
+                              <td>{{ exist_main_contract_details.markup }}%</td>
+                              <td>${{ exist_main_contract_details.markup_amount }}</td>
+                              <td>${{ exist_main_contract_details.unit_price }}</td>
+                              <td>${{ exist_main_contract_details.total_price }}</td>
+                              <td>${{ exist_main_contract_details.target_profit }}</td>
+
+
+
+
+                              <td>
+                                <button class="btn btn-danger btn-sm remove-button" data-id="{{ exist_main_contract_details.id }}">Remove</button>
+                              </td>
+
+                                <td style="display: none;">{{ exist_main_contract_details.item_description }}</td>
+                              <td style="display: none;">{{ exist_main_contract_details.assembly_row.id }}</td>
+                              <!-- New column for row ID -->
+                                <td style="display: none;">{{ exist_main_contract_details.id }}</td>
+
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="6">Totals</th>
+                                <th id="totalBudgetCosts">$0.00</th>
+                                <th></th>
+                                <th id="totalMarkupAmount">$0.00</th>
+                                <th></th>
+                                <th id="totalTotalPrice">$0.00</th>
+                                <th id="totalTargetProfit">$0.00</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="text-center" style="margin-top: 20px;">
+                    <!-- <button id="saveContractButton" type="button" class="btn btn-warning" onclick="saveContract()">Save Contract</button> -->
+
+                    <!-- Save Contract Button -->
+                    <button id="saveContractButton"  class="btn btn-primary" onclick="showContractNameModal()"  style="padding-left: 40px; padding-right: 40px; padding-top: 20px; padding-bottom: 20px;">Update Contract</button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="contractNameModal" tabindex="-1" aria-labelledby="contractNameModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="contractNameModalLabel">Enter Contract Name</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="text" id="contractNameInput" class="form-control" placeholder="Contract Name" name="contract_name" value="{{main_contract.contract_name}}">
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" onclick="saveContract()">Update Contract</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <script>
+                const numberInput = document.getElementById('numberInput');
+                const numberInput_id = document.getElementById('numberInput_id');
+                const dropdownMenuButton = document.getElementById('dropdownMenuButton');
+                const dropdownMenu = document.getElementById('dropdownMenu');
+                const resourceTotalsContainer = document.getElementById('resourceTotalsContainer');
+            
+                // Parse assemblies data from Django context
+                const assembliesData = JSON.parse('{{ assemblies_data|safe }}');
+                console.log(assembliesData);
+            
+                function populateDropdown(items) {
+                    dropdownMenu.innerHTML = ''; // Clear existing items
+            
+                    items.forEach(item => {
+                        console.log(item);
+                        const li = document.createElement('li');
+                        const aTag = document.createElement('a');
+                        aTag.classList.add('dropdown-item');
+                        aTag.href = "#";
+                        aTag.innerHTML = `${item.Assemblies_Code_L3} (${item.unit_of_measure})`;
+                        
+                        aTag.addEventListener('click', (e) => {
+                            e.preventDefault();
+            
+                            // Set input field to selected assembly name
+                            numberInput.value = item.assembly_name;
+                            numberInput_id.value = item.id;
+                            document.getElementById('Comb_Assem_Code').value=`${item.Assemblies_Code_L1}-${item.Assemblies_Code_L2}-${item.Assemblies_Code_L3}`;
+                            
+                            // Display resource code totals for the selected assembly
+                            displayResourceCodeTotals(item.id);
+                            
+                            dropdownMenu.classList.remove('show');
+                        });
+            
+                        li.appendChild(aTag);
+                        dropdownMenu.appendChild(li);
+                    });
+                }
+            
+                function displayResourceCodeTotals(assemblyId) {
+                    const assembly = assembliesData.find(a => a.id === assemblyId);
+                    
+                    if (assembly) {
+                        const totals = assembly.resource_code_totals;
+            
+                        // Clear existing inputs and show the container
+                        resourceTotalsContainer.innerHTML = '';
+                        resourceTotalsContainer.style.display = 'block';
+                        
+                        for (const [resourceCode, budget_unit_rate] of Object.entries(totals)) {
+                            // Create label and input for each resource code total
+                            const label = document.createElement('label');
+                            label.classList.add('col-form-label');
+                            label.textContent = `${resourceCode}`;
+            
+                            const input = document.createElement('input');
+                            input.type = 'text';
+                            input.classList.add('form-control', 'mb-2');
+                            input.value = `$${budget_unit_rate}`;
+                            input.setAttribute('readonly', 'readonly');
+            
+                            // Append the label and input to the container
+                            resourceTotalsContainer.appendChild(label);
+                            resourceTotalsContainer.appendChild(input);
+                        }
+                    }
+                }
+            
+                // Initially populate the dropdown with all assemblies
+                populateDropdown(assembliesData);
+            
+                // Toggle dropdown visibility
+                dropdownMenuButton.addEventListener('click', () => {
+                    dropdownMenu.classList.toggle('show');
+                });
+            
+                // Filter dropdown based on input
+                numberInput.addEventListener('input', () => {
+                    const value = numberInput.value.toLowerCase();
+                    const filteredData = assembliesData.filter(item => item.assembly_name.toLowerCase().includes(value));
+                    populateDropdown(filteredData);
+                    dropdownMenu.classList.add('show');
+                });
+            
+                // Close dropdown when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!dropdownMenuButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
+            
+                // Function to perform the calculations and update the table
+                function calculateValues() {
+                    const selectedAssemblyName = numberInput.value;
+                    console.log(selectedAssemblyName)
+                    const assembly = assembliesData.find(a => a.assembly_name === selectedAssemblyName);
+                    console.log(assembly)
+            
+                    if (!assembly) {
+                        alert('Please select a valid assembly name.');
+                        return;
+                    }
+            
+                    const unit = assembly.unit_of_measure;
+                    const unitCost = parseFloat(assembly.assembly_unit_cost);
+                    const budgetQuantity = parseFloat(document.getElementById('Budget_Quantity').value);
+                    const contractQuantity = parseFloat(document.getElementById('Contract_Quantity').value);
+                    const markup = parseFloat(document.getElementById('Markup').value);
+                    
+                    const budgetCosts = budgetQuantity * unitCost;
+                    const markupAmount = budgetCosts * (markup / 100);
+                    const unitPrice = unitCost * (1 + markup / 100);
+                    const totalPrice = unitPrice * contractQuantity;
+                    const targetProfit = totalPrice - budgetCosts;
+            
+                    // Update the results table
+                    const resultsTableBody = document.getElementById('resultsTableBody');
+                    const resourceCodeTableBody = document.getElementById('resourceCodeTableBody');
+            
+                    resultsTableBody.innerHTML = `
+                        <tr>
+                            <td>${unit}</td>
+                            <td>$${unitCost.toFixed(2)}</td>
+                            <td>${contractQuantity}</td>
+                            <td>${budgetQuantity}</td>
+                            <td>$${budgetCosts.toFixed(2)}</td>
+                            <td>${markup}%</td>
+                            <td>$${markupAmount.toFixed(2)}</td>
+                            <td>$${unitPrice.toFixed(2)}</td>
+                            <td>$${totalPrice.toFixed(2)}</td>
+                            <td>$${targetProfit.toFixed(2)}</td>
+                        </tr>
+                    `;
+            
+                    resourceCodeTableBody.innerHTML = '';
+                    for (const [resourceCode, budget_unit_rate] of Object.entries(assembly.resource_code_totals)) {
+                        resourceCodeTableBody.innerHTML += `
+                            <tr>
+                                <td>${resourceCode}</td>
+                                <td>$${budget_unit_rate}</td>
+                                <td>$${budget_unit_rate*budgetQuantity}</td>
+                            </tr>
+                        `;
+                    }
+            
+                    document.getElementById('resultsTable').style.display = 'block';
+                }
+            
+                function addToContract() {
+                    const resultsTableBody = document.getElementById('resultsTableBody').querySelector('tr');
+                    const contractTableBody = document.getElementById('contractTableBody');
+                    if (!resultsTableBody || !contractTableBody) {
+                        console.error('Table body not found');
+                        return;
+                    }
+                    
+                    const newRow = resultsTableBody.cloneNode(true);
+
+                    // Add the Comb_Assem_Code value as a new column
+                    const combAssemCodeValue = document.getElementById('Comb_Assem_Code')?.value || ''; // Get value or default to empty
+                    const combAssemCodeCell = document.createElement('td');
+                    combAssemCodeCell.textContent = combAssemCodeValue; // Add the value to the cell
+                    newRow.insertBefore(combAssemCodeCell, newRow.firstChild); // Insert at the beginning of the row
+
+                    // Add the numberInput value as a new column
+                    const numberInputValue = document.getElementById('numberInput')?.value || ''; // Get value or default to empty
+                    const numberInputCell = document.createElement('td');
+                    numberInputCell.textContent = numberInputValue; // Add the value to the cell
+                    newRow.insertBefore(numberInputCell, combAssemCodeCell.nextSibling); // Insert after the Comb_Assem_Code column
+
+                    // Add the "Remove" button
+                    const actionCell = document.createElement('td');
+                    const removeButton = document.createElement('button');
+                    removeButton.classList.add('btn', 'btn-danger', 'btn-sm', 'remove-button');
+                    removeButton.textContent = 'Remove';
+
+                    // Attach the event listener using the reusable function
+                    removeButton.addEventListener('click', function () {
+                        handleRemoveButtonClick(this); // Use the reusable function
+                    });
+                    actionCell.appendChild(removeButton);
+                    newRow.appendChild(actionCell);
+
+                    // Add the new column at the end
+                    const newColumnCell = document.createElement('td');
+                    newColumnCell.textContent = document.getElementById('Item_Description').value;
+                    newColumnCell.style.display = 'none'; 
+                    newRow.appendChild(newColumnCell);
+
+                    // Add the new column at the end
+                    const assemblies_id_const = document.createElement('td');
+                    assemblies_id_const.textContent = document.getElementById('numberInput_id').value;
+                    assemblies_id_const.style.display = 'none'; 
+                    newRow.appendChild(assemblies_id_const);
+
+
+                    // Add the new column for row ID (set to None for new rows)
+                    const rowIdCell = document.createElement('td');
+                    rowIdCell.textContent = 'None'; // Set to None for new rows
+                    rowIdCell.style.display = 'none';
+                    newRow.appendChild(rowIdCell);
+                    
+                    contractTableBody.appendChild(newRow);
+                    updateTotals();
+                    document.getElementById('contractTableContainer').style.display = 'block';
+                }
+            
+                function updateTotals() {
+                    const contractTableBody = document.getElementById('contractTableBody');
+                    let totalBudgetCosts = 0;
+                    let totalMarkupAmount = 0;
+                    let totalTotalPrice = 0;
+                    let totalTargetProfit = 0;
+            
+                    Array.from(contractTableBody.querySelectorAll('tr')).forEach(row => {
+                        const cells = row.querySelectorAll('td');
+                        console.log(cells)
+                        console.log(cells.length)
+                        if (cells.length >= 9) {
+                            totalBudgetCosts += parseFloat(cells[6].textContent.replace('$', '')) || 0;
+                            totalMarkupAmount += parseFloat(cells[8].textContent.replace('$', '')) || 0;
+                            totalTotalPrice += parseFloat(cells[10].textContent.replace('$', '')) || 0;
+                            totalTargetProfit += parseFloat(cells[11].textContent.replace('$', '')) || 0;
+                        }
+                    });
+            
+                    document.getElementById('totalBudgetCosts').textContent = `$${totalBudgetCosts.toFixed(2)}`;
+                    document.getElementById('totalMarkupAmount').textContent = `$${totalMarkupAmount.toFixed(2)}`;
+                    document.getElementById('totalTotalPrice').textContent = `$${totalTotalPrice.toFixed(2)}`;
+                    document.getElementById('totalTargetProfit').textContent = `$${totalTargetProfit.toFixed(2)}`;
+                }
+
+
+                function showContractNameModal() {
+                    const contractNameModal = new bootstrap.Modal(document.getElementById('contractNameModal'));
+                    contractNameModal.show();
+                }
+
+
+
+
+                function saveContract() {
+                    const saveButton = document.getElementById('saveContractButton');
+                    saveButton.textContent = 'Saving...';
+                    saveButton.disabled = true;
+
+                    const contractName = document.getElementById('contractNameInput').value;
+                    if (!contractName) {
+                        alert('Please enter a contract name.');
+                        saveButton.textContent = 'Update Contract';
+                        saveButton.disabled = false;
+                        return;
+                    }
+
+                    const contractTableBody = document.getElementById('contractTableBody');
+                    const rows = Array.from(contractTableBody.querySelectorAll('tr')).map(row => {
+                        return Array.from(row.querySelectorAll('td')).map(cell => cell.textContent.trim()).join(',');
+                    });
+                    console.log('rows')
+                    console.log(rows)
+
+                    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                    const data = new FormData();
+                    data.append('csrfmiddlewaretoken', csrfToken);
+                    data.append('contract_name', contractName);
+                    data.append('Comb_Assem_Code', document.getElementById('Comb_Assem_Code').value);
+                    data.append('numberInput', document.getElementById('numberInput').value);
+                    data.append('numberInput_id', document.getElementById('numberInput_id').value);
+                    data.append('Item_Description', document.getElementById('Item_Description').value);
+                    data.append('totalBudgetCosts', document.getElementById('totalBudgetCosts').textContent);
+                    data.append('totalMarkupAmount', document.getElementById('totalMarkupAmount').textContent);
+                    data.append('totalTotalPrice', document.getElementById('totalTotalPrice').textContent);
+                    data.append('totalTargetProfit', document.getElementById('totalTargetProfit').textContent);
+
+                    // Add main_contract.id to the FormData
+                    const mainContractId = '{{ main_contract.id }}'; // Access main_contract.id from Django template context
+                    data.append('main_contract_id', mainContractId);
+
+                    // data.append('rows[]', rows);
+
+                    // Loop through rows and append each row separately to 'rows[]'
+                    rows.forEach(row => {
+                        data.append('rows[]', row); // Append each row as a separate element in 'rows[]'
+                    });
+
+                    fetch('{% url "save_edit_contract" %}', {
+                        method: 'POST',
+                        body: data,
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.href = '{% url "contract_list" %}';
+                        } else {
+                            alert('An error occurred while Updating the contract.');
+                            saveButton.textContent = 'Update Contract';
+                            saveButton.disabled = false;
+                        }
+                    }).catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while Updating the contract.');
+                        saveButton.textContent = 'Update Contract';
+                        saveButton.disabled = false;
+                    });
+                }
+
+
+
+            </script>
+
+
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+
+                    // Attach event listeners to all "Remove" buttons (including pre-existing rows)
+                    const removeButtons = document.querySelectorAll('.remove-button');
+                    removeButtons.forEach(button => {
+                        button.addEventListener('click', function () {
+                            handleRemoveButtonClick(this); // Use the reusable function
+                        });
+                    });
+
+                    // Call updateTotals() to initialize the totals
+                    updateTotals();
+                });
+            </script>
+
+            <script>
+                function handleRemoveButtonClick(button) {
+                console.log('handleRemoveButtonClick');
+                const row = button.closest('tr'); // Find the closest row to the clicked button
+                const rowId = button.getAttribute('data-id'); // Get the row ID from the data-id attribute
+
+                if (rowId) {
+                    // Send an AJAX request to delete the row from the database
+                    fetch(`/delete-contract-row/${rowId}/`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}', // Include the CSRF token for security
+                        },
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            row.remove(); // Remove the row from the table
+                            updateTotals(); // Update the totals
+                            alert('Row deleted successfully!');
+                        } else {
+                            alert('Failed to delete the row.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                } else {
+                    // For newly added rows (no rowId), just remove the row and update totals
+                    row.remove();
+                    updateTotals();
+                }
+            }
+            </script>
+
+
+
+
+            
+          
+          
+          </div>
+        </div>
+      </div>
+      <!-- Basic with Icons -->
+      
+    </div>
+  </div>
+
+    
+{% endblock %}

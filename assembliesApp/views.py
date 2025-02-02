@@ -177,12 +177,12 @@ def save_edit_company_assembly_record(request):
         except json.JSONDecodeError:
             list_resourses_ids = []
 
-        e=request.POST.get('Assembly_Name')
-        eq=request.POST.get('Assemblies_Code_L1')
-        eqq=request.POST.get('Assemblies_Code_L2')
-        eee=request.POST.get('Assemblies_Code_L3')
-        sse=request.POST.get('Unit_of_Measure')
-        qwwe=request.POST.get('Assembly_Unit_Cost')
+        # e=request.POST.get('Assembly_Name')
+        # eq=request.POST.get('Assemblies_Code_L1')
+        # eqq=request.POST.get('Assemblies_Code_L2')
+        # eee=request.POST.get('Assemblies_Code_L3')
+        # sse=request.POST.get('Unit_of_Measure')
+        # qwwe=request.POST.get('Assembly_Unit_Cost')
 
         # Update the assembly record
         assembly.Assembly_Name = request.POST.get('Assembly_Name')
@@ -222,7 +222,8 @@ def save_edit_company_assembly_record(request):
                 )
 
         messages.success(request, "Assembly updated successfully!")
-        return redirect('estimate_assemblies')
+        # return redirect('estimate_assemblies')
+        return redirect('assemblies_list')
 
     return render(request, "assembliesApp/edit_estimate_assemblies.html", {
         'assembly': assembly,
