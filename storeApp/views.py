@@ -371,6 +371,7 @@ def save_edit_store(request):
     company_details_record = request.user.company_details
     if request.method == 'POST':
         try:
+            store_id = request.POST.get('store_id')
             comb_assem_code = request.POST.get('combAssemCode')
             stock_trasaction_status  = request.POST.get('stock_trasaction_status')
             contract_value = request.POST.get('contractValue')
@@ -381,6 +382,9 @@ def save_edit_store(request):
             total_cost = request.POST.get('totalCost')
 
             Calculate_Manual_Unit_Cost_name = request.POST.get('Calculate_Manual_Unit_Cost_name')
+
+            print(store_id)
+            print('store_id')
 
             print(Calculate_Manual_Unit_Cost_name)
             print('Calculate_Manual_Unit_Cost')
@@ -419,20 +423,23 @@ def save_edit_store(request):
             else:
                 Calculate_Manual_Unit_Cost_name = False
 
-            store = StoreTable.objects.create(
-                Company_Details=company_details_record,
-                comb_assem_code=comb_assem_code,
-                stock_trasaction_status=stock_trasaction_status,
-                contract_value=MainContract.objects.get(id=contract_value),
-                assembly_value=Estimation_Assemblies_Table.objects.get(id=assembly_value),
-                resource_value=get_resource_record,
-                quantity=quantity,
-                unit_cost=unit_cost,
-                total_cost=total_cost,
-                Calculate_Manual_Unit_Cost = Calculate_Manual_Unit_Cost_name
-            )
+            get_store = StoreTable.objects.get(id=store_id)
+            print(get_store)
+            get_store.Company_Details=company_details_record
+            get_store.comb_assem_code=comb_assem_code
+            get_store.stock_trasaction_status=stock_trasaction_status
+            get_store.contract_value=MainContract.objects.get(id=contract_value)
+            get_store.assembly_value=Estimation_Assemblies_Table.objects.get(id=assembly_value)
+            get_store.resource_value=get_resource_record
+            get_store.quantity=quantity
+            get_store.unit_cost=unit_cost
+            get_store.total_cost=total_cost
+            get_store.Calculate_Manual_Unit_Cost = Calculate_Manual_Unit_Cost_name
+
+            get_store.save()
+            
             print('saved store')
-            return JsonResponse({'message': 'store saved successfully', 'id': store.id}, status=201)
+            return JsonResponse({'message': 'store Updated successfully', 'id': get_store.id}, status=201)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
     return JsonResponse({'error': 'Invalid request method'}, status=405)
@@ -444,7 +451,7 @@ def save_edit_store(request):
 def store_management(request):
     company_details_record = request.user.company_details
 
-    level1_resources = Resource_Code_L1_Table.objects.all()
+    level1_resources = Resource_Code_L1_Table.objects.filter(Company_Details=company_details_record)
     data = []
     for level1 in level1_resources:
         level2_resources = Resource_Code_L2_Table.objects.filter(Resource_Code_L1=level1)

@@ -46,6 +46,8 @@
                 <td>{{ store.unit_cost }}</td>
                 <td>{{ store.total_cost }}</td>
                 <td>
+                    <a class="btn btn-info btn-sm" href="{% url 'edit_store' store.pk %}">Edit</a>
+                    
                     <a class="btn btn-danger btn-sm" href="{% url 'delete_store' store.pk %}" data-bs-toggle="modal" data-bs-target="#modalCenter{{store.id}}">Delete</a>
                     
             

@@ -40,6 +40,8 @@
                 <td>{{ expense.unit_cost }}</td>
                 <td>{{ expense.total_cost }}</td>
                 <td>
+                    <a class="btn btn-info btn-sm" href="{% url 'edit_expense' expense.pk %}">Edit</a>
+
                     <a class="btn btn-danger btn-sm" href="{% url 'delete_expense' expense.pk %}" data-bs-toggle="modal" data-bs-target="#modalCenter{{expense.id}}">Delete</a>
                     
             
