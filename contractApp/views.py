@@ -60,7 +60,10 @@ def save_contract(request):
         totalTotalPrice = request.POST.get('totalTotalPrice')
         totalTargetProfit = request.POST.get('totalTargetProfit')
         rows = request.POST.getlist('rows[]')
-
+        r = []
+        for row in rows:
+            data = row.split(',')
+            r.append(data)
         print(totalBudgetCosts, totalMarkupAmount, totalTotalPrice, totalTargetProfit)
 
         print('------------------------------')
@@ -122,10 +125,10 @@ def save_contract(request):
                     unit=get_estimated_assembly.Unit_of_Measure,
                     item_description=data[13],
                     unit_cost=clean_decimal(data[3]),
-                    budget_quantity=clean_decimal(data[5]),
-                    contract_quantity=clean_decimal(data[4]),
+                    budget_quantity=clean_decimal(data[5]), #BUDGET QUANTITY
+                    contract_quantity=clean_decimal(data[4]), #CONTRACT QUANTITY
                     budget_costs=clean_decimal(data[6]),
-                    markup=clean_decimal(data[7]),
+                    markup=clean_decimal(data[7]),  #Markup
                     markup_amount=clean_decimal(data[8]),
                     unit_price=clean_decimal(data[9]),
                     total_price=clean_decimal(data[10]),
@@ -135,6 +138,119 @@ def save_contract(request):
                 # except (IndexError, InvalidOperation) as e:
                 #     print(f"Error processing row {row}: {e}")
                 #     return JsonResponse({'status': 'error', 'message': f"Error processing row {row}: {e}"}, status=400)
+
+                filter_Estimation_Assemblies_Resource_Details = Estimation_Assemblies_Resource_Details_Table.objects.filter(Estimation_Assemblies=get_estimated_assembly)
+                for estimated_assembly in filter_Estimation_Assemblies_Resource_Details:
+                    var_MainContractBudgetCost = MainContractBudgetCostTable(
+                        company_details = company_details_record,
+                        contract_details = var_contract_detail_record_save,
+                        Resource_Code = estimated_assembly.Resource_record,
+                        budget_unit_rates = estimated_assembly.Resource_record.Budget_Unit_Cost,
+                        budget_cost = float(estimated_assembly.Resource_record.Budget_Unit_Cost)*int(clean_decimal(data[4]))
+                    )
+                    var_MainContractBudgetCost.save()
+
+        return JsonResponse({'status': 'success'})
+
+    return JsonResponse({'status': 'error'}, status=400)
+
+
+
+
+@login_required
+def save_edit_contract(request):
+    company_details_record = request.user.company_details
+    if request.method == 'POST':
+        print(request.POST)
+        main_contract_id = request.POST.get('main_contract_id')  # Get main_contract.id from the request
+
+        contract_name = request.POST.get('contract_name')
+        comb_assem_code = request.POST.get('Comb_Assem_Code')
+        number_input = request.POST.get('numberInput')
+        numberInput_id = request.POST.get('numberInput_id')
+        item_description = request.POST.get('Item_Description')
+        print(contract_name, comb_assem_code, number_input, numberInput_id, item_description)
+
+        totalBudgetCosts = request.POST.get('totalBudgetCosts')
+        totalMarkupAmount = request.POST.get('totalMarkupAmount')
+        totalTotalPrice = request.POST.get('totalTotalPrice')
+        totalTargetProfit = request.POST.get('totalTargetProfit')
+        rows = request.POST.getlist('rows[]')
+        r = []
+        for row in rows:
+            data = row.split(',')
+            r.append(data)
+        print(totalBudgetCosts, totalMarkupAmount, totalTotalPrice, totalTargetProfit)
+
+        print('------------------------------')
+
+        print(rows)
+        print(type(rows))
+
+        if not rows:
+            return JsonResponse({'status': 'error', 'message': 'No rows provided'}, status=400)
+
+        company_details_record = request.user.company_details
+
+        if not company_details_record:
+            return JsonResponse({'status': 'error', 'message': 'No company details found for the user'}, status=400)
+
+        # Create the MainContract
+
+        main_contract=get_object_or_404(MainContract, id=main_contract_id)
+        main_contract.contract_name = contract_name
+        main_contract.contract_total_budget_costs = clean_decimal(totalBudgetCosts)
+        main_contract.contract_total_markup_amount = clean_decimal(totalMarkupAmount)
+        main_contract.contract_total_price = clean_decimal(totalTotalPrice)
+        main_contract.contract_total_target_profit = clean_decimal(totalTargetProfit)
+        main_contract.save()
+
+
+        # Create MainContractDetail instances
+        for row in rows:
+            data = row.split(',')
+            # print('data')
+            # print(data)
+            # print(type(data))
+            # print(data[0])
+            #
+            # print(data[0])
+            # print(data[1])
+            # print(data[2])
+            # print(data[3])
+            # print(clean_decimal(data[4]))
+            # print(clean_decimal(data[5]))
+            # print(clean_decimal(data[6]))
+            # print(clean_decimal(data[7]))
+            # print(clean_decimal(data[8]))
+            # print(clean_decimal(data[9]))
+            # print(clean_decimal(data[10]))
+            # print(clean_decimal(data[11]))
+            #
+            # print('ssss')
+
+            if len(data) >= 12 and data[15] == 'None':  # Ensure there are enough elements in the data list
+                # try:
+                get_estimated_assembly = Estimation_Assemblies_Table.objects.filter(id=data[14]).last()
+
+                var_contract_detail_record_save = MainContractDetail(
+                    main_contract=main_contract,
+                    comb_assem_code=data[0],
+                    assembly_name=data[1],
+                    assembly_row = get_estimated_assembly,
+                    unit=get_estimated_assembly.Unit_of_Measure,
+                    item_description=data[13],
+                    unit_cost=clean_decimal(data[3]),
+                    budget_quantity=clean_decimal(data[5]), #BUDGET QUANTITY
+                    contract_quantity=clean_decimal(data[4]), #CONTRACT QUANTITY
+                    budget_costs=clean_decimal(data[6]),
+                    markup=clean_decimal(data[7]),  #Markup
+                    markup_amount=clean_decimal(data[8]),
+                    unit_price=clean_decimal(data[9]),
+                    total_price=clean_decimal(data[10]),
+                    target_profit=clean_decimal(data[11])
+                )
+                var_contract_detail_record_save.save()
 
                 filter_Estimation_Assemblies_Resource_Details = Estimation_Assemblies_Resource_Details_Table.objects.filter(Estimation_Assemblies=get_estimated_assembly)
                 for estimated_assembly in filter_Estimation_Assemblies_Resource_Details:
@@ -348,7 +464,58 @@ def create_contract(request):
     return render(request, "contractApp/create_contract.html", context)
 
 
+def edit_contract(request, contract_id):
+    company_details_record = request.user.company_details
+    main_contract = MainContract.objects.get(id=contract_id)
+    main_contract_details = MainContractDetail.objects.filter(main_contract=main_contract)
 
+    filter_Estimation_Assemblies_Table = Estimation_Assemblies_Table.objects.filter(
+        Company_Details=company_details_record)
+
+    # Gather assemblies and resource totals
+    assemblies_data = []
+    for assembly in filter_Estimation_Assemblies_Table:
+        assemblies_data.append({
+            'id': assembly.id,
+            'assembly_name': assembly.Assembly_Name,
+            'unit_of_measure': assembly.Unit_of_Measure,
+            'assembly_unit_cost': assembly.Assembly_Unit_Cost,
+            'resource_code_totals': assembly.get_resource_code_totals(),
+            'Assemblies_Code_L1': assembly.Assemblies_Code_L1.Assemblies_Code_L1,
+            'Assemblies_Code_L2': assembly.Assemblies_Code_L2.Assemblies_Code_L2,
+            'Assemblies_Code_L3': assembly.Assemblies_Code_L3.Assemblies_Code_L3,
+        })
+
+    context = {
+        'assemblies_data': json.dumps(assemblies_data),  # Pass as JSON for easy JS access
+        'main_contract_details': main_contract_details,  # Pass as JSON for easy JS access
+        'main_contract': main_contract,  # Pass as JSON for easy JS access
+    }
+
+
+    return render(request, 'contractApp/edit_contract.html', context)
+
+
+
+
+@csrf_exempt  # Use this decorator if you're not using CSRF tokens in your AJAX request
+def delete_contract_row(request, row_id):
+    print('row_id')
+    if request.method == 'DELETE':
+        try:
+            d=3
+            print('row_id')
+            print(row_id)
+            # Fetch the row from the database
+            row = MainContractDetail.objects.get(id=row_id)
+            row.delete()  # Delete the row
+            return JsonResponse({'status': 'success', 'message': 'Row deleted successfully.'})
+        except MainContractDetail.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Row not found.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=405)
 
 
 def Contract_Management(request):
