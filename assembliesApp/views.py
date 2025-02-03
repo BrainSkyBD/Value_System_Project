@@ -105,6 +105,8 @@ def company_assembly_record(request):
         var_Estimation_Assemblies.save()
 
         for resource_id in list_resourses_ids:
+            print(resource_id)
+            print('resource_id')
             resource_record_row = CompanyResourcesTable.objects.get(id=resource_id[0])
             var_Estimation_Assemblies_Resource_Details = Estimation_Assemblies_Resource_Details_Table(
                 Company_Details=company_details_record,
@@ -112,7 +114,7 @@ def company_assembly_record(request):
                 Resource_record=resource_record_row,
                 Resource_Budget_Unit_Cost=resource_record_row.Budget_Unit_Cost,
                 Quantity=resource_id[1],
-                Unit_of_Measure=resource_id[2],
+                Unit_of_Measure=resource_id[3],
                 Unit_Cost=float(resource_record_row.Budget_Unit_Cost)*float(resource_id[1]),
             ).save()
         messages.success(request, "Assembly saved successfully!")
@@ -217,7 +219,7 @@ def save_edit_company_assembly_record(request):
                     Resource_record=resource_record_row,
                     Resource_Budget_Unit_Cost=resource_record_row.Budget_Unit_Cost,
                     Quantity=resource_id[1],
-                    Unit_of_Measure=resource_id[2],
+                    Unit_of_Measure=resource_id[3],
                     Unit_Cost=float(resource_record_row.Budget_Unit_Cost) * float(resource_id[1]),
                 )
 
