@@ -6,7 +6,7 @@
 {% block content %}
 
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Contract/</span> Update Contract</h4>
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Contract/</span> Create Contract</h4>
 
     <!-- Basic Layout & Basic with Icons -->
     <div class="row">
@@ -27,7 +27,6 @@
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" id="numberInput" placeholder="Enter Assembly Name">
                             <input type="hidden" class="form-control" id="numberInput_id" >
-
 
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton">
                                 <span class="visually-hidden">Toggle Dropdown</span>
@@ -113,7 +112,7 @@
             </form>
 
             <!-- New table to accumulate the results -->
-            <div id="contractTableContainer" class="mt-4" style="">
+            <div id="contractTableContainer" class="mt-4" style="display: none;">
                 <div class="table-responsive text-nowrap">
                     <h4>CONTRACT DETAILS</h4>
                     <table class="table table-bordered">
@@ -134,42 +133,10 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="contractTableBody">
-
-                        {% for exist_main_contract_details in main_contract_details %}
-                            <tr>
-                              <td>{{ exist_main_contract_details.comb_assem_code }}</td>
-                              <td>{{ exist_main_contract_details.assembly_name }}</td>
-                              <td>{{ exist_main_contract_details.unit }}</td>
-                              <td>${{ exist_main_contract_details.unit_cost }}</td>
-                              <td>{{ exist_main_contract_details.contract_quantity }}</td>
-                              <td>{{ exist_main_contract_details.budget_quantity }}</td>
-                              <td>${{ exist_main_contract_details.budget_costs }}</td>
-                              <td>{{ exist_main_contract_details.markup }}%</td>
-                              <td>${{ exist_main_contract_details.markup_amount }}</td>
-                              <td>${{ exist_main_contract_details.unit_price }}</td>
-                              <td>${{ exist_main_contract_details.total_price }}</td>
-                              <td>${{ exist_main_contract_details.target_profit }}</td>
-
-
-
-
-                              <td>
-                                <button class="btn btn-danger btn-sm remove-button" data-id="{{ exist_main_contract_details.id }}">Remove</button>
-                              </td>
-
-                                <td style="display: none;">{{ exist_main_contract_details.item_description }}</td>
-                              <td style="display: none;">{{ exist_main_contract_details.assembly_row.id }}</td>
-                              <!-- New column for row ID -->
-                                <td style="display: none;">{{ exist_main_contract_details.id }}</td>
-
-                            </tr>
-                        {% endfor %}
-
-                        </tbody>
+                        <tbody id="contractTableBody"></tbody>
                         <tfoot>
                             <tr>
-                                <th colspan="6">Totals</th>
+                                <th colspan="5">Totals</th>
                                 <th id="totalBudgetCosts">$0.00</th>
                                 <th></th>
                                 <th id="totalMarkupAmount">$0.00</th>
@@ -185,7 +152,7 @@
                     <!-- <button id="saveContractButton" type="button" class="btn btn-warning" onclick="saveContract()">Save Contract</button> -->
 
                     <!-- Save Contract Button -->
-                    <button id="saveContractButton"  class="btn btn-primary" onclick="showContractNameModal()"  style="padding-left: 40px; padding-right: 40px; padding-top: 20px; padding-bottom: 20px;">Update Contract</button>
+                    <button id="saveContractButton"  class="btn btn-primary" onclick="showContractNameModal()"  style="padding-left: 40px; padding-right: 40px; padding-top: 20px; padding-bottom: 20px;">Save Contract</button>
 
                     <!-- Modal -->
                     <div class="modal fade" id="contractNameModal" tabindex="-1" aria-labelledby="contractNameModalLabel" aria-hidden="true">
@@ -196,12 +163,11 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <input type="text" id="contractNameInput" class="form-control" placeholder="Contract Name" name="contract_name" value="{{main_contract.contract_name}}">
-
+                                    <input type="text" id="contractNameInput" class="form-control" placeholder="Contract Name">
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" onclick="saveContract()">Update Contract</button>
+                                    <button type="button" class="btn btn-primary" onclick="saveContract()">Save Contract</button>
                                 </div>
                             </div>
                         </div>
@@ -369,6 +335,8 @@
                     }
 
                     const newRow = resultsTableBody.cloneNode(true);
+                    console.log('newRow')
+                    console.log(newRow)
 
                     // Add the Comb_Assem_Code value as a new column
                     const combAssemCodeValue = document.getElementById('Comb_Assem_Code')?.value || ''; // Get value or default to empty
@@ -382,16 +350,33 @@
                     numberInputCell.textContent = numberInputValue; // Add the value to the cell
                     newRow.insertBefore(numberInputCell, combAssemCodeCell.nextSibling); // Insert after the Comb_Assem_Code column
 
-                    // Add the "Remove" button
+                    // newRow.removeChild(newRow.children[2]);
+
+                    // Create new <td> elements
+                    // const newTdAt3rd = document.createElement('td');
+                    // newTdAt3rd.textContent = 'New Cell 3'; // Content for the new cell at 3rd position
+
+                    // const newTdAt5th = document.createElement('td');
+                    // newTdAt5th.textContent = 'New Cell 5'; // Content for the new cell at 5th position
+
+                    // // Add the new cells
+                    // newRow.insertBefore(newTdAt3rd, newRow.children[2]); // Insert at 3rd position (index 2)
+                    // newRow.insertBefore(newTdAt5th, newRow.children[4]); // Insert at 5th position (index 4 after adding 3rd)
+
+                    // // Verify the updated row
+                    // console.log(newRow.outerHTML);
+                    // console.log('newRow')
+                    // console.log(newRow)
+
                     const actionCell = document.createElement('td');
                     const removeButton = document.createElement('button');
-                    removeButton.classList.add('btn', 'btn-danger', 'btn-sm', 'remove-button');
+                    removeButton.classList.add('btn', 'btn-danger', 'btn-sm');
                     removeButton.textContent = 'Remove';
+                    removeButton.onclick = function() {
+                        contractTableBody.removeChild(newRow);
+                        updateTotals();
+                    };
 
-                    // Attach the event listener using the reusable function
-                    removeButton.addEventListener('click', function () {
-                        handleRemoveButtonClick(this); // Use the reusable function
-                    });
                     actionCell.appendChild(removeButton);
                     newRow.appendChild(actionCell);
 
@@ -406,13 +391,6 @@
                     assemblies_id_const.textContent = document.getElementById('numberInput_id').value;
                     assemblies_id_const.style.display = 'none';
                     newRow.appendChild(assemblies_id_const);
-
-
-                    // Add the new column for row ID (set to None for new rows)
-                    const rowIdCell = document.createElement('td');
-                    rowIdCell.textContent = 'None'; // Set to None for new rows
-                    rowIdCell.style.display = 'none';
-                    newRow.appendChild(rowIdCell);
 
                     contractTableBody.appendChild(newRow);
                     updateTotals();
@@ -450,7 +428,142 @@
                     contractNameModal.show();
                 }
 
+                // function saveContract() {
+                //     const saveButton = document.getElementById('saveContractButton');
+                //     saveButton.textContent = 'Saving...';
+                //     saveButton.disabled = true;
 
+                //     const contractName = document.getElementById('contractNameInput').value;
+                //     if (!contractName) {
+                //         alert('Please enter a contract name.');
+                //         saveButton.textContent = 'Save Contract';
+                //         saveButton.disabled = false;
+                //         return;
+                //     }
+
+                //     const contractTableBody = document.getElementById('contractTableBody');
+                //     const rows = Array.from(contractTableBody.querySelectorAll('tr')).map(row => {
+                //         return Array.from(row.querySelectorAll('td')).map(cell => cell.textContent.trim()).join(',');
+                //     });
+
+                //     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                //     const data = new FormData();
+                //     data.append('csrfmiddlewaretoken', csrfToken);
+                //     data.append('contract_name', contractName);
+                //     data.append('Comb_Assem_Code', document.getElementById('Comb_Assem_Code').value);
+                //     data.append('numberInput', document.getElementById('numberInput_id').value);
+                //     data.append('numberInput_id', document.getElementById('numberInput_id').value);
+
+                //     data.append('Item_Description', document.getElementById('Item_Description').value);
+                //     data.append('rows[]', rows);
+
+                //     console.log('data')
+                //     console.log(data)
+
+                //     fetch('', {
+                //         method: 'POST',
+                //         body: data,
+                //     }).then(response => {
+                //         if (response.ok) {
+                //             window.location.href = '{% url "contract_list" %}';
+                //         } else {
+                //             alert('An error occurred while saving the contract.');
+                //             saveButton.textContent = 'Save Contract';
+                //             saveButton.disabled = false;
+                //         }
+                //     }).catch(error => {
+                //         console.error('Error:', error);
+                //         alert('An error occurred while saving the contract.');
+                //         saveButton.textContent = 'Save Contract';
+                //         saveButton.disabled = false;
+                //     });
+                // }
+
+
+                // function saveContract() {
+                //     const saveButton = document.getElementById('saveContractButton');
+                //     saveButton.textContent = 'Saving...';
+                //     saveButton.disabled = true;
+
+                //     const contractName = document.getElementById('contractNameInput').value;
+                //     if (!contractName) {
+                //         alert('Please enter a contract name.');
+                //         saveButton.textContent = 'Save Contract';
+                //         saveButton.disabled = false;
+                //         return;
+                //     }
+
+                //     const contractTableBody = document.getElementById('contractTableBody');
+                //     const rows = Array.from(contractTableBody.querySelectorAll('tr')).map(row => {
+                //         return Array.from(row.querySelectorAll('td')).map(cell => cell.textContent.trim()).join(',');
+                //     });
+
+                //     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                //     const data = new FormData();
+                //     data.append('csrfmiddlewaretoken', csrfToken);
+                //     data.append('contract_name', contractName);
+                //     data.append('Comb_Assem_Code', document.getElementById('Comb_Assem_Code').value);
+                //     data.append('numberInput', document.getElementById('numberInput').value);
+                //     data.append('Item_Description', document.getElementById('Item_Description').value);
+                //     data.append('rows[]', rows);
+
+                //     fetch('{% url "save_contract" %}', {
+                //         method: 'POST',
+                //         body: data,
+                //     }).then(response => {
+                //         if (response.ok) {
+                //             window.location.href = '{% url "contract_list" %}';
+                //         } else {
+                //             alert('An error occurred while saving the contract.');
+                //             saveButton.textContent = 'Save Contract';
+                //             saveButton.disabled = false;
+                //         }
+                //     }).catch(error => {
+                //         console.error('Error:', error);
+                //         alert('An error occurred while saving the contract.');
+                //         saveButton.textContent = 'Save Contract';
+                //         saveButton.disabled = false;
+                //     });
+                // }
+
+
+
+                // function saveContract() {
+                //     const saveButton = document.getElementById('saveContractButton');
+                //     saveButton.textContent = 'Saving...';
+                //     saveButton.disabled = true;
+
+                //     const contractTableBody = document.getElementById('contractTableBody');
+                //     const rows = Array.from(contractTableBody.querySelectorAll('tr')).map(row => {
+                //         return Array.from(row.querySelectorAll('td')).map(cell => cell.textContent.trim()).join(',');
+                //     });
+
+                //     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                //     const data = new FormData();
+                //     data.append('csrfmiddlewaretoken', csrfToken);
+                //     data.append('Comb_Assem_Code', document.getElementById('Comb_Assem_Code').value);
+                //     data.append('numberInput', document.getElementById('numberInput').value);
+                //     data.append('Item_Description', document.getElementById('Item_Description').value);
+                //     data.append('rows[]', rows);
+
+                //     fetch('', {
+                //         method: 'POST',
+                //         body: data,
+                //     }).then(response => {
+                //         if (response.ok) {
+                //             window.location.href = '{% url "contract_list" %}';
+                //         } else {
+                //             alert('An error occurred while saving the contract.');
+                //             saveButton.textContent = 'Save Contract';
+                //             saveButton.disabled = false;
+                //         }
+                //     }).catch(error => {
+                //         console.error('Error:', error);
+                //         alert('An error occurred while saving the contract.');
+                //         saveButton.textContent = 'Save Contract';
+                //         saveButton.disabled = false;
+                //     });
+                // }
 
 
                 function saveContract() {
@@ -461,7 +574,7 @@
                     const contractName = document.getElementById('contractNameInput').value;
                     if (!contractName) {
                         alert('Please enter a contract name.');
-                        saveButton.textContent = 'Update Contract';
+                        saveButton.textContent = 'Save Contract';
                         saveButton.disabled = false;
                         return;
                     }
@@ -486,10 +599,6 @@
                     data.append('totalTotalPrice', document.getElementById('totalTotalPrice').textContent);
                     data.append('totalTargetProfit', document.getElementById('totalTargetProfit').textContent);
 
-                    // Add main_contract.id to the FormData
-                    const mainContractId = '{{ main_contract.id }}'; // Access main_contract.id from Django template context
-                    data.append('main_contract_id', mainContractId);
-
                     // data.append('rows[]', rows);
 
                     // Loop through rows and append each row separately to 'rows[]'
@@ -497,82 +606,82 @@
                         data.append('rows[]', row); // Append each row as a separate element in 'rows[]'
                     });
 
-                    fetch('{% url "save_edit_contract" %}', {
+                    fetch('{% url "save_contract" %}', {
                         method: 'POST',
                         body: data,
                     }).then(response => {
                         if (response.ok) {
                             window.location.href = '{% url "contract_list" %}';
                         } else {
-                            alert('An error occurred while Updating the contract.');
-                            saveButton.textContent = 'Update Contract';
+                            alert('An error occurred while saving the contract.');
+                            saveButton.textContent = 'Save Contract';
                             saveButton.disabled = false;
                         }
                     }).catch(error => {
                         console.error('Error:', error);
-                        alert('An error occurred while Updating the contract.');
-                        saveButton.textContent = 'Update Contract';
+                        alert('An error occurred while saving the contract.');
+                        saveButton.textContent = 'Save Contract';
                         saveButton.disabled = false;
                     });
                 }
 
 
+                // function saveContract() {
+                //     const saveButton = document.getElementById('saveContractButton');
+                //     saveButton.textContent = 'Saving...';
+                //     saveButton.disabled = true;
 
+                //     const contractTableBody = document.getElementById('contractTableBody');
+                //     const rows = contractTableBody.querySelectorAll('tr');
+
+                //     const combAssemCode = document.getElementById('Comb_Assem_Code').value;
+                //     const assemblyName = document.getElementById('numberInput').value;
+                //     const itemDescription = document.getElementById('Item_Description').value;
+
+                //     const details = Array.from(rows).map(row => {
+                //         const cells = row.querySelectorAll('td');
+                //         return {
+                //             unit: cells[2].textContent,
+                //             unit_cost: parseFloat(cells[3].textContent.replace('$', '')),
+                //             budget_quantity: parseFloat(cells[4].textContent),
+                //             budget_costs: parseFloat(cells[5].textContent.replace('$', '')),
+                //             markup: parseFloat(cells[6].textContent.replace('%', '')),
+                //             markup_amount: parseFloat(cells[7].textContent.replace('$', '')),
+                //             unit_price: parseFloat(cells[8].textContent.replace('$', '')),
+                //             total_price: parseFloat(cells[9].textContent.replace('$', '')),
+                //             target_profit: parseFloat(cells[10].textContent.replace('$', ''))
+                //         };
+                //     });
+
+                //     const data = {
+                //         comb_assem_code: combAssemCode,
+                //         assembly_name: assemblyName,
+                //         item_description: itemDescription,
+                //         details: details
+                //     };
+
+                //     fetch('{% url "save_contract" %}', {
+                //         method: 'POST',
+                //         headers: {
+                //             'Content-Type': 'application/json',
+                //             'X-CSRFToken': '{{ csrf_token }}'
+                //         },
+                //         body: JSON.stringify(data)
+                //     })
+                //     .then(response => response.json())
+                //     .then(data => {
+                //         if (data.status === 'success') {
+                //             // alert('Contract saved successfully!');
+                //             window.location.href = '{% url "contract_list" %}';
+                //         } else {
+                //             alert('Error saving contract.');
+                //         }
+                //     })
+                //     .catch(error => {
+                //         console.error('Error:', error);
+                //     });
+                // }
             </script>
-
-
-
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-
-                    // Attach event listeners to all "Remove" buttons (including pre-existing rows)
-                    const removeButtons = document.querySelectorAll('.remove-button');
-                    removeButtons.forEach(button => {
-                        button.addEventListener('click', function () {
-                            handleRemoveButtonClick(this); // Use the reusable function
-                        });
-                    });
-
-                    // Call updateTotals() to initialize the totals
-                    updateTotals();
-                });
-            </script>
-
-            <script>
-                function handleRemoveButtonClick(button) {
-                console.log('handleRemoveButtonClick');
-                const row = button.closest('tr'); // Find the closest row to the clicked button
-                const rowId = button.getAttribute('data-id'); // Get the row ID from the data-id attribute
-
-                if (rowId) {
-                    // Send an AJAX request to delete the row from the database
-                    fetch(`/delete-contract-row/${rowId}/`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRFToken': '{{ csrf_token }}', // Include the CSRF token for security
-                        },
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            row.remove(); // Remove the row from the table
-                            updateTotals(); // Update the totals
-                            alert('Row deleted successfully!');
-                        } else {
-                            alert('Failed to delete the row.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-                } else {
-                    // For newly added rows (no rowId), just remove the row and update totals
-                    row.remove();
-                    updateTotals();
-                }
-            }
-            </script>
-
-
 
 
             
