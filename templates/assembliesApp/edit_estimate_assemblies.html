@@ -693,7 +693,7 @@ function show_existing_records() {
     //totalCost += itemTotalCost;
     //document.getElementById('totalCost').innerText = `${totalCost.toFixed(2)}`;
 
-    resource_quantity = [resourceCode_id, quantity.toFixed(2), totalCost.toFixed(2)]
+    resource_quantity = [resourceCode_id, quantity.toFixed(2), totalCost.toFixed(2), unitOfMeasure]
     // Example of appending an item to the list
     list_resourses_ids.push(resource_quantity);
     // Store the array back to the input as a JSON string
