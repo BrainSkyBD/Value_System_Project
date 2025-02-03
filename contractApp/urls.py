@@ -28,4 +28,10 @@ urlpatterns = [
     path('subcontract/delete/<int:subcontract_id>/', views.delete_subcontract, name='delete_subcontract'),
 
     path('SubContract_Management/', views.SubContract_Management_main, name="SubContract_Management"),
+
+    path('subcontract-edit/<int:subcontract_id>/', views.edit_subcontract, name='edit_subcontract'),
+    path('save-edit-subcontract/', views.save_edit_subcontract, name='save_edit_subcontract'),
+    path('delete-subcontract-row/<int:row_id>/', views.delete_subcontract_row, name='delete_subcontract_row'),
+
+
 ]

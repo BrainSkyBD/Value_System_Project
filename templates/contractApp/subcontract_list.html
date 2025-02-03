@@ -25,6 +25,7 @@
                 <td>
                     <!-- Add any actions you want, such as viewing details or editing -->
                     <a href="{% url 'view_subcontract' contract.id %}" class="btn btn-info">View</a>
+                    <a href="{% url 'edit_subcontract' contract.id %}" class="btn btn-warning">Edit</a> <!-- Edit Button -->
                     <a href="#" id="deleteContractButton" class="btn btn-danger" onclick="deleteContract({{ contract.id }})">Delete Contract</a>
                 </td>
             </tr>
