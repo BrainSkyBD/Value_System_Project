@@ -518,6 +518,8 @@ def delete_contract_row(request, row_id):
         return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=405)
 
 
+
+
 def Contract_Management(request):
     company_details_record = request.user.company_details
     print('company_details_record')
@@ -704,6 +706,45 @@ def create_subcontract(request):
 
 
 
+@login_required
+def edit_subcontract(request, subcontract_id):
+
+    main_subcontract = SubContractTable.objects.get(id=subcontract_id)
+    main_subcontract_details = SubContractDetail.objects.filter(sub_contract=main_subcontract)
+
+    company_details_record = request.user.company_details
+    filter_Estimation_Assemblies_Table = Estimation_Assemblies_Table.objects.filter(Company_Details=company_details_record)
+
+    # Gather assemblies and resource totals
+    assemblies_data = []
+    for assembly in filter_Estimation_Assemblies_Table:
+        assemblies_data.append({
+            'id': assembly.id,
+            'assembly_name': assembly.Assembly_Name,
+            'unit_of_measure': assembly.Unit_of_Measure,
+            'assembly_unit_cost': assembly.Assembly_Unit_Cost,
+            'resource_code_totals': assembly.get_resource_code_totals(),
+            'Assemblies_Code_L1': assembly.Assemblies_Code_L1.Assemblies_Code_L1,
+            'Assemblies_Code_L2': assembly.Assemblies_Code_L2.Assemblies_Code_L2,
+            'Assemblies_Code_L3': assembly.Assemblies_Code_L3.Assemblies_Code_L3,
+
+        })
+
+    # Filter main contract
+    filter_MainContract_query = MainContract.objects.filter(company_details=company_details_record)
+    filter_MainContract_list = list(filter_MainContract_query.values('id', 'contract_name'))
+    filter_MainContract_json = json.dumps(filter_MainContract_list, cls=DateTimeEncoder)
+
+    context = {
+        'assemblies_data': json.dumps(assemblies_data),  # Pass as JSON for easy JS access
+        'filter_MainContract_json':filter_MainContract_json,
+        'main_subcontract':main_subcontract,
+        'main_subcontract_details':main_subcontract_details,
+    }
+    return render(request, "contractApp/edit_subcontract.html", context)
+
+
+
 
 @login_required
 def save_subcontract(request):
@@ -782,6 +823,128 @@ def save_subcontract(request):
         return JsonResponse({'status': 'success'})
 
     return JsonResponse({'status': 'error'}, status=400)
+
+
+
+@login_required
+def save_edit_subcontract(request):
+    if request.method == 'POST':
+        print('subcontract')
+        print(request.POST)
+
+        main_contract_id = request.POST.get('main_contract_id')
+
+        subcontract_name = request.POST.get('subcontract_name')
+        comb_assem_code = request.POST.get('Comb_Assem_Code')
+        hiddencontractInputId = request.POST.get('hiddencontractInputId')
+        hiddenassemblyInputId = request.POST.get('hiddenassemblyInputId')
+        item_description = request.POST.get('Item_Description')
+
+        totalTotalPrice = request.POST.get('totalTotalPrice')
+        rows = request.POST.getlist('rows[]')
+
+        print("hiddencontractInputId, hiddenassemblyInputId, totalTotalPrice, subcontract_name")
+        print(hiddencontractInputId, hiddenassemblyInputId, totalTotalPrice, subcontract_name)
+
+
+        print(rows)
+        print(type(rows))
+
+        if not rows:
+            return JsonResponse({'status': 'error', 'message': 'No rows provided'}, status=400)
+
+        company_details_record = request.user.company_details
+
+        if not company_details_record:
+            return JsonResponse({'status': 'error', 'message': 'No company details found for the user'}, status=400)
+
+        # Create the MainContract
+        sub_contract = get_object_or_404(SubContractTable, id=main_contract_id)
+        sub_contract.company_details = company_details_record
+        sub_contract.contract_value = MainContract.objects.filter(id=hiddencontractInputId).last()
+        sub_contract.subcontract_name = subcontract_name
+        sub_contract.contract_total_price = clean_decimal(totalTotalPrice)
+        sub_contract.save()
+
+        # sub_contract = SubContractTable.objects.create(
+        #     company_details=company_details_record,
+        #     contract_value=MainContract.objects.filter(id=hiddencontractInputId).last(),
+        #     subcontract_name=subcontract_name,
+        #     contract_total_price=clean_decimal(totalTotalPrice),
+        # )
+        # print('sub_contract')
+        # print(sub_contract)
+
+        # Create MainContractDetail instances
+        r = []
+        for row in rows:
+            data = row.split(',')
+            r.append(data)
+
+        for row in rows:
+            data = row.split(',')
+            # r.append(data)
+            print('data')
+            print(data)
+            print(type(data))
+
+            print(data[0])
+            print(data[1])
+            print(data[2])
+            print(data[3])
+            ns=data[6]
+            n=data[7]
+            if data[7] == 'None':
+                # if len(data) >= 12:  # Ensure there are enough elements in the data list
+                    # try:
+                get_subcontract_detail_row = Estimation_Assemblies_Table.objects.filter(id=data[6]).last()
+                print(get_subcontract_detail_row)
+                var_subcontract = SubContractDetail(
+                    sub_contract=sub_contract,
+                    comb_assem_code=comb_assem_code,
+                    assembly_value = get_subcontract_detail_row,
+                    item_description=data[5],
+                    unit=data[0],
+                    unit_cost=clean_decimal(data[1]),
+                    subcontract_quantity=clean_decimal(data[2]),
+                    subcontract_total_price=clean_decimal(data[3]),
+
+                )
+                var_subcontract.save()
+            else:
+                pass
+
+                # except (IndexError, InvalidOperation) as e:
+                #     print(f"Error processing row {row}: {e}")
+                #     return JsonResponse({'status': 'error', 'message': f"Error processing row {row}: {e}"}, status=400)
+        messages.success(request, "Sub-Contract saved successfully.")
+        # return redirect('subcontract_list')
+        return JsonResponse({'status': 'success'})
+
+    return JsonResponse({'status': 'error'}, status=400)
+
+
+
+
+@csrf_exempt  # Use this decorator if you're not using CSRF tokens in your AJAX request
+def delete_subcontract_row(request, row_id):
+    print('row_id')
+    if request.method == 'DELETE':
+        try:
+            d=3
+            print('row_id')
+            print(row_id)
+            # Fetch the row from the database
+            row = SubContractDetail.objects.get(id=row_id)
+            row.delete()  # Delete the row
+            return JsonResponse({'status': 'success', 'message': 'Row deleted successfully.'})
+        except SubContractDetail.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Row not found.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=405)
+
 
 
 
