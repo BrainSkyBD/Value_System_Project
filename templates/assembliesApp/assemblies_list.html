@@ -44,7 +44,7 @@
                   <a class="btn btn-info btn-sm" href="{% url 'edit_assembly' assemblies.id %}" style="color:white;">Edit</a>
 
                   <a class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalCenter{{assemblies.id}}" style="color:white;">Delete</a>
-                  
+                  <a class="btn btn-warning btn-sm" href="{% url 'duplicate_assembly' assemblies.id %}" style="color:white;">Duplicate</a>
           
                   <!-- Modal -->
                   <div class="modal fade" id="modalCenter{{assemblies.id}}" tabindex="-1" style="display: none;" aria-hidden="true">

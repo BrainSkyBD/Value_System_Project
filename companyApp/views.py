@@ -389,6 +389,28 @@ def Create_Resource_Dictionary(request):
     return render(request, "companyApp/Create_Resource_Dictionary.html", context)
 
 
+@login_required
+def duplicate_resource(request, resource_id):
+    # Fetch the existing resource record
+    original_resource = get_object_or_404(CompanyResourcesTable, id=resource_id)
+
+    # Create a new resource record with "Duplicate" appended to the name
+    new_resource = CompanyResourcesTable(
+        Company_Details=original_resource.Company_Details,
+        Resource_Name=f"{original_resource.Resource_Name} - Duplicate",
+        Resource_Code_L1=original_resource.Resource_Code_L1,
+        Resource_Code_L2=original_resource.Resource_Code_L2,
+        Resource_Code_L3=original_resource.Resource_Code_L3,
+        Unit_of_Measure=original_resource.Unit_of_Measure,
+        Budget_Unit_Cost=original_resource.Budget_Unit_Cost,
+    )
+    new_resource.save()
+
+    # Notify the user and redirect
+    messages.success(request, "Resource duplicated successfully!")
+    return redirect('List_Resource_Dictionary')  # Replace with the name of your resource list view
+
+
 
 @login_required
 def List_Resource_Dictionary(request):
@@ -421,9 +443,12 @@ def edit_resource(request, pk):
 
         # Update the resource record
         get_resource_record.Resource_Name = Resource_Name
-        get_resource_record.Resource_Code_L1 = get_Resource_Code_L1_record
-        get_resource_record.Resource_Code_L2 = get_Resource_Code_L2_record
-        get_resource_record.Resource_Code_L3 = get_Resource_Code_L3_record
+        if Resource_Code_L1_id:
+            get_resource_record.Resource_Code_L1 = get_Resource_Code_L1_record
+        if Resource_Code_L2_id:
+            get_resource_record.Resource_Code_L2 = get_Resource_Code_L2_record
+        if Resource_Code_L3_id:
+            get_resource_record.Resource_Code_L3 = get_Resource_Code_L3_record
         get_resource_record.Unit_of_Measure = Unit_of_Measure
         get_resource_record.Budget_Unit_Cost = Budget_Unit_Cost
 

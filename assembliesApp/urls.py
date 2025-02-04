@@ -10,6 +10,8 @@ urlpatterns = [
     path('edit_assembly/<int:pk>/', views.edit_assembly, name="edit_assembly"),
     path('assemblies_Delete/<int:pk>/', views.assemblies_Delete, name="assemblies_Delete"),
 
+    path('duplicate_assembly/<int:assembly_id>/', views.duplicate_assembly, name='duplicate_assembly'),
+
 
 
 

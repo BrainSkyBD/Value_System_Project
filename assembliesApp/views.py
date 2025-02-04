@@ -121,51 +121,44 @@ def company_assembly_record(request):
         return redirect('estimate_assemblies')
 
 
+def duplicate_assembly(request, assembly_id):
+    # Fetch the existing assembly record
+    original_assembly = get_object_or_404(Estimation_Assemblies_Table, id=assembly_id)
+
+    # Create a new assembly record with "Duplicate" appended to the name
+    new_assembly = Estimation_Assemblies_Table(
+        Company_Details=original_assembly.Company_Details,
+        Assembly_Name=f"{original_assembly.Assembly_Name} - Duplicate",
+        Assemblies_Code_L1=original_assembly.Assemblies_Code_L1,
+        Assemblies_Code_L2=original_assembly.Assemblies_Code_L2,
+        Assemblies_Code_L3=original_assembly.Assemblies_Code_L3,
+        Unit_of_Measure=original_assembly.Unit_of_Measure,
+        Assembly_Unit_Cost=original_assembly.Assembly_Unit_Cost,
+    )
+    new_assembly.save()
+
+    # Fetch and duplicate the associated resource details
+    original_resources = Estimation_Assemblies_Resource_Details_Table.objects.filter(
+        Estimation_Assemblies=original_assembly)
+    for resource in original_resources:
+        new_resource = Estimation_Assemblies_Resource_Details_Table(
+            Company_Details=resource.Company_Details,
+            Estimation_Assemblies=new_assembly,
+            Resource_record=resource.Resource_record,
+            Resource_Budget_Unit_Cost=resource.Resource_Budget_Unit_Cost,
+            Quantity=resource.Quantity,
+            Unit_of_Measure=resource.Unit_of_Measure,
+            Unit_Cost=resource.Unit_Cost,
+        )
+        new_resource.save()
+
+    # Notify the user and redirect
+    messages.success(request, "Assembly duplicated successfully!")
+    return redirect('assemblies_list')
+
 
 @login_required
 def save_edit_company_assembly_record(request):
-    # company_details_record = request.user.company_details
-    # if request.method == "POST":
-    #     list_resourses_ids_json = request.POST.get('list_resourses_ids')
-    #     get_assembly_record_id = request.POST.get('get_assembly_record_id')
-    #     try:
-    #         # Parse the JSON data
-    #         list_resourses_ids = json.loads(list_resourses_ids_json)
-    #     except json.JSONDecodeError:
-    #         list_resourses_ids = []
-    #     print(list_resourses_ids)
-    #     Assembly_Name = request.POST.get('Assembly_Name')
-    #     Assemblies_Code_L1_id = request.POST.get('Assemblies_Code_L1')
-    #     Assemblies_Code_L2_id = request.POST.get('Assemblies_Code_L2')
-    #     Assemblies_Code_L3_id = request.POST.get('Assemblies_Code_L3')
-    #     Unit_of_Measure = request.POST.get('Unit_of_Measure')
-    #     Assembly_Unit_Cost = request.POST.get('Assembly_Unit_Cost')
-    #     Total_Cost = request.POST.get('Total_Cost')
-    #
-    #     var_Estimation_Assemblies = Estimation_Assemblies_Table(
-    #         Company_Details=company_details_record,
-    #         Assembly_Name=Assembly_Name,
-    #         Assemblies_Code_L1=Assemblies_Code_L1_Table.objects.filter(id=Assemblies_Code_L1_id).last(),
-    #         Assemblies_Code_L2=Assemblies_Code_L2_Table.objects.filter(id=Assemblies_Code_L2_id).last(),
-    #         Assemblies_Code_L3=Assemblies_Code_L3_Table.objects.filter(id=Assemblies_Code_L3_id).last(),
-    #         Unit_of_Measure=Unit_of_Measure,
-    #         Assembly_Unit_Cost=Assembly_Unit_Cost,
-    #     )
-    #     var_Estimation_Assemblies.save()
-    #
-    #     for resource_id in list_resourses_ids:
-    #         resource_record_row = CompanyResourcesTable.objects.get(id=resource_id[0])
-    #         var_Estimation_Assemblies_Resource_Details = Estimation_Assemblies_Resource_Details_Table(
-    #             Company_Details=company_details_record,
-    #             Estimation_Assemblies=var_Estimation_Assemblies,
-    #             Resource_record=resource_record_row,
-    #             Resource_Budget_Unit_Cost=resource_record_row.Budget_Unit_Cost,
-    #             Quantity=resource_id[1],
-    #             Unit_of_Measure=resource_id[2],
-    #             Unit_Cost=float(resource_record_row.Budget_Unit_Cost)*float(resource_id[1]),
-    #         ).save()
-    #     messages.success(request, "Assembly saved successfully!")
-    #     return redirect('estimate_assemblies')
 
     get_assembly_record_id = request.POST.get('get_assembly_record_id')
     company_details_record = request.user.company_details
