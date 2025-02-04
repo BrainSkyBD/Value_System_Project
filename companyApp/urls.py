@@ -34,4 +34,6 @@ urlpatterns = [
     path('Resource_Delete/<int:pk>/', views.Resource_Delete, name="Resource_Delete"),
     path('Resource_Desplay/', views.Resource_Desplay, name="Resource_Desplay"),
     path('Resource_Management/', views.Resource_Management, name="Resource_Management"),
+
+    path('duplicate_resource/<int:resource_id>/', views.duplicate_resource, name='duplicate_resource'),
 ]
