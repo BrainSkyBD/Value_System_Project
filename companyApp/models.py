@@ -300,6 +300,7 @@ class CompanyResourcesTable(models.Model):
     class Meta:
         verbose_name_plural = "Company Resources Table"
     Company_Details = models.ForeignKey(CompanyDetailsTable, on_delete=models.CASCADE, null=True, blank=True)
+    Resource_Title = models.CharField(max_length=255, null=True, blank=True, default=None)
     Resource_Name = models.CharField(max_length=255, null=True, blank=True)
     Resource_Code_L1 = models.ForeignKey(Resource_Code_L1_Table, on_delete=models.CASCADE, null=True, blank=True)
     Resource_Code_L2 = models.ForeignKey(Resource_Code_L2_Table, on_delete=models.CASCADE, null=True, blank=True)

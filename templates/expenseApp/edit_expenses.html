@@ -533,7 +533,7 @@
                     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
                     data.append('csrfmiddlewaretoken', csrfToken);
 
-                    fetch('{% url "save_expense" %}', {
+                    fetch('{% url "save_expense_edit" %}', {
                         method: 'POST',
                         body: data,
                     })

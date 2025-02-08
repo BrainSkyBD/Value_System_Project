@@ -245,7 +245,7 @@
                 function populateAssemblyDropdown(assemblies) {
                     assemblyDropdown.innerHTML = '';
                     assemblies.forEach(assembly => {
-                        const assemblyName = assembly.assembly_name || 'Unnamed Assembly';
+                        const assemblyName = assembly.assembly_title || assembly.assembly_name;
                         const unitOfMeasure = assembly.unit_of_measure || 'N/A';
                         
                         const li = document.createElement('li');
@@ -261,11 +261,11 @@
             
                 // Assembly selection
                 function selectAssembly(assembly) {
-                    assemblyInput.value = assembly.assembly_name;
+                    assemblyInput.value = assembly.assembly_title;
                     assemblyDropdown.classList.remove('show');
                     fetchResource(assembly.id);
 
-                    document.getElementById('hiddenassemblyInputValue').value=assembly.assembly_name;
+                    document.getElementById('hiddenassemblyInputValue').value=assembly.assembly_title;
                     document.getElementById('hiddenassemblyInputId').value=assembly.id;
                 }
                 // Fetch assemblies for the selected resource
@@ -305,7 +305,7 @@
                 function populateResourceDropdown(resources) {
                     resourceDropdown.innerHTML = '';
                     resources.forEach(resource => {
-                        const resourceName = resource.Resource_Code_L3  || 'Unnamed resource';
+                        const resourceName = resource.Resource_Title  || 'Unnamed resource';
                         const unitOfMeasure = resource.Unit_of_Measure || 'N/A';
                         
 
@@ -322,7 +322,7 @@
             
                 // Resource selection
                 function selectResource(resource) {
-                    resourceInput.value = resource.Resource_Code_L3;
+                    resourceInput.value = resource.Resource_Title;
                     resourceDropdown.classList.remove('show');
                     budgetUnitCostInput.value = parseFloat(resource.Budget_Unit_Cost) || 0; // Populate Budget Unit Cost
                     document.getElementById('Comb_Assem_Code').value = resource.Resource_Name;
@@ -399,7 +399,7 @@
                     console.log('value')
                     console.log(value)
                     const filteredassembly = assembliesData.filter(item =>
-                        (item.assembly_name || '').toLowerCase().includes(value)
+                        (item.assembly_title || '').toLowerCase().includes(value)
                     );
                     populateAssemblyDropdown(filteredassembly);
                     assemblyDropdown.classList.toggle('show');

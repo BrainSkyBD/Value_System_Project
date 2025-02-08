@@ -196,13 +196,13 @@
                         const aTag = document.createElement('a');
                         aTag.classList.add('dropdown-item');
                         aTag.href = "#";
-                        aTag.innerHTML = `${item.Assemblies_Code_L3} (${item.unit_of_measure})`;
+                        aTag.innerHTML = `${item.assembly_title}` || `${item.Assemblies_Code_L3}`;
 
                         aTag.addEventListener('click', (e) => {
                             e.preventDefault();
 
                             // Set input field to selected assembly name
-                            numberInput.value = item.assembly_name;
+                            numberInput.value = item.assembly_title;
                             numberInput_id.value = item.id;
                             document.getElementById('Comb_Assem_Code').value=`${item.Assemblies_Code_L1}-${item.Assemblies_Code_L2}-${item.Assemblies_Code_L3}`;
 
@@ -257,7 +257,7 @@
                 // Filter dropdown based on input
                 numberInput.addEventListener('input', () => {
                     const value = numberInput.value.toLowerCase();
-                    const filteredData = assembliesData.filter(item => item.assembly_name.toLowerCase().includes(value));
+                    const filteredData = assembliesData.filter(item => item.assembly_title.toLowerCase().includes(value));
                     populateDropdown(filteredData);
                     dropdownMenu.classList.add('show');
                 });
@@ -273,7 +273,7 @@
                 function calculateValues() {
                     const selectedAssemblyName = numberInput.value;
                     console.log(selectedAssemblyName)
-                    const assembly = assembliesData.find(a => a.assembly_name === selectedAssemblyName);
+                    const assembly = assembliesData.find(a => a.assembly_title === selectedAssemblyName);
                     console.log(assembly)
 
                     if (!assembly) {

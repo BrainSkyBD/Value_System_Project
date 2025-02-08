@@ -51,7 +51,7 @@ def estimate_assemblies(request):
         filter_company_Assemblies_Code_L1_query = Assemblies_Code_L1_Table.objects.filter(Company_Details=company_details_record)
         
         # Convert the QuerySets to lists of dictionaries
-        filter_resources_list = list(filter_resources_query.values('id', 'Unit_of_Measure', 'Resource_Code_L1__Resource_Code_L1', 'Resource_Code_L2__Resource_Code_L2', 'Resource_Code_L3__Resource_Code_L3', 'Resource_Name', 'Budget_Unit_Cost'))
+        filter_resources_list = list(filter_resources_query.values('id', 'Unit_of_Measure', 'Resource_Code_L1__Resource_Code_L1', 'Resource_Code_L2__Resource_Code_L2', 'Resource_Code_L3__Resource_Code_L3', 'Resource_Name', 'Resource_Title', 'Budget_Unit_Cost'))
         # filter_resources_list = list(filter_resources_query.values())
         filter_company_Assemblies_Code_L1_query_list = list(filter_company_Assemblies_Code_L1_query.values())
         
@@ -85,6 +85,7 @@ def company_assembly_record(request):
         except json.JSONDecodeError:
             list_resourses_ids = []
         print(list_resourses_ids)
+        Assembly_Title = request.POST.get('Assembly_Title')
         Assembly_Name = request.POST.get('Assembly_Name')
         Assemblies_Code_L1_id = request.POST.get('Assemblies_Code_L1')
         Assemblies_Code_L2_id = request.POST.get('Assemblies_Code_L2')
@@ -95,6 +96,7 @@ def company_assembly_record(request):
 
         var_Estimation_Assemblies = Estimation_Assemblies_Table(
             Company_Details=company_details_record,
+            Assembly_Title=Assembly_Title,
             Assembly_Name=Assembly_Name,
             Assemblies_Code_L1=Assemblies_Code_L1_Table.objects.filter(id=Assemblies_Code_L1_id).last(),
             Assemblies_Code_L2=Assemblies_Code_L2_Table.objects.filter(id=Assemblies_Code_L2_id).last(),
@@ -181,6 +183,7 @@ def save_edit_company_assembly_record(request):
 
         # Update the assembly record
         assembly.Assembly_Name = request.POST.get('Assembly_Name')
+        assembly.Assembly_Title = request.POST.get('Assembly_Title')
         assembly.Assemblies_Code_L1 = Assemblies_Code_L1_Table.objects.filter(
             id=request.POST.get('Assemblies_Code_L1')).last()
         assembly.Assemblies_Code_L2 = Assemblies_Code_L2_Table.objects.filter(
@@ -257,7 +260,7 @@ def edit_assembly(request, pk):
         filter_company_Assemblies_Code_L1_query = Assemblies_Code_L1_Table.objects.filter(Company_Details=company_details_record)
         
         # Convert the QuerySets to lists of dictionaries
-        filter_resources_list = list(filter_resources_query.values('id', 'Unit_of_Measure', 'Resource_Code_L1__Resource_Code_L1', 'Resource_Code_L2__Resource_Code_L2', 'Resource_Code_L3__Resource_Code_L3', 'Resource_Name', 'Budget_Unit_Cost'))
+        filter_resources_list = list(filter_resources_query.values('id', 'Unit_of_Measure', 'Resource_Code_L1__Resource_Code_L1', 'Resource_Code_L2__Resource_Code_L2', 'Resource_Code_L3__Resource_Code_L3', 'Resource_Name', 'Resource_Title', 'Budget_Unit_Cost'))
         # filter_resources_list = list(filter_resources_query.values())
         filter_company_Assemblies_Code_L1_query_list = list(filter_company_Assemblies_Code_L1_query.values())
         

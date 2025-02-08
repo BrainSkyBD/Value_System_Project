@@ -49,6 +49,7 @@ class Assemblies_Code_L3_Table(models.Model):
 class Estimation_Assemblies_Table(models.Model):
     Company_Details = models.ForeignKey(CompanyDetailsTable, on_delete=models.CASCADE, null=True, blank=True)
     Assembly_Code = models.CharField(max_length=255, unique=True, default=uuid.uuid4, editable=False)
+    Assembly_Title = models.CharField(max_length=255, null=True, blank=True)
     Assembly_Name = models.CharField(max_length=255, null=True, blank=True)
     Assemblies_Code_L1 = models.ForeignKey(Assemblies_Code_L1_Table, on_delete=models.CASCADE, null=True, blank=True)
     Assemblies_Code_L2 = models.ForeignKey(Assemblies_Code_L2_Table, on_delete=models.CASCADE, null=True, blank=True)

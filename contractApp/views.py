@@ -449,6 +449,7 @@ def create_contract(request):
     for assembly in filter_Estimation_Assemblies_Table:
         assemblies_data.append({
             'id': assembly.id,
+            'assembly_title': assembly.Assembly_Title,
             'assembly_name': assembly.Assembly_Name,
             'unit_of_measure': assembly.Unit_of_Measure,
             'assembly_unit_cost': assembly.Assembly_Unit_Cost,
@@ -477,6 +478,7 @@ def edit_contract(request, contract_id):
     for assembly in filter_Estimation_Assemblies_Table:
         assemblies_data.append({
             'id': assembly.id,
+            'assembly_title': assembly.Assembly_Title,
             'assembly_name': assembly.Assembly_Name,
             'unit_of_measure': assembly.Unit_of_Measure,
             'assembly_unit_cost': assembly.Assembly_Unit_Cost,
@@ -683,6 +685,7 @@ def create_subcontract(request):
     for assembly in filter_Estimation_Assemblies_Table:
         assemblies_data.append({
             'id': assembly.id,
+            'assembly_title': assembly.Assembly_Title,
             'assembly_name': assembly.Assembly_Name,
             'unit_of_measure': assembly.Unit_of_Measure,
             'assembly_unit_cost': assembly.Assembly_Unit_Cost,
@@ -720,6 +723,7 @@ def edit_subcontract(request, subcontract_id):
     for assembly in filter_Estimation_Assemblies_Table:
         assemblies_data.append({
             'id': assembly.id,
+            'assembly_title': assembly.Assembly_Title,
             'assembly_name': assembly.Assembly_Name,
             'unit_of_measure': assembly.Unit_of_Measure,
             'assembly_unit_cost': assembly.Assembly_Unit_Cost,

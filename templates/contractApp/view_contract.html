@@ -286,6 +286,8 @@
                   </div>
               </small>
             </td>
+            <td colspan="2" style="background: #bcd8ec; color: black; text-align: center;"></td>
+
 
           </tr>
           <tr class="text-nowrap">
@@ -396,7 +398,11 @@
             <th>Contract Quantity</th>
             <th>Remain Quantity</th>
             <th>Remain Revenue</th>
-            <th>Revenue To-date</th>
+            <th>Total Contract Amount</th>
+
+
+            <th>CPI</th>
+            <th>TCPI</th>
             
 
             
@@ -497,6 +503,10 @@
               
               <td>$ {{ detail.total_price }}</td>
 
+              <!-- CPI  -->
+              <td>$ {{ detail.calculate_assembly_cpi_value }}</td>
+              <td>$ {{ detail.calculate_assembly_tcpi_value }}</td>
+
               
               
 
@@ -584,6 +594,8 @@
               <td ></td>
               <td ></td>
               <td >$ {{ contract.calculate_total_price }}</td>
+              <td >$ {{ contract.calculate_total_CPI_by_resource_list }}</td>
+              <td >$ {{ contract.calculate_total_TCPI_by_resource_list }}</td>
 
 
 

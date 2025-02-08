@@ -21,6 +21,7 @@
           <thead>
             <tr class="text-nowrap">
               <th>#</th>
+              <th>Resource Title</th>
               <th>Resource Name</th>
               <!-- <th>Resources Category</th> -->
               <th>Resource C0ode L1</th>
@@ -35,6 +36,7 @@
             {% for resource in filter_resoures %}
             <tr>
               <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ resource.Resource_Title }}</td>
               <td>{{ resource.Resource_Name }}</td>
               <!-- <td>{{ resource.Resources_Category }}</td> -->
               <td>{{ resource.Resource_Code_L1.Resource_Code_L1 }}</td>
