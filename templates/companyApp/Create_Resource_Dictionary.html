@@ -21,6 +21,11 @@
             <form method="POST" action="">
               {% csrf_token %}
               <div class="row">
+
+                <div class="mb-3 col-md-12">
+                    <label class=" col-form-label" for="Resource_Title">Resource Title</label>
+                    <input type="text" class="form-control" id="Resource_Title" name="Resource_Title" placeholder="Resource Title" >
+                </div>
                 
                 <div class="mb-3 col-md-4">
                     <label for="Resource_Code_L1" class="form-label">Resource Code L1</label>

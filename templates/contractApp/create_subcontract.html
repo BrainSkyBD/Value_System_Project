@@ -276,7 +276,7 @@
                 function populateAssemblyDropdown(assemblies) {
                     assemblyDropdown.innerHTML = '';
                     assemblies.forEach(assembly => {
-                        const assemblyName = assembly.assembly_name || 'Unnamed Assembly';
+                        const assemblyName = assembly.assembly_title || 'Unnamed Assembly';
                         const unitOfMeasure = assembly.unit_of_measure || 'N/A';
                         
                         const li = document.createElement('li');
@@ -293,12 +293,12 @@
                 // Assembly selection
                 function selectAssembly(assembly) {
                     console.log(assembly)
-                    assemblyInput.value = assembly.assembly_name;
+                    assemblyInput.value = assembly.assembly_title;
                     assemblyDropdown.classList.remove('show');
 
-                    document.getElementById('hiddenassemblyInputValue').value=assembly.assembly_name;
+                    document.getElementById('hiddenassemblyInputValue').value=assembly.assembly_title;
                     document.getElementById('hiddenassemblyInputId').value=assembly.id;
-                    document.getElementById('Comb_Assem_Code').value=`${assembly.assembly_name}`;
+                    document.getElementById('Comb_Assem_Code').value=`${assembly.assembly_title}`;
                 }
                 
             
@@ -330,7 +330,7 @@
                     console.log('value')
                     console.log(value)
                     const filteredassembly = assembliesData.filter(item =>
-                        (item.assembly_name || '').toLowerCase().includes(value)
+                        (item.assembly_title || '').toLowerCase().includes(value)
                     );
                     populateAssemblyDropdown(filteredassembly);
                     assemblyDropdown.classList.toggle('show');
@@ -450,7 +450,7 @@
                     }
                     
                     const selectedAssemblyName = assemblyInput.value;
-                    const assembly = assembliesData.find(a => a.assembly_name === selectedAssemblyName);
+                    const assembly = assembliesData.find(a => a.assembly_title === selectedAssemblyName);
             
                     if (!assembly) {
                         alert('Please select a valid assembly name.');

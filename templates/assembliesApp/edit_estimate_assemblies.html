@@ -89,7 +89,7 @@
                       const li = document.createElement('li');
                       
                       // Display the Resource Code L3 and Unit of Measure in the dropdown
-                      const resourceCode = item.Resource_Code_L3__Resource_Code_L3 || `Resource Code L3 ID: ${item.Resource_Code_L3_id}`;
+                      const resourceCode = item.Resource_Title || `Resource Code L3 ID: ${item.Resource_Code_L3_id}`;
                       const unitOfMeasure = item.Unit_of_Measure || 'No unit'; // Default to 'No unit' if missing
 
                       // Create the anchor tag for each item
@@ -101,7 +101,7 @@
                       aTag.innerHTML = `${resourceCode} (${unitOfMeasure})`;
                       
                       // Add data attributes to the anchor tag
-                      aTag.setAttribute('data-name', item.Resource_Name);
+                      aTag.setAttribute('data-name', item.Resource_Title);
                       aTag.setAttribute('data-price', item.Budget_Unit_Cost);
                       aTag.setAttribute('data-code-l1', item.Resource_Code_L1__Resource_Code_L1);
                       aTag.setAttribute('data-code-l2', item.Resource_Code_L2__Resource_Code_L2);
@@ -113,10 +113,10 @@
                           e.preventDefault(); // Prevent the default anchor behavior
                           
                           // Set the input field values based on the selected item
-                          numberInput.value = item.Resource_Code_L3__Resource_Code_L3; // Assuming you want to use item.id for input value
+                          numberInput.value = item.Resource_Title; // Assuming you want to use item.id for input value
 
                           // Optionally, you can also set data attributes on numberInput if needed
-                          numberInput.setAttribute('data-name', item.Resource_Name);
+                          numberInput.setAttribute('data-name', item.Resource_Title);
                           numberInput.setAttribute('data-price', item.Budget_Unit_Cost);
                           numberInput.setAttribute('data-code-l1', item.Resource_Code_L1__Resource_Code_L1);
                           numberInput.setAttribute('data-code-l2', item.Resource_Code_L2__Resource_Code_L2);
@@ -165,7 +165,7 @@
           <table id="resourceTable" class="table table-bordered">
               <thead>
                 <tr>
-                  <th>Resource Name</th>
+                  <th>Resource Title</th>
                   <th>Resource Code L1</th>
                   <th>Resource Code L2</th>
                   <th>Resource Code L3</th>
@@ -178,7 +178,7 @@
               <tbody id="resourceTableBody">
                 {% for exist_resource in filter_Estimation_Assemblies_Resource_Details %}
                 <tr>
-                  <td>{{ exist_resource.Resource_record.Resource_Name }}</td>
+                  <td>{{ exist_resource.Resource_record.Resource_Title }}</td>
                   <td>{{ exist_resource.Resource_record.Resource_Code_L1.Resource_Code_L1 }}</td>
                   <td>{{ exist_resource.Resource_record.Resource_Code_L2.Resource_Code_L2 }}</td>
                   <td>{{ exist_resource.Resource_record.Resource_Code_L3.Resource_Code_L3 }}</td>
@@ -224,7 +224,12 @@
                       </div>
                       <div class="modal-body">
 
-
+                        <div class="row g-2">
+                            <div class="col mb-0">
+                              <label for="Assembly_Title" class="form-label">Assembly Title</label>
+                              <input type="text" id="Assembly_Title" class="form-control" name="Assembly_Title" placeholder="Assembly Title" required>
+                            </div>
+                        </div>
 
                         <div class="row g-2 mt-3">
                             <div class="mb-3 col-md-4">
@@ -587,7 +592,7 @@ function show_existing_records() {
                       aTag.innerHTML = `${resourceCode} (${unitOfMeasure})`;
                       
                       // Add data attributes to the anchor tag
-                      aTag.setAttribute('data-name', item.Resource_Name);
+                      aTag.setAttribute('data-name', item.Resource_Title);
                       aTag.setAttribute('data-price', item.Budget_Unit_Cost);
                       aTag.setAttribute('data-code-l1', item.Resource_Code_L1__Resource_Code_L1);
                       aTag.setAttribute('data-code-l2', item.Resource_Code_L2__Resource_Code_L2);
@@ -602,7 +607,7 @@ function show_existing_records() {
                           numberInput.value = item.Resource_Code_L3__Resource_Code_L3; // Assuming you want to use item.id for input value
 
                           // Optionally, you can also set data attributes on numberInput if needed
-                          numberInput.setAttribute('data-name', item.Resource_Name);
+                          numberInput.setAttribute('data-name', item.Resource_Title);
                           numberInput.setAttribute('data-price', item.Budget_Unit_Cost);
                           numberInput.setAttribute('data-code-l1', item.Resource_Code_L1__Resource_Code_L1);
                           numberInput.setAttribute('data-code-l2', item.Resource_Code_L2__Resource_Code_L2);

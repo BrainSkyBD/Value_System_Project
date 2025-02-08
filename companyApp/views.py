@@ -360,6 +360,7 @@ def get_resource_code_l3(request):
 def Create_Resource_Dictionary(request):
     company_details_record = request.user.company_details
     if request.method == 'POST':
+        Resource_Title = request.POST.get('Resource_Title')
         Resource_Name = request.POST.get('Resource_Name')
         Resources_Category = request.POST.get('Resources_Category')
         Resource_Code_L1_id = request.POST.get('Resource_Code_L1')
@@ -372,6 +373,7 @@ def Create_Resource_Dictionary(request):
         
         Company_Resources = CompanyResourcesTable(
             Company_Details=company_details_record,
+            Resource_Title=Resource_Title,
             Resource_Name=Resource_Name,
             # Resources_Category=Resources_Category,
             Resource_Code_L1=Resource_Code_L1_Table.objects.filter(id=Resource_Code_L1_id).last(),
@@ -428,6 +430,7 @@ def edit_resource(request, pk):
         get_resource_record_id = request.POST.get('get_resource_record_id')
         get_resource_record = CompanyResourcesTable.objects.filter(id=get_resource_record_id).last()
 
+        Resource_Title = request.POST.get('Resource_Title')
         Resource_Name = request.POST.get('Resource_Name')
         Resources_Category = request.POST.get('Resources_Category')
         Resource_Code_L1_id = request.POST.get('Resource_Code_L1')
@@ -442,6 +445,7 @@ def edit_resource(request, pk):
         get_Resource_Code_L3_record = Resource_Code_L3_Table.objects.filter(id=Resource_Code_L3_id).last()
 
         # Update the resource record
+        get_resource_record.Resource_Title = Resource_Title
         get_resource_record.Resource_Name = Resource_Name
         if Resource_Code_L1_id:
             get_resource_record.Resource_Code_L1 = get_Resource_Code_L1_record

@@ -21,7 +21,8 @@
           <thead>
             <tr class="text-nowrap">
               <th>#</th>
-              <th>Assembly_Name</th>
+              <th>Assembly Title</th>
+              <th>Assembly Name</th>
               <!-- <th>Resources Category</th> -->
               <th>Assemblies Code L1</th>
               <th>Assemblies Code L2</th>
@@ -34,6 +35,7 @@
             {% for assemblies in filter_Estimation_Assemblies %}
             <tr>
               <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ assemblies.Assembly_Title }}</td>
               <td>{{ assemblies.Assembly_Name }}</td>
               <!-- <td>{{ resource.Resources_Category }}</td> -->
               <td>{{ assemblies.Assemblies_Code_L1.Assemblies_Code_L1 }}</td>

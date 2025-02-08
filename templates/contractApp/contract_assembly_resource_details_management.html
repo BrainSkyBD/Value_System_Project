@@ -110,6 +110,9 @@
                                         <th>Total Price</th>
                                         <th>Total Target <br>Profit</th>
                                         <th>Total Actual <br>Resources Cost</th>
+                                        <th>Actual Sub Contract <br>Quantity</th>
+                                        <th>Actual <br>Expenses Quantity</th>
+                                        <th>Actual <br>Store Quantity</th>
                                         <th>Actual Sub Contract <br>Cost</th>
                                         <th>Actual <br>Expenses Cost</th>
                                         <th>Actual <br>Store Cost</th>
@@ -145,6 +148,9 @@
                                         <td>$ {{ contract.contract_total_target_profit }}</td>
                                         
                                         <td>${{ contract.calculate_total_actual_cost }}</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
                                         <td>${{ contract.calculate_total_subcontract_usage_cost }}</td>
                                         <td>${{ contract.calculate_total_actual_expense_cost }}</td>
                                         <td>${{ contract.calculate_total_actual_store_cost }}</td>
@@ -183,6 +189,11 @@
                                         <td>$ {{ assembly_level_1_values.total_target_profit }}</td>
 
                                         <td>$ {{ assembly_level_1_values.total_actual_resources_cost }}</td>
+
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+
                                         <td>$ {{ assembly_level_1_values.actual_sub_contract_cost }}</td>
                                         <td>$ {{ assembly_level_1_values.actual_expenses_cost }}</td>
                                         <td>$ {{ assembly_level_1_values.actual_store_cost }}</td>
@@ -221,6 +232,11 @@
                                         <td>$ {{ assembly_level_2_values.total_target_profit }}</td>
 
                                         <td>$ {{ assembly_level_2_values.total_actual_resources_cost }}</td>
+
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+
                                         <td>$ {{ assembly_level_2_values.actual_sub_contract_cost }}</td>
                                         <td>$ {{ assembly_level_2_values.actual_expenses_cost }}</td>
                                         <td>$ {{ assembly_level_2_values.actual_store_cost }}</td>
@@ -256,6 +272,11 @@
                                         <td>$ {{ assembly_level_3_values.total_target_profit }}</td>
 
                                         <td>$ {{ assembly_level_3_values.total_actual_resources_cost }}</td>
+
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+
                                         <td>$ {{ assembly_level_3_values.actual_sub_contract_cost }}</td>
                                         <td>$ {{ assembly_level_3_values.actual_expenses_cost }}</td>
                                         <td>$ {{ assembly_level_3_values.actual_store_cost }}</td>
@@ -294,6 +315,11 @@
                                         <td>{{ resource_level_1_value.total_target_profit }}</td>
 
                                         <td>{{ resource_level_1_value.total_actual_resources_cost }}</td>
+
+                                        <td>{{ resource_level_1_value.actual_sub_contract_quantity }}</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        
                                         <td>{{ resource_level_1_value.actual_sub_contract_cost }}</td>
                                         <td>{{ resource_level_1_value.actual_expenses_cost }}</td>
                                         <td>{{ resource_level_1_value.actual_store_cost }}</td>
@@ -331,6 +357,11 @@
                                         <td>{{ resource_level_2_value.total_target_profit }}</td>
 
                                         <td>{{ resource_level_2_value.total_actual_resources_cost }}</td>
+
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+
                                         <td>{{ resource_level_2_value.actual_sub_contract_cost }}</td>
                                         <td>{{ resource_level_2_value.actual_expenses_cost }}</td>
                                         <td>{{ resource_level_2_value.actual_store_cost }}</td>
@@ -362,6 +393,11 @@
                                         <td>{{ resource_level_3_value.total_target_profit }}</td>
 
                                         <td>{{ resource_level_3_value.total_actual_resources_cost }}</td>
+
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        
                                         <td>{{ resource_level_3_value.actual_sub_contract_cost }}</td>
                                         <td>{{ resource_level_3_value.actual_expenses_cost }}</td>
                                         <td>{{ resource_level_3_value.actual_store_cost }}</td>

@@ -123,6 +123,20 @@ class MainContract(models.Model):
             total_earned_cost += resource_usage_data.get('total_actual_earned_cost_var', 0)
         return round(total_earned_cost, 2)
 
+    def calculate_total_CPI_by_resource_list(self):
+        total_cpi = 0
+        for detail in self.details.all():  
+            resource_usage_data = detail.calculate_assembly_cpi_value()
+            total_cpi += resource_usage_data
+        return round(total_cpi, 2)
+
+    def calculate_total_TCPI_by_resource_list(self):
+        total_tcpi = 0
+        for detail in self.details.all():  
+            resource_usage_data = detail.calculate_assembly_tcpi_value()
+            total_tcpi += resource_usage_data
+        return round(total_tcpi, 2)
+
     def calculate_total_contract_resource_variance_to_date_calculation(self):
         total_variance_to_date_cost = 0
         for detail in self.details.all():  
@@ -350,6 +364,7 @@ class MainContract(models.Model):
     
 
     def contract_assemblies_level_1_values(self):
+        print("========================================================================================================")
         from assembliesApp.models import Assemblies_Code_L1_Table, Assemblies_Code_L2_Table
         filter_assembly_level_1 = Assemblies_Code_L1_Table.objects.filter(Company_Details=self.company_details)
         resource_usage = {}
@@ -377,10 +392,15 @@ class MainContract(models.Model):
             Estimate_At_Completion_EAC = 0
             VAC_value = 0
 
+            print('-=--------------------------------------------------------------------------------------------------------')
+            print('Gate-1')
+
             filter_contract_details = MainContractDetail.objects.filter(
                 main_contract=self,
                 assembly_row__Assemblies_Code_L1=assemblies_level_1_record
             )
+            print(filter_contract_details)
+            print('Gate-2')
             
             if filter_contract_details:
                 total_unit_cost = round(filter_contract_details.aggregate(total=Sum('unit_cost'))['total'], 2)
@@ -391,7 +411,7 @@ class MainContract(models.Model):
                 Unit_Price = round(filter_contract_details.aggregate(total=Sum('unit_price'))['total'], 2)
                 Total_Price = round(filter_contract_details.aggregate(total=Sum('total_price'))['total'], 2)
                 Total_Target_Profit = round(filter_contract_details.aggregate(total=Sum('target_profit'))['total'], 2)
-            
+            print('Gate-3')
             for detail in filter_contract_details:  
                 resource_cost_data = detail.actual_cost_total_resource_code_calculation()
                 Total_Actual_Resources_Cost += resource_cost_data.get('total_sum_assembly_resource_code_amount_var', 0)
@@ -401,7 +421,7 @@ class MainContract(models.Model):
                 resource_usage_data = detail.actual_cost_subcontracts_resource_list()
                 Actual_Sub_Contract_Cost += resource_usage_data.get('total_sum_calculate_usage_amount', 0)
                 Actual_Sub_Contract_Cost = round(Actual_Sub_Contract_Cost, 2)
-            
+            print('Gate-5')
             for detail in filter_contract_details: 
                 resource_usage_data = detail.actual_cost_expense_resource_list()
                 Actual_Expenses_Cost += resource_usage_data.get('var_total_actual_expense_cost', 0)
@@ -411,7 +431,7 @@ class MainContract(models.Model):
                 resource_usage_data = detail.actual_cost_store_resource_list()
                 Actual_Store_Cost += resource_usage_data.get('total_actual_store_cost_var', 0)
                 Actual_Store_Cost = round(Actual_Store_Cost, 2)
-            
+            print('Gate-7')
             for detail in filter_contract_details:  
                 resource_usage_data = detail.earned_cost_by_resource_list()
                 EARNED_COSTS += resource_usage_data.get('total_actual_earned_cost_var', 0)
@@ -421,22 +441,22 @@ class MainContract(models.Model):
                 resource_usage_data = detail.contract_resource_variance_to_date_calculation()
                 VARIANCE_TO_DATE += resource_usage_data.get('contract_resource_variance_to_date_value', 0)
                 VARIANCE_TO_DATE = round(VARIANCE_TO_DATE, 2)
-
+            print('Gate-9')
             for detail in filter_contract_details:  
                 resource_usage_data = detail.contract_resource_estimate_at_completion_calculation()
                 Estimate_At_Completion_EAC += resource_usage_data.get('sum_total_estimate_at_completion_cost', 0)
                 Estimate_At_Completion_EAC = round(Estimate_At_Completion_EAC, 2)
-        
+
             for detail in filter_contract_details:  
                 resource_usage_data = detail.contract_ETC_remaining_calculation()
                 ETC_REMAINING += resource_usage_data.get('contract_ETC_remaining_value', 0)
                 ETC_REMAINING = round(ETC_REMAINING, 2)
-        
+            print('Gate-11')
             for detail in filter_contract_details:  
                 resource_usage_data = detail.contract_VAC_remaining_calculation()
                 VAC_value += resource_usage_data.get('contract_VAC_remaining_value', 0)
                 VAC_value = round(VAC_value, 2)
-
+            print('Gate-12++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
             resource_usage[assemblies_level_1_record.Assemblies_Code_L1] = {
                 "id": assemblies_level_1_record.id,
                 "name": Assembly_Level_1_Name,
@@ -461,7 +481,7 @@ class MainContract(models.Model):
                 "vac_value": VAC_value,
                 "level_2_values": self.contract_assemblies_level_2_values(assemblies_level_1_record)
             }
-        
+            print("Done -----------------------------------------------------------------------------------------")
         return resource_usage
 
     def contract_assemblies_level_2_values(self, assemblies_level_1_record):
@@ -889,8 +909,11 @@ class MainContract(models.Model):
         
 
         filter_assembly_level_3 = Assemblies_Code_L3_Table.objects.filter(Assemblies_Code_L2=assemblies_level_2_record, Company_Details=self.company_details)
-
+        print("Start -----------Resource level 1 ==================================================================================================")
         filter_Estimation_Assemblies = Estimation_Assemblies_Table.objects.filter(Assemblies_Code_L3__in=filter_assembly_level_3, Company_Details=self.company_details).last()
+        # filter_Estimation_Assemblies = Estimation_Assemblies_Table.objects.filter(Assemblies_Code_L3__in=filter_assembly_level_3, Company_Details=self.company_details)
+        print('filter_Estimation_Assemblies')
+        print(filter_Estimation_Assemblies)
         detail = MainContractDetail.objects.filter(
             main_contract=self,
             assembly_row__Assemblies_Code_L1=assemblies_level_1_record,
@@ -898,7 +921,7 @@ class MainContract(models.Model):
             assembly_row__Assemblies_Code_L3=assemblies_level_3_record
         ).last()
         filter_resource_level_1 = Resource_Code_L1_Table.objects.filter(Company_Details=self.company_details)
-
+        print("Resource level 1 ==================================================================================================")
         resource_usage = {}
 
         total_quantity = SubContractInvoiceDetailsTable.objects.filter(
@@ -1015,6 +1038,7 @@ class MainContract(models.Model):
                 "total_price": " - ",
                 "total_target_profit": " - ",
                 "total_actual_resources_cost": total_actual_resources_cost,
+                "actual_sub_contract_quantity": 100,
                 "actual_sub_contract_cost": subcontract_cost,
                 "actual_expenses_cost": expense_cost,
                 "actual_store_cost": store_cost,
@@ -1498,8 +1522,6 @@ class MainContractDetail(models.Model):
 
                     ultimate_usage_resource_L1_total_amount = ultimate_usage_resource_L1_total_amount + ultimate_usage_resource_L1
                     ultimate_usage_resource_L1_total_single_amount = float(ultimate_usage_resource_L1_total_single_amount) + assembly_detail_record_Unit_Cost
-
-                    
                 
             print(f"last ultimate_usage_resource_L1_total_single_assembly_amount: {ultimate_usage_resource_L1_total_single_amount}")
             print(f"last ultimate_usage_resource_L1_total_amount: {ultimate_usage_resource_L1_total_amount}")
@@ -1851,6 +1873,41 @@ class MainContractDetail(models.Model):
         cost_difference['contract_VAC_remaining_value'] = round(total_budget_cost - total_get_EAC_cost, 2)
         return cost_difference
 
+
+    def calculate_assembly_cpi_value(self):
+        earned_cost_data = self.earned_cost_by_resource_list()
+        total_actual_earned_cost = earned_cost_data.get('total_actual_earned_cost_var', 0)
+
+        print(f"Total Actual Earned Cost: {total_actual_earned_cost}")
+
+        actual_cost_data = self.actual_cost_total_resource_code_calculation()
+        total_actual_cost = actual_cost_data.get('total_sum_assembly_resource_code_amount_var', 0)
+
+        try:
+            var_cpi_value = total_actual_earned_cost / total_actual_cost
+        except:
+            var_cpi_value = 0
+
+        
+        return round(var_cpi_value, 2)
+
+
+    def calculate_assembly_tcpi_value(self):
+        budget_costs = self.budget_costs
+
+        earned_cost_data = self.earned_cost_by_resource_list()
+        total_actual_earned_cost = earned_cost_data.get('total_actual_earned_cost_var', 0)
+
+        actual_cost_data = self.actual_cost_total_resource_code_calculation()
+        total_actual_cost = actual_cost_data.get('total_sum_assembly_resource_code_amount_var', 0)
+
+        try:
+            var_tcpi_value = (budget_costs - total_actual_earned_cost) / (budget_costs - total_actual_cost)
+        except:
+            var_tcpi_value = 0
+
+        
+        return round(var_tcpi_value, 2)
     
 
 

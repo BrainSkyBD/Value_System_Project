@@ -97,6 +97,7 @@ def fetch_assemblies_by_contract(request, contract_id):
 
     get_contract_assemblies = MainContractDetail.objects.filter(main_contract=get_contract).select_related('assembly_row').values(
         'assembly_row__id',
+        'assembly_row__Assembly_Title',
         'assembly_row__Assembly_Name',
         'assembly_row__Unit_of_Measure',
         'assembly_row__Assembly_Unit_Cost'
@@ -126,6 +127,7 @@ def fetch_assemblies_by_contract(request, contract_id):
 
         assemblies_list.append({
             'id': assembly['assembly_row__id'],
+            'assembly_title': assembly['assembly_row__Assembly_Title'] or 'Untitle Assembly',
             'assembly_name': assembly['assembly_row__Assembly_Name'] or 'Unnamed Assembly',
             'unit_of_measure': assembly['assembly_row__Unit_of_Measure'] or 'N/A',
             'assembly_unit_cost': assembly['assembly_row__Assembly_Unit_Cost'] or 0,
@@ -152,6 +154,7 @@ def fetch_resorce_by_assemblies(request, assembly_id):
 
     get_assembly_resources = Estimation_Assemblies_Resource_Details_Table.objects.filter(Estimation_Assemblies=get_assembly).select_related('Resource_record').values(
         'Resource_record__id',
+        'Resource_record__Resource_Title',
         'Resource_record__Resource_Name',
         'Resource_record__Resource_Code_L3__Resource_Code_L3',
         'Resource_record__Unit_of_Measure',
@@ -166,6 +169,7 @@ def fetch_resorce_by_assemblies(request, assembly_id):
 
         resourse_list.append({
             'id': resourse['Resource_record__id'],
+            'Resource_Title': resourse['Resource_record__Resource_Title'] or 'Unnamed Resource',
             'Resource_Name': resourse['Resource_record__Resource_Name'] or 'Unnamed Resource',
             'Resource_Code_L3': resourse['Resource_record__Resource_Code_L3__Resource_Code_L3'] or 'N/A',
             'Unit_of_Measure': resourse['Resource_record__Unit_of_Measure'] or 'N/A',
@@ -223,6 +227,8 @@ def save_expense(request):
             else:
                 Calculate_Manual_Unit_Cost_name = False
 
+            print(Calculate_Manual_Unit_Cost_name)
+
             expense = ExpenseTable.objects.create(
                 Company_Details=company_details_record,
                 comb_assem_code=comb_assem_code,
@@ -236,6 +242,7 @@ def save_expense(request):
             )
             return JsonResponse({'message': 'Expense saved successfully', 'id': expense.id}, status=201)
         except Exception as e:
+            print(e)
             return JsonResponse({'error': str(e)}, status=400)
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
@@ -274,7 +281,7 @@ def edit_expense(request, pk):
 
 
 @csrf_exempt
-def save_expense(request):
+def save_expense_edit(request):
     print("saving expense ...")
     company_details_record = request.user.company_details
     if request.method == 'POST':
