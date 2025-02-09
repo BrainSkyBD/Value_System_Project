@@ -82,12 +82,6 @@
                 <div data-i18n="Analytics">Dashboard</div>
               </a>
             </li>
-            <li class="menu-item {% block contract_assembly_resource_details_management_active %}{% endblock %}">
-              <a href="{% url 'contract_assembly_resource_details_management' %}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-layout"></i>
-                <div data-i18n="Analytics">Contract-Assembly-Resource-Pivot</div>
-              </a>
-            </li>
 
 
             <li class="menu-header small text-uppercase">
@@ -156,6 +150,7 @@
             <li class="menu-header small text-uppercase"><span class="menu-header-text">Resource</span></li>
             <!-- Cards -->
             
+            {% comment %}
             <!-- User interface -->
             <li class="menu-item {% block Resource_Code_active %}{% endblock %}">
               <a href="javascript:void(0)" class="menu-link menu-toggle">
@@ -168,7 +163,7 @@
                     <div data-i18n="Alerts">Resource Management</div>
                   </a>
                 </li>
-                {% comment %}
+                
                 <li class="menu-item {% block Resource_Code_L1_active %}{% endblock %}">
                   <a href="{% url 'Resource_Code_L1_module' %}" class="menu-link">
                     <div data-i18n="Accordion">Resource Code L1</div>
@@ -190,11 +185,12 @@
                     <div data-i18n="Alerts">Resource Desplay</div>
                   </a>
                 </li>
-                {% endcomment %}
+                
                 
                 
               </ul>
             </li>
+            {% endcomment %}
 
 
 
@@ -205,9 +201,16 @@
                 <div data-i18n="User interface">Resource Dictionary</div>
               </a>
               <ul class="menu-sub">
+                {% comment %}
                 <li class="menu-item {% block Create_Resource_Dictionary_active %}{% endblock %}">
                   <a href="{% url 'Create_Resource_Dictionary' %}" class="menu-link">
                     <div data-i18n="Accordion">Create Resource</div>
+                  </a>
+                </li>
+                {% endcomment %}
+                <li class="menu-item {% block List_Resource_management_active %}{% endblock %}">
+                  <a href="{% url 'Resource_Management' %}" class="menu-link">
+                    <div data-i18n="Alerts">Resource Levels</div>
                   </a>
                 </li>
                 <li class="menu-item {% block List_Resource_Dictionary_active %}{% endblock %}">
@@ -215,6 +218,14 @@
                     <div data-i18n="Alerts">Resource List</div>
                   </a>
                 </li>
+                
+                <li class="menu-item {% block contract_assembly_resource_details_management_active %}{% endblock %}">
+                  <a href="{% url 'contract_assembly_resource_details_management' %}" class="menu-link">
+                    
+                    <div data-i18n="Analytics">Contract-Assembly-Resource-Pivot</div>
+                  </a>
+                </li>
+                
                 
                 
                 
@@ -227,6 +238,7 @@
             <!-- Forms & Tables -->
             <li class="menu-header small text-uppercase"><span class="menu-header-text">Estimate Assemblies Templates</span></li>
             <!-- Forms -->
+            {% comment %}
             <li class="menu-item {% block Assemblies_Code_active %}{% endblock %}">
               <a href="javascript:void(0)" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-box"></i>
@@ -238,7 +250,7 @@
                     <div data-i18n="Alerts">Assemblies Management</div>
                   </a>
                 </li>
-                {% comment %}
+                
                 <li class="menu-item {% block Assemblies_Code_L1_active %}{% endblock %}">
                   <a href="{% url 'Assemblies_Code_L1_module' %}" class="menu-link">
                     <div data-i18n="Accordion">Assemblies Code L1</div>
@@ -260,18 +272,26 @@
                     <div data-i18n="Alerts">Assemblies Desplay</div>
                   </a>
                 </li>
-                {% endcomment %}
+                
               </ul>
             </li>
+            {% endcomment %}
             <li class="menu-item {% block Company_Assemblies_active %}{% endblock %}">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-detail"></i>
                 <div data-i18n="Form Elements">Company Assemblies</div>
               </a>
               <ul class="menu-sub">
+                {% comment %}
                 <li class="menu-item {% block Estimate_Assemblies_active %}{% endblock %}">
                   <a href="{% url 'estimate_assemblies' %}" class="menu-link">
                     <div data-i18n="Basic Inputs">Estimate Assemblies</div>
+                  </a>
+                </li>
+                {% endcomment %}
+                <li class="menu-item {% block List_assemblies_management_active %}{% endblock %}">
+                  <a href="{% url 'Assemblies_Management' %}" class="menu-link">
+                    <div data-i18n="Alerts">Assemblies Levels</div>
                   </a>
                 </li>
                 <li class="menu-item {% block Assemblies_list_active %}{% endblock %}">
@@ -279,6 +299,7 @@
                     <div data-i18n="Input groups">Assemblies List</div>
                   </a>
                 </li>
+                
               </ul>
             </li>
 
