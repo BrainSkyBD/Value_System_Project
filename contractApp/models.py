@@ -961,6 +961,8 @@ class MainContract(models.Model):
 
             
             ultimate_usage_resource_L1_total_amount = 0
+            ultimate_usage_resource_L1_total_qty = 0
+
             ultimate_usage_resource_L1_total_single_amount = 0
             for assembly_detail_record in filter_Estimation_Assemblies_Resource_Details:
                 if resoures_level_1_record == assembly_detail_record.Resource_record.Resource_Code_L1:
@@ -972,9 +974,14 @@ class MainContract(models.Model):
                     ultimate_usage_resource_L1 =  total_quantity * assembly_detail_record_Unit_Cost
 
                     ultimate_usage_resource_L1_total_amount = ultimate_usage_resource_L1_total_amount + ultimate_usage_resource_L1
+
+                    ultimate_usage_resource_L1_total_qty = ultimate_usage_resource_L1_total_qty + total_quantity
+
+
                     ultimate_usage_resource_L1_total_single_amount = float(ultimate_usage_resource_L1_total_single_amount) + assembly_detail_record_Unit_Cost
 
             subcontract_cost = ultimate_usage_resource_L1_total_amount
+            subcontract_qty = ultimate_usage_resource_L1_total_qty
 
             
 
@@ -986,6 +993,15 @@ class MainContract(models.Model):
                 resource_value__Resource_Code_L1=resoures_level_1_record
             ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0
 
+            # Calculate expense qty
+            expense_qty = ExpenseTable.objects.filter(
+                Company_Details=self.company_details,
+                contract_value=self,
+                assembly_value=filter_Estimation_Assemblies,
+                resource_value__Resource_Code_L1=resoures_level_1_record
+            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0
+
+
             # Calculate store costs
             store_cost = StoreTable.objects.filter(
                 Company_Details=self.company_details,
@@ -994,6 +1010,15 @@ class MainContract(models.Model):
                 resource_value__Resource_Code_L1=resoures_level_1_record,
                 stock_trasaction_status="Stock-Out"
             ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0
+
+
+            store_qty = StoreTable.objects.filter(
+                Company_Details=self.company_details,
+                contract_value=self,
+                assembly_value=filter_Estimation_Assemblies,
+                resource_value__Resource_Code_L1=resoures_level_1_record,
+                stock_trasaction_status="Stock-Out"
+            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0
 
             # Calculate budget costs
             budget_unit_cost = Estimation_Assemblies_Resource_Details_Table.objects.filter(
@@ -1038,7 +1063,9 @@ class MainContract(models.Model):
                 "total_price": " - ",
                 "total_target_profit": " - ",
                 "total_actual_resources_cost": total_actual_resources_cost,
-                "actual_sub_contract_quantity": 100,
+                "actual_sub_contract_quantity": subcontract_qty,
+                "actual_expenses_quantity": expense_qty,
+                "actual_store_quantity": store_qty,
                 "actual_sub_contract_cost": subcontract_cost,
                 "actual_expenses_cost": expense_cost,
                 "actual_store_cost": store_cost,
@@ -1122,6 +1149,8 @@ class MainContract(models.Model):
             
             ultimate_usage_resource_L2_total_amount = 0
             ultimate_usage_resource_L2_total_single_amount = 0
+
+            ultimate_usage_resource_L2_total_qty = 0
             for assembly_detail_record in filter_Estimation_Assemblies_Resource_Details:
                 if resoures_level_2_record == assembly_detail_record.Resource_record.Resource_Code_L2:
                     if assembly_detail_record.Unit_Cost:
@@ -1132,9 +1161,11 @@ class MainContract(models.Model):
                     ultimate_usage_resource_L2 =  total_quantity * assembly_detail_record_Unit_Cost
 
                     ultimate_usage_resource_L2_total_amount = ultimate_usage_resource_L2_total_amount + ultimate_usage_resource_L2
+                    ultimate_usage_resource_L2_total_qty = ultimate_usage_resource_L2_total_qty + total_quantity
                     ultimate_usage_resource_L2_total_single_amount = float(ultimate_usage_resource_L2_total_single_amount) + assembly_detail_record_Unit_Cost
 
             subcontract_cost = ultimate_usage_resource_L2_total_amount
+            subcontract_qty = ultimate_usage_resource_L2_total_qty
             print('subcontract_cost')
             print(subcontract_cost)
 
@@ -1149,6 +1180,14 @@ class MainContract(models.Model):
                 resource_value__Resource_Code_L2=resoures_level_2_record
             ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0
 
+            expense_qty = ExpenseTable.objects.filter(
+                Company_Details=self.company_details,
+                contract_value=self,
+                assembly_value=filter_Estimation_Assemblies,
+                resource_value__Resource_Code_L1=resoures_level_1_record,
+                resource_value__Resource_Code_L2=resoures_level_2_record
+            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0
+
             # Calculate store costs
             store_cost = StoreTable.objects.filter(
                 Company_Details=self.company_details,
@@ -1158,6 +1197,15 @@ class MainContract(models.Model):
                 resource_value__Resource_Code_L2=resoures_level_2_record,
                 stock_trasaction_status="Stock-Out"
             ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0
+
+            store_qty = StoreTable.objects.filter(
+                Company_Details=self.company_details,
+                contract_value=self,
+                assembly_value=filter_Estimation_Assemblies,
+                resource_value__Resource_Code_L1=resoures_level_1_record,
+                resource_value__Resource_Code_L2=resoures_level_2_record,
+                stock_trasaction_status="Stock-Out"
+            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0
 
             # Calculate budget costs
             budget_unit_cost = Estimation_Assemblies_Resource_Details_Table.objects.filter(
@@ -1201,6 +1249,9 @@ class MainContract(models.Model):
                 "total_price": " - ",
                 "total_target_profit": " - ",
                 "total_actual_resources_cost": total_actual_resources_cost,
+                "actual_sub_contract_quantity": subcontract_qty,
+                "actual_expenses_quantity": expense_qty,
+                "actual_store_quantity": store_qty,
                 "actual_sub_contract_cost": subcontract_cost,
                 "actual_expenses_cost": expense_cost,
                 "actual_store_cost": store_cost,
@@ -1284,6 +1335,7 @@ class MainContract(models.Model):
 
             
             ultimate_usage_resource_L3_total_amount = 0
+            ultimate_usage_resource_L3_total_qty = 0
             ultimate_usage_resource_L3_total_single_amount = 0
             for assembly_detail_record in filter_Estimation_Assemblies_Resource_Details:
                 if resoures_level_3_record == assembly_detail_record.Resource_record.Resource_Code_L3:
@@ -1295,8 +1347,10 @@ class MainContract(models.Model):
                     ultimate_usage_resource_L3 =  total_quantity * assembly_detail_record_Unit_Cost
 
                     ultimate_usage_resource_L3_total_amount = ultimate_usage_resource_L3_total_amount + ultimate_usage_resource_L3
+                    ultimate_usage_resource_L3_total_qty = ultimate_usage_resource_L3_total_qty + total_quantity
                     ultimate_usage_resource_L3_total_single_amount = float(ultimate_usage_resource_L3_total_single_amount) + assembly_detail_record_Unit_Cost
 
+            subcontract_qty = ultimate_usage_resource_L3_total_qty
             subcontract_cost = ultimate_usage_resource_L3_total_amount
             print('subcontract_cost')
             print(subcontract_cost)
@@ -1313,6 +1367,15 @@ class MainContract(models.Model):
                 resource_value__Resource_Code_L3=resoures_level_3_record
             ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0
 
+            expense_qty = ExpenseTable.objects.filter(
+                Company_Details=self.company_details,
+                contract_value=self,
+                assembly_value=filter_Estimation_Assemblies,
+                resource_value__Resource_Code_L1=resoures_level_1_record,
+                resource_value__Resource_Code_L2=resoures_level_2_record,
+                resource_value__Resource_Code_L3=resoures_level_3_record
+            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0
+
             # Calculate store costs
             store_cost = StoreTable.objects.filter(
                 Company_Details=self.company_details,
@@ -1323,6 +1386,17 @@ class MainContract(models.Model):
                 resource_value__Resource_Code_L3=resoures_level_3_record,
                 stock_trasaction_status="Stock-Out"
             ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0
+
+
+            store_qty = StoreTable.objects.filter(
+                Company_Details=self.company_details,
+                contract_value=self,
+                assembly_value=filter_Estimation_Assemblies,
+                resource_value__Resource_Code_L1=resoures_level_1_record,
+                resource_value__Resource_Code_L2=resoures_level_2_record,
+                resource_value__Resource_Code_L3=resoures_level_3_record,
+                stock_trasaction_status="Stock-Out"
+            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0
 
             # Calculate budget costs
             budget_unit_cost = Estimation_Assemblies_Resource_Details_Table.objects.filter(
@@ -1367,6 +1441,9 @@ class MainContract(models.Model):
                 "total_price": " - ",
                 "total_target_profit": " - ",
                 "total_actual_resources_cost": total_actual_resources_cost,
+                "actual_sub_contract_quantity": subcontract_qty,
+                "actual_expenses_quantity": expense_qty,
+                "actual_store_quantity": store_qty,
                 "actual_sub_contract_cost": subcontract_cost,
                 "actual_expenses_cost": expense_cost,
                 "actual_store_cost": store_cost,
