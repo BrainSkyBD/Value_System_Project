@@ -21,8 +21,8 @@
           <thead>
             <tr class="text-nowrap">
               <th>#</th>
-              <th>Resource Title</th>
               <th>Resource Name</th>
+              <th>Resource Code</th>
               <!-- <th>Resources Category</th> -->
               <th>Resource C0ode L1</th>
               <th>Resource Code L2</th>
@@ -61,7 +61,7 @@
                             </div>
                             <div class="modal-body">
                                 <h1>Delete Resource</h1>
-                                <p>Are you sure you want to delete?<br>Resource Name: {{ resource.Resource_Name }}</p>
+                                <p>Are you sure you want to delete?<br>Resource Name: {{ resource.Resource_Title }}</p>
                                 <div class="modal-footer">
                                     <form method="post" action="/Resource_Delete/{{resource.id}}/">
                                         {% csrf_token %}
