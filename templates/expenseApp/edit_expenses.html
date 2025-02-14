@@ -81,19 +81,19 @@
                     <!-- Budget Unit Cost -->
                     <div class="mb-3 col-md-12">
                         <label class="col-form-label" for="Budget_Unit_Cost">Budget Unit Cost</label>
-                        <input type="number" class="form-control" id="Budget_Unit_Cost" value="{% if not expense.Calculate_Manual_Unit_Cost %}{{expense.unit_cost}}{% else %}{{expense.resource_value.Budget_Unit_Cost}}{% endif %}" name="Budget_Unit_Cost" placeholder="Enter Budget Unit Cost" required readonly>
+                        <input type="number" class="form-control" id="Budget_Unit_Cost" step="0.01" min="0" value="{% if not expense.Calculate_Manual_Unit_Cost %}{{expense.unit_cost}}{% else %}{{expense.resource_value.Budget_Unit_Cost}}{% endif %}" name="Budget_Unit_Cost" placeholder="Enter Budget Unit Cost" required readonly>
                     </div>
         
                     <!-- Contract Quantity -->
                     <div class="mb-3 col-md-6">
                         <label class="col-form-label" for="Contract_Quantity">Actual Quantity</label>
-                        <input type="number" class="form-control" id="Contract_Quantity" name="Contract_Quantity" value="{% if expense.quantity %}{{expense.quantity}}{% endif %}" placeholder="Enter Contract Quantity" required>
+                        <input type="number" class="form-control" id="Contract_Quantity" name="Contract_Quantity" value="{% if expense.quantity %}{{expense.quantity}}{% endif %}" step="0.01" min="0" placeholder="Enter Contract Quantity" required>
                     </div>
         
                     <!-- Manual Unit Cost -->
                     <div class="mb-3 col-md-6">
                         <label class="col-form-label" for="Manual_Unit_Cost">Manual Unit Cost</label>
-                        <input type="number" class="form-control" id="Manual_Unit_Cost" name="Manual_Unit_Cost" placeholder="Enter Manual Unit Cost" value="{% if expense.Calculate_Manual_Unit_Cost %}{{expense.unit_cost}}{% endif %}">
+                        <input type="number" class="form-control" id="Manual_Unit_Cost" name="Manual_Unit_Cost" placeholder="Enter Manual Unit Cost" value="{% if expense.Calculate_Manual_Unit_Cost %}{{expense.unit_cost}}{% endif %}" step="0.01" min="0">
                     </div>
         
                     <!-- Checkbox for Manual Unit Cost -->
