@@ -333,12 +333,13 @@
                     <div data-i18n="Form Layouts">Main Contract</div>
                 </a>
                 <ul class="menu-sub">
-                  
+                    {% comment %}
                     <li class="menu-item {% block create_contract_active %}{% endblock %}">
                     <a href="{% url 'create_contract' %}" class="menu-link">
                         <div data-i18n="Vertical Form">Create Contract</div>
                     </a>
                     </li>
+                    {% endcomment %}
                     <li class="menu-item {% block contract_list_active %}{% endblock %}">
                     <a href="{% url 'contract_list' %}" class="menu-link">
                         <div data-i18n="Horizontal Form">My Contracts</div>
@@ -359,11 +360,14 @@
                     <div data-i18n="Form Layouts">Subcontract</div>
                 </a>
                 <ul class="menu-sub">
+                    {% comment %}
                     <li class="menu-item {% block create_subcontract_active %}{% endblock %}">
                     <a href="{% url 'create_subcontract' %}" class="menu-link">
                         <div data-i18n="Vertical Form">Create Sub-Contract</div>
                     </a>
                     </li>
+                    {% endcomment %}
+                    
                     <li class="menu-item {% block List_subcontract_active %}{% endblock %}">
                     <a href="{% url 'subcontract_list' %}" class="menu-link">
                         <div data-i18n="Horizontal Form">Sub-Contract Table</div>
@@ -391,11 +395,13 @@
                         <div data-i18n="Vertical Form">Expenses Management</div>
                     </a>
                     </li>
+                    {% comment %}
                     <li class="menu-item {% block Calculate_Expenses_active %}{% endblock %}">
                       <a href="{% url 'calculate_expenses' %}" class="menu-link">
                           <div data-i18n="Vertical Form">Calculate Expenses</div>
                       </a>
                       </li>
+                      {% endcomment %}
                     <li class="menu-item {% block expense_list_active %}{% endblock %}">
                     <a href="{% url 'expense_list' %}" class="menu-link">
                         <div data-i18n="Horizontal Form">Expense Table</div>
@@ -419,11 +425,13 @@
                           <div data-i18n="Vertical Form">Store Management</div>
                       </a>
                     </li>
+                    {% comment %}
                     <li class="menu-item {% block store_create_active %}{% endblock %}">
                       <a href="{% url 'calculate_stores' %}" class="menu-link">
                           <div data-i18n="Vertical Form">Calculate Store</div>
                       </a>
                     </li>
+                    {% endcomment %}
                     <li class="menu-item {% block stock_in_list_active %}{% endblock %}">
                       <a href="{% url 'stock_in_list' %}" class="menu-link">
                           <div data-i18n="Horizontal Form">Stock-In List</div>

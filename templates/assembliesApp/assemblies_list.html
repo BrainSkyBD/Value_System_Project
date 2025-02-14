@@ -21,8 +21,8 @@
           <thead>
             <tr class="text-nowrap">
               <th>#</th>
-              <th>Assembly Title</th>
               <th>Assembly Name</th>
+              <th>Assembly Code</th>
               <!-- <th>Resources Category</th> -->
               <th>Assemblies Code L1</th>
               <th>Assemblies Code L2</th>
@@ -58,7 +58,7 @@
                               </div>
                               <div class="modal-body">
                                   <h1>Delete assemblies</h1>
-                                  <p>Are you sure you want to delete?<br>Assembly Name: {{ assemblies.Assembly_Name }}</p>
+                                  <p>Are you sure you want to delete?<br>Assembly Code: {{ assemblies.Assembly_Name }}</p>
                                   <div class="modal-footer">
                                       <form method="post" action="/assemblies_Delete/{{assemblies.id}}/">
                                           {% csrf_token %}

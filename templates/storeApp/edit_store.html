@@ -98,24 +98,24 @@
                     <!-- Budget Unit Cost -->
                     <div class="mb-3 col-md-6">
                         <label class="col-form-label" for="Available_Quantity">Available Quantity</label>
-                        <input type="number" class="form-control" id="Available_Quantity" value="{% if store.resource_value.calculate_stock_availablity %}{{store.resource_value.calculate_stock_availablity}}{% endif %}" name="Available_Quantity" placeholder="0" required readonly>
+                        <input type="number" class="form-control" id="Available_Quantity" value="{% if store.resource_value.calculate_stock_availablity %}{{store.resource_value.calculate_stock_availablity}}{% endif %}" step="0.01" min="0" name="Available_Quantity" placeholder="0" required readonly>
                     </div>
 
                     <div class="mb-3 col-md-6">
                         <label class="col-form-label" for="Budget_Unit_Cost">Budget Unit Cost</label>
-                        <input type="number" class="form-control" id="Budget_Unit_Cost" name="Budget_Unit_Cost" value="{% if not store.Calculate_Manual_Unit_Cost %}{{store.unit_cost}}{% else %}{{store.resource_value.Budget_Unit_Cost}}{% endif %}" placeholder="Budget Unit Cost" required readonly>
+                        <input type="number" class="form-control" id="Budget_Unit_Cost" name="Budget_Unit_Cost" value="{% if not store.Calculate_Manual_Unit_Cost %}{{store.unit_cost}}{% else %}{{store.resource_value.Budget_Unit_Cost}}{% endif %}" step="0.01" min="0" placeholder="Budget Unit Cost" required readonly>
                     </div>
         
                     <!-- Contract Quantity -->
                     <div class="mb-3 col-md-6">
                         <label class="col-form-label" for="Contract_Quantity">Stock-In Quantity</label>
-                        <input type="number" class="form-control" id="Contract_Quantity" name="Contract_Quantity"  value="{% if store.quantity %}{{store.quantity}}{% endif %}" placeholder="Enter Contract Quantity" required>
+                        <input type="number" class="form-control" id="Contract_Quantity" name="Contract_Quantity"  value="{% if store.quantity %}{{store.quantity}}{% endif %}" step="0.01" min="0" placeholder="Enter Contract Quantity" required>
                     </div>
         
                     <!-- Manual Unit Cost -->
                     <div class="mb-3 col-md-6">
                         <label class="col-form-label" for="Manual_Unit_Cost">Manual Unit Cost</label>
-                        <input type="number" class="form-control" id="Manual_Unit_Cost" name="Manual_Unit_Cost" placeholder="Enter Manual Unit Cost" value="{% if store.Calculate_Manual_Unit_Cost %}{{store.unit_cost}}{% endif %}">
+                        <input type="number" class="form-control" id="Manual_Unit_Cost" name="Manual_Unit_Cost" placeholder="Enter Manual Unit Cost" value="{% if store.Calculate_Manual_Unit_Cost %}{{store.unit_cost}}{% endif %}" step="0.01" min="0">
                     </div>
         
                     <!-- Checkbox for Manual Unit Cost -->

@@ -90,9 +90,14 @@ def company_assembly_record(request):
         Assemblies_Code_L1_id = request.POST.get('Assemblies_Code_L1')
         Assemblies_Code_L2_id = request.POST.get('Assemblies_Code_L2')
         Assemblies_Code_L3_id = request.POST.get('Assemblies_Code_L3')
-        Unit_of_Measure = request.POST.get('Unit_of_Measure')
+        Unit_of_Measure = request.POST.get('Assembly_Unit_of_Measure_Show')
+        Assembly_Quantity_Show = request.POST.get('Assembly_Quantity_Show')
         Assembly_Unit_Cost = request.POST.get('Assembly_Unit_Cost')
         Total_Cost = request.POST.get('Total_Cost')
+
+        print('Unit_of_Measure')
+        print(Unit_of_Measure)
+        print('Unit_of_Measure')
 
         var_Estimation_Assemblies = Estimation_Assemblies_Table(
             Company_Details=company_details_record,
@@ -102,6 +107,7 @@ def company_assembly_record(request):
             Assemblies_Code_L2=Assemblies_Code_L2_Table.objects.filter(id=Assemblies_Code_L2_id).last(),
             Assemblies_Code_L3=Assemblies_Code_L3_Table.objects.filter(id=Assemblies_Code_L3_id).last(),
             Unit_of_Measure=Unit_of_Measure,
+            Assembly_Quantity = Assembly_Quantity_Show,
             Assembly_Unit_Cost=Assembly_Unit_Cost,
         )
         var_Estimation_Assemblies.save()
@@ -115,6 +121,8 @@ def company_assembly_record(request):
                 Estimation_Assemblies=var_Estimation_Assemblies,
                 Resource_record=resource_record_row,
                 Resource_Budget_Unit_Cost=resource_record_row.Budget_Unit_Cost,
+                Resource_Quantity=resource_id[4],
+                Assembly_Quantity=resource_id[5],
                 Quantity=resource_id[1],
                 Unit_of_Measure=resource_id[3],
                 Unit_Cost=float(resource_record_row.Budget_Unit_Cost)*float(resource_id[1]),
@@ -190,7 +198,7 @@ def save_edit_company_assembly_record(request):
             id=request.POST.get('Assemblies_Code_L2')).last()
         assembly.Assemblies_Code_L3 = Assemblies_Code_L3_Table.objects.filter(
             id=request.POST.get('Assemblies_Code_L3')).last()
-        assembly.Unit_of_Measure = request.POST.get('Unit_of_Measure')
+        assembly.Unit_of_Measure = request.POST.get('Assembly_Unit_of_Measure_Show')
         assembly.Assembly_Unit_Cost = request.POST.get('Assembly_Unit_Cost')
         assembly.save()
 
@@ -214,6 +222,8 @@ def save_edit_company_assembly_record(request):
                     Estimation_Assemblies=assembly,
                     Resource_record=resource_record_row,
                     Resource_Budget_Unit_Cost=resource_record_row.Budget_Unit_Cost,
+                    Resource_Quantity=resource_id[4],
+                    Assembly_Quantity=resource_id[5],
                     Quantity=resource_id[1],
                     Unit_of_Measure=resource_id[3],
                     Unit_Cost=float(resource_record_row.Budget_Unit_Cost) * float(resource_id[1]),

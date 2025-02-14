@@ -29,18 +29,18 @@
           <tr>
             <td colspan="10"></td>
             <td colspan="5" style="background: #78943c; color: black; text-align: center;">MARKUP & PRICE</td>
-            <td colspan="6" style="background: #e0ecf4; color: black; text-align: center;">BUDGET UNIT RATES</td>
-            <td colspan="6" style="background: #08b454; color: black; text-align: center;">BUDGET UNIT RATES</td>
+            <td colspan="{{ filter_resoures_level_1|length|add:1 }}" style="background: #e0ecf4; color: black; text-align: center;">BUDGET UNIT RATES</td>
+            <td colspan="{{ filter_resoures_level_1|length|add:1 }}" style="background: #08b454; color: black; text-align: center;">BUDGET COSTS</td>
             <td colspan="5" style="background: #ffffff; color: black; text-align: center;">ACTUAL COSTS BY TRANSACTION</td>
-            <td colspan="6" style="background: #e09494; color: black; text-align: center;">ACTUAL COSTS: TOTAL: RESOURCE CODE</td>
-            <td colspan="6" style="background: #e09494; color: black; text-align: center;">ACTUAL COSTS: SUBCONTRACTS</td>					
-            <td colspan="6" style="background: #f1b6b6; color: black; text-align: center;">ACTUAL COSTS: EXPENSES</td>
-            <td colspan="6" style="background: #e09494; color: black; text-align: center;">ACTUAL COSTS: STORE</td>
-            <td colspan="6" style="background: #0874c4; color: black; text-align: center;">EARNED COSTS</td>
-            <td colspan="6" style="background: #e8dcec; color: black; text-align: center;">VARIANCE TO DATE</td>
-            <td colspan="6" style="background: #fffccc; color: black; text-align: center;">ETC (REMAINING)</td>
-            <td colspan="6" style="background: #e0ecf4; color: black; text-align: center;">Estimate At Completion (EAC)</td>
-            <td colspan="6" style="background: #e8dcec; color: black; text-align: center;">VAC</td>
+            <td colspan="{{ filter_resoures_level_1|length|add:1 }}" style="background: #e09494; color: black; text-align: center;">ACTUAL COSTS: TOTAL: RESOURCE CODE</td>
+            <td colspan="{{ filter_resoures_level_1|length|add:1 }}" style="background: #e09494; color: black; text-align: center;">ACTUAL COSTS: SUBCONTRACTS</td>					
+            <td colspan="{{ filter_resoures_level_1|length|add:1 }}" style="background: #f1b6b6; color: black; text-align: center;">ACTUAL COSTS: EXPENSES</td>
+            <td colspan="{{ filter_resoures_level_1|length|add:1 }}" style="background: #e09494; color: black; text-align: center;">ACTUAL COSTS: STORE</td>
+            <td colspan="{{ filter_resoures_level_1|length|add:1 }}" style="background: #0874c4; color: black; text-align: center;">EARNED COSTS</td>
+            <td colspan="{{ filter_resoures_level_1|length|add:1 }}" style="background: #e8dcec; color: black; text-align: center;">VARIANCE TO DATE</td>
+            <td colspan="{{ filter_resoures_level_1|length|add:1 }}" style="background: #fffccc; color: black; text-align: center;">ETC (REMAINING)</td>
+            <td colspan="{{ filter_resoures_level_1|length|add:1 }}" style="background: #e0ecf4; color: black; text-align: center;">Estimate At Completion (EAC)</td>
+            <td colspan="{{ filter_resoures_level_1|length|add:1 }}" style="background: #e8dcec; color: black; text-align: center;">VAC</td>
             <td colspan="7" style="background: #ffffff; color: black; text-align: center;">
               Main Contract Invoice
 
@@ -188,7 +188,7 @@
                                                 
                                                 <td id="">
                                                   <input type="number" class="form-control" id="invoice_qty_{{ detail.id }}" name="invoice_qty_{{ forloop.counter }}" 
-                                                         oninput="func_calculate('{{ detail.id }}')" value="0" placeholder="Inv Qty">
+                                                         oninput="func_calculate('{{ detail.id }}')" placeholder="Inv Qty" value="1.00" step="0.01" min="0">
                                                   <input type="hidden" name="contract_details_id_{{ forloop.counter }}" value="{{ detail.id }}">
                                                 </td>
                                                 
@@ -534,10 +534,10 @@
 
 
               <!-- budget unit rates  -->
-              <td colspan="6"><strong></strong></td>
+              <td colspan="{{ filter_resoures_level_1|length|add:1 }}"><strong></strong></td>
 
               <!-- budget cost  -->
-              <td colspan="5"><strong>Total</strong></td>
+              <td colspan="{{ filter_resoures_level_1|length }}"><strong>Total</strong></td>
               <td><b>$ {{ contract.calculate_total_resource_budget_cost }}</b></td>
 
 
@@ -989,7 +989,7 @@
                                         
                                         <td id="">
                                           <input type="number" class="form-control" id="invoice_qty_{{ detail.id }}" name="invoice_qty_{{ forloop.counter }}" 
-                                                 oninput="func_calculate('{{ detail.id }}')" value="0" placeholder="Inv Qty">
+                                                 oninput="func_calculate('{{ detail.id }}')" placeholder="Inv Qty" value="1.00" step="0.01" min="0">
                                           <input type="hidden" name="contract_details_id_{{ forloop.counter }}" value="{{ detail.id }}">
                                         </td>
                                         

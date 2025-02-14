@@ -134,7 +134,7 @@
                                             <span class="toggle-icon" data-target="contract-{{contract.id}}" onclick="toggleRows(this, 'contract-{{contract.id}}')">▶</span>
                                             {{contract.contract_name}} 
                                             {% if contract.contract_assemblies_level_1_values|length > 0 %}
-                                            <small class="float-end" style="position: relative; top: -1px; color: #000000 !important; background-color: RGBA(var(--bs-info-rgb), var(--bs-bg-opacity, 1)) !important; border-radius: 32%;"> &nbsp;({{ contract.contract_assemblies_level_1_values|length }})&nbsp;</small>
+                                            <!-- <small class="float-end" style="position: relative; top: -1px; color: #000000 !important; background-color: RGBA(var(--bs-info-rgb), var(--bs-bg-opacity, 1)) !important; border-radius: 32%;"> &nbsp;({{ contract.contract_assemblies_level_1_values|length }})&nbsp;</small> -->
                                             {% endif %}
                                             
                                         </td>
@@ -165,14 +165,14 @@
 
                                     {% for assembly_level_1_key, assembly_level_1_values in contract.contract_assemblies_level_1_values.items %}
                                     <!-- Level 1 Row -->
-                                    <tr class="hidden contract-{{contract.id}} level1-row">
+                                    <tr class="hidden contract-{{contract.id}} level1-row" style="{% if assembly_level_1_values.contract_quantity == 0 %}display:none{% endif %};">
                                         <td>
                                             <span style="margin-left: 26px;">
                                                 <span class="toggle-icon" data-target="assemblies_level1-{{contract.id}}-{{ assembly_level_1_values.id }}" onclick="toggleRows(this, 'assemblies_level1-{{contract.id}}-{{ assembly_level_1_values.id }}')">▶</span>
                                                 
                                                 {{ assembly_level_1_values.name }}
                                                 {% if assembly_level_1_values.level_2_values|length > 0 %}
-                                                <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important; border-radius: 32%;"> &nbsp;({{ assembly_level_1_values.level_2_values|length }})&nbsp;</small>
+                                                <!-- <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important; border-radius: 32%;"> &nbsp;({{ assembly_level_1_values.level_2_values|length }})&nbsp;</small> -->
                                                 {% endif %} 
                                             </span>
                                             
@@ -208,7 +208,7 @@
                                     
                                     {% for assembly_level_2_key, assembly_level_2_values in assembly_level_1_values.level_2_values.items %}
                                     <!-- Level 2 Rows -->
-                                    <tr class="hidden assemblies_level1-{{contract.id}}-{{ assembly_level_1_values.id }} level22-row">
+                                    <tr class="hidden assemblies_level1-{{contract.id}}-{{ assembly_level_1_values.id }} level22-row"  style="{% if assembly_level_2_values.contract_quantity == 0 %}display:none{% endif %};">
                                         <td class="nested">
                                             <span style="margin-left: 52px;">
                                                 <span class="toggle-icon" data-target="assemblies_level2-{{contract.id}}-{{ assembly_level_1_values.id }}-{{ assembly_level_2_values.id }}" onclick="toggleRows(this, 'assemblies_level2-{{contract.id}}-{{ assembly_level_1_values.id }}-{{ assembly_level_2_values.id }}')">▶</span>
@@ -216,7 +216,7 @@
                                                 {{ assembly_level_2_values.name }} 
 
                                                 {% if assembly_level_2_values.level_3_values|length > 0 %}
-                                                <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important; border-radius: 32%;"> &nbsp;({{ assembly_level_2_values.level_3_values|length }})&nbsp;</small>
+                                                <!-- <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important; border-radius: 32%;"> &nbsp;({{ assembly_level_2_values.level_3_values|length }})&nbsp;</small> -->
                                                 {% endif %}
                                             </span>
                                         </td>
@@ -251,13 +251,13 @@
                                     
                                     {% for assembly_level_3_key, assembly_level_3_values in assembly_level_2_values.level_3_values.items %}
                                     <!-- Level 3 Rows -->
-                                    <tr class="hidden assemblies_level2-{{contract.id}}-{{ assembly_level_1_values.id }}-{{ assembly_level_2_values.id }} level33-row">
+                                    <tr class="hidden assemblies_level2-{{contract.id}}-{{ assembly_level_1_values.id }}-{{ assembly_level_2_values.id }} level33-row"  style="{% if assembly_level_3_values.contract_quantity == 0 %}display:none{% endif %};">
                                         <td class="nested nested-2">
                                             <span style="margin-left: 78px;">
                                                 <span class="toggle-icon" data-target="assemblies_level3-{{contract.id}}-{{ assembly_level_1_values.id }}-{{ assembly_level_2_values.id }}-{{assembly_level_3_values.id}}" onclick="toggleRows(this, 'assemblies_level3-{{contract.id}}-{{ assembly_level_1_values.id }}-{{ assembly_level_2_values.id }}-{{assembly_level_3_values.id}}')">▶</span>
                                                 {{ assembly_level_3_values.name }}
                                                 {% if assembly_level_3_values.resource_level_1_values|length > 0 %}
-                                                <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important; border-radius: 32%;"> &nbsp;({{ assembly_level_3_values.resource_level_1_values|length }})&nbsp;</small>
+                                                <!-- <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important; border-radius: 32%;"> &nbsp;({{ assembly_level_3_values.resource_level_1_values|length }})&nbsp;</small> -->
                                                 {% endif %}
                                             </span>
                                         </td>
@@ -291,14 +291,14 @@
                                     
                                     {% for resource_level_1_key, resource_level_1_value in assembly_level_3_values.resource_level_1_values.items %}
                                     <!-- Level 1 Row -->
-                                    <tr class="hidden assemblies_level3-{{contract.id}}-{{ assembly_level_1_values.id }}-{{ assembly_level_2_values.id }}-{{assembly_level_3_values.id}} level11-row">
+                                    <tr class="hidden assemblies_level3-{{contract.id}}-{{ assembly_level_1_values.id }}-{{ assembly_level_2_values.id }}-{{assembly_level_3_values.id}} level11-row" style="{% if 'resource_level_1_value.contract_quantity' == 0 %}display:none{% endif %};">
                                         <td>
                                             <span style="margin-left: 104px;">
                                                 <span class="toggle-icon" data-target="resource_level1-{{contract.id}}-{{ assembly_level_1_values.id }}-{{ assembly_level_2_values.id }}-{{assembly_level_3_values.id}}-{{resource_level_1_value.id}}" onclick="toggleRows(this, 'resource_level1-{{contract.id}}-{{ assembly_level_1_values.id }}-{{ assembly_level_2_values.id }}-{{assembly_level_3_values.id}}-{{resource_level_1_value.id}}')">▶</span>
                                                 
                                                 {{ resource_level_1_value.name }} 
                                                 {% if resource_level_1_value.resource_level_2_values|length > 0 %}
-                                                <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important; border-radius: 32%;"> &nbsp;({{ resource_level_1_value.resource_level_2_values|length }})&nbsp;</small>
+                                                <!-- <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important; border-radius: 32%;"> &nbsp;({{ resource_level_1_value.resource_level_2_values|length }})&nbsp;</small> -->
                                                 {% endif %}
                                             </span>
                                             
@@ -333,7 +333,7 @@
 
                                     {% for resource_level_2_key, resource_level_2_value in resource_level_1_value.resource_level_2_values.items %}
                                     <!-- Level 2 Rows -->
-                                    <tr class="hidden resource_level1-{{contract.id}}-{{ assembly_level_1_values.id }}-{{ assembly_level_2_values.id }}-{{assembly_level_3_values.id}}-{{resource_level_1_value.id}} level2-row">
+                                    <tr style="{% if resource_level_2_value.contract_quantity == 0 %}display:none{% endif %};" class="hidden resource_level1-{{contract.id}}-{{ assembly_level_1_values.id }}-{{ assembly_level_2_values.id }}-{{assembly_level_3_values.id}}-{{resource_level_1_value.id}} level2-row">
                                         <td class="nested">
                                             <span style="margin-left: 158px;">
                                                 <span class="toggle-icon" data-target="resource_level2-{{contract.id}}-{{ assembly_level_1_values.id }}-{{ assembly_level_2_values.id }}-{{assembly_level_3_values.id}}-{{resource_level_1_value.id}}-{{resource_level_2_value.id}}" onclick="toggleRows(this, 'resource_level2-{{contract.id}}-{{ assembly_level_1_values.id }}-{{ assembly_level_2_values.id }}-{{assembly_level_3_values.id}}-{{resource_level_1_value.id}}-{{resource_level_2_value.id}}')">▶</span>
@@ -341,7 +341,7 @@
                                                 {{ resource_level_2_value.name }}
 
                                                 {% if resource_level_2_value.resource_level_3_values|length > 0 %}
-                                                <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important; border-radius: 32%;"> &nbsp;({{ resource_level_2_value.resource_level_3_values|length }})&nbsp;</small>
+                                                <!-- <small class="float-end" style="position: relative; top: -1px; color: #fff !important; background-color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important; border-radius: 32%;"> &nbsp;({{ resource_level_2_value.resource_level_3_values|length }})&nbsp;</small> -->
                                                 {% endif %}
                                             </span>
                                         </td>
@@ -375,7 +375,7 @@
 
                                     {% for resource_level_3_key, resource_level_3_value in resource_level_2_value.resource_level_3_values.items %}
                                     <!-- Level 3 Rows -->
-                                    <tr class="hidden resource_level2-{{contract.id}}-{{ assembly_level_1_values.id }}-{{ assembly_level_2_values.id }}-{{assembly_level_3_values.id}}-{{resource_level_1_value.id}}-{{resource_level_2_value.id}} level3-row">
+                                    <tr style="{% if resource_level_3_value.contract_quantity == 0 %}display:none{% endif %};" class="hidden resource_level2-{{contract.id}}-{{ assembly_level_1_values.id }}-{{ assembly_level_2_values.id }}-{{assembly_level_3_values.id}}-{{resource_level_1_value.id}}-{{resource_level_2_value.id}} level3-row">
                                         <td class="nested nested-2">
                                             <span style="margin-left: 206px;">
                                                 
