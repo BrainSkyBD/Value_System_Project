@@ -334,7 +334,7 @@ def create_invoice(request):
                 return redirect('view_contract', contract_id)
 
             get_remain_invoice = get_contract_details.calculate_remaining_quantity()
-            if int(get_remain_invoice) < int(invoice_quantity):
+            if float(get_remain_invoice) < float(invoice_quantity):
                 messages.error(request, f"Error : Your remain invoice quantity is {get_remain_invoice}, you trying to add {invoice_quantity}")
                 return redirect('view_contract', contract_id)
             
@@ -1101,7 +1101,7 @@ def subcontract_create_invoice(request):
                 return redirect('view_contract', contract_id)
 
             get_remain_invoice = get_contract_details.calculate_remaining_quantity()
-            if int(get_remain_invoice) < int(invoice_quantity):
+            if float(get_remain_invoice) < float(invoice_quantity):
                 messages.error(request, f"Error : Your remain invoice quantity is {get_remain_invoice}, you trying to add {invoice_quantity}")
                 return redirect('view_contract', contract_id)
             
