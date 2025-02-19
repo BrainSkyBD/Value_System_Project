@@ -52,15 +52,15 @@
     }
 
     .level1-row {
-        background-color: #1fcba2;
+        background-color: #c4d79b;
     }
 
     .level2-row {
-        background-color: #b2fffb;
+        background-color: #d8e4bc;
     }
 
     .level3-row {
-        background-color: #e1bee7;
+        background-color: #ebf1de;
     }
 
     .add-button {
@@ -100,7 +100,7 @@
                                 <tbody>
                                     {% for level1 in data %}
                                     <!-- Level 1 Row -->
-                                    <tr class="level1-row">
+                                    <tr class="level1-row" style="color: black;">
                                         <td>
                                             {% if level1.level2|length > 0 %}
                                             <span class="toggle-icon" data-target="level1-{{ level1.level1.id }}" onclick="toggleRows(this, 'level1-{{ level1.level1.id }}')">▶</span>
@@ -122,7 +122,7 @@
 
                                     <!-- Level 2 Rows -->
                                     {% for level2 in level1.level2 %}
-                                    <tr class="hidden level1-{{ level1.level1.id }} level2-row">
+                                    <tr class="hidden level1-{{ level1.level1.id }} level2-row" style="color: black;">
                                         <td class="nested">
                                             <span style="margin-left: 26px;">
                                                 {% if level2.level3|length > 0 %}
@@ -146,7 +146,7 @@
 
                                     <!-- Level 3 Rows -->
                                     {% for level3 in level2.level3 %}
-                                    <tr class="hidden level2-{{ level2.level2.id }} level3-row">
+                                    <tr class="hidden level2-{{ level2.level2.id }} level3-row" style="color: black;">
                                         <td class="nested nested-2">
                                             <span style="margin-left: 52px;">
                                                 
@@ -167,8 +167,8 @@
 
                                     <!-- Company Resources Rows -->
                                     {% for resource in level3.resources %}
-                                    <tr class="hidden resources-{{ level3.resource.id }}" style="background: #873a95;
-    color: white;">
+                                    <tr class="hidden resources-{{ level3.resource.id }}" style="background: #ffffff;
+    color: black;">
                                         <td class="nested nested-3">
                                             <span style="margin-left: 92px;">
                                                 {{ resource.Resource_Name }}

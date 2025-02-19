@@ -980,74 +980,75 @@ class MainContract(models.Model):
 
                     ultimate_usage_resource_L1_total_single_amount = float(ultimate_usage_resource_L1_total_single_amount) + assembly_detail_record_Unit_Cost
 
-            subcontract_cost = ultimate_usage_resource_L1_total_amount
-            subcontract_qty = ultimate_usage_resource_L1_total_qty
+            subcontract_cost = round(ultimate_usage_resource_L1_total_amount, 2)
+            subcontract_qty = round(ultimate_usage_resource_L1_total_qty, 2)
 
             
 
             # Calculate expense costs
-            expense_cost = ExpenseTable.objects.filter(
+            expense_cost = round(ExpenseTable.objects.filter(
                 Company_Details=self.company_details,
                 contract_value=self,
                 assembly_value=filter_Estimation_Assemblies,
                 resource_value__Resource_Code_L1=resoures_level_1_record
-            ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0
+            ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0, 2)
 
             # Calculate expense qty
-            expense_qty = ExpenseTable.objects.filter(
+            expense_qty = round(ExpenseTable.objects.filter(
                 Company_Details=self.company_details,
                 contract_value=self,
                 assembly_value=filter_Estimation_Assemblies,
                 resource_value__Resource_Code_L1=resoures_level_1_record
-            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0
+            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0, 2)
 
 
             # Calculate store costs
-            store_cost = StoreTable.objects.filter(
+            store_cost = round(StoreTable.objects.filter(
                 Company_Details=self.company_details,
                 contract_value=self,
                 assembly_value=filter_Estimation_Assemblies,
                 resource_value__Resource_Code_L1=resoures_level_1_record,
                 stock_trasaction_status="Stock-Out"
-            ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0
+            ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0, 2)
 
 
-            store_qty = StoreTable.objects.filter(
+            store_qty = round(StoreTable.objects.filter(
                 Company_Details=self.company_details,
                 contract_value=self,
                 assembly_value=filter_Estimation_Assemblies,
                 resource_value__Resource_Code_L1=resoures_level_1_record,
                 stock_trasaction_status="Stock-Out"
-            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0
+            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0, 2)
 
             # Calculate budget costs
-            budget_unit_cost = Estimation_Assemblies_Resource_Details_Table.objects.filter(
+            budget_unit_cost = round(Estimation_Assemblies_Resource_Details_Table.objects.filter(
                 Company_Details=self.company_details,
                 Estimation_Assemblies=filter_Estimation_Assemblies,
                 Resource_record__Resource_Code_L1=resoures_level_1_record
-            ).aggregate(total=Sum('Unit_Cost'))['total'] or 0
-            budget_cost = budget_unit_cost * float(budget_quantity)
+            ).aggregate(total=Sum('Unit_Cost'))['total'] or 0, 2)
+            
+            budget_cost = round(budget_unit_cost * float(budget_quantity), 2)
 
 
-            total_actual_resources_cost = float(subcontract_cost) + float(expense_cost) + float(store_cost)
+            total_actual_resources_cost = round(float(subcontract_cost) + float(expense_cost) + float(store_cost), 2)
 
             # Calculate earned cost
-            earned_cost = budget_unit_cost * main_contract_total_quantity
+            earned_cost = round(budget_unit_cost * main_contract_total_quantity, 2)
 
             # Calculate variance to date
-            variance_to_date = budget_cost - subcontract_cost
+            variance_to_date = round(budget_cost - subcontract_cost, 2)
 
             # Calculate estimate at completion
-            estimate_at_completion = budget_unit_cost * float(contract_remain_quantity) + total_actual_resources_cost
+            estimate_at_completion = round(budget_unit_cost * float(contract_remain_quantity) + total_actual_resources_cost, 2)
 
             print('estimate_at_completion')
             print(estimate_at_completion)
 
             # Calculate ETC remaining
-            ETC_remaining = estimate_at_completion - subcontract_cost
+            ETC_remaining = round(estimate_at_completion - subcontract_cost, 2)
 
             # Calculate VAC remaining
-            VAC_remaining = budget_cost - estimate_at_completion
+            VAC_remaining = round(budget_cost - estimate_at_completion, 2)
 
             resource_usage[resoures_level_1_record.Resource_Code_L1] = {
                 "id": resoures_level_1_record.id,
@@ -1164,76 +1165,76 @@ class MainContract(models.Model):
                     ultimate_usage_resource_L2_total_qty = ultimate_usage_resource_L2_total_qty + total_quantity
                     ultimate_usage_resource_L2_total_single_amount = float(ultimate_usage_resource_L2_total_single_amount) + assembly_detail_record_Unit_Cost
 
-            subcontract_cost = ultimate_usage_resource_L2_total_amount
-            subcontract_qty = ultimate_usage_resource_L2_total_qty
+            subcontract_cost = round(ultimate_usage_resource_L2_total_amount, 2)
+            subcontract_qty = round(ultimate_usage_resource_L2_total_qty, 2)
             print('subcontract_cost')
             print(subcontract_cost)
 
             
 
             # Calculate expense costs
-            expense_cost = ExpenseTable.objects.filter(
+            expense_cost = round(ExpenseTable.objects.filter(
                 Company_Details=self.company_details,
                 contract_value=self,
                 assembly_value=filter_Estimation_Assemblies,
                 resource_value__Resource_Code_L1=resoures_level_1_record,
                 resource_value__Resource_Code_L2=resoures_level_2_record
-            ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0
+            ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0, 2)
 
-            expense_qty = ExpenseTable.objects.filter(
+            expense_qty = round(ExpenseTable.objects.filter(
                 Company_Details=self.company_details,
                 contract_value=self,
                 assembly_value=filter_Estimation_Assemblies,
                 resource_value__Resource_Code_L1=resoures_level_1_record,
                 resource_value__Resource_Code_L2=resoures_level_2_record
-            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0
+            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0, 2)
 
             # Calculate store costs
-            store_cost = StoreTable.objects.filter(
+            store_cost = round(StoreTable.objects.filter(
                 Company_Details=self.company_details,
                 contract_value=self,
                 assembly_value=filter_Estimation_Assemblies,
                 resource_value__Resource_Code_L1=resoures_level_1_record,
                 resource_value__Resource_Code_L2=resoures_level_2_record,
                 stock_trasaction_status="Stock-Out"
-            ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0
+            ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0, 2)
 
-            store_qty = StoreTable.objects.filter(
+            store_qty = round(StoreTable.objects.filter(
                 Company_Details=self.company_details,
                 contract_value=self,
                 assembly_value=filter_Estimation_Assemblies,
                 resource_value__Resource_Code_L1=resoures_level_1_record,
                 resource_value__Resource_Code_L2=resoures_level_2_record,
                 stock_trasaction_status="Stock-Out"
-            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0
+            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0, 2)
 
             # Calculate budget costs
-            budget_unit_cost = Estimation_Assemblies_Resource_Details_Table.objects.filter(
+            budget_unit_cost = round(Estimation_Assemblies_Resource_Details_Table.objects.filter(
                 Company_Details=self.company_details,
                 Estimation_Assemblies=filter_Estimation_Assemblies,
                 Resource_record__Resource_Code_L1=resoures_level_1_record,
                 Resource_record__Resource_Code_L2=resoures_level_2_record
-            ).aggregate(total=Sum('Unit_Cost'))['total'] or 0
-            budget_cost = budget_unit_cost * float(budget_quantity)
+            ).aggregate(total=Sum('Unit_Cost'))['total'] or 0, 2)
+            budget_cost = round(budget_unit_cost * float(budget_quantity), 2)
 
 
-            total_actual_resources_cost = float(subcontract_cost) + float(expense_cost) + float(store_cost)
+            total_actual_resources_cost = round(float(subcontract_cost) + float(expense_cost) + float(store_cost), 2)
 
             # Calculate earned cost
-            earned_cost = budget_unit_cost * main_contract_total_quantity
+            earned_cost = round(budget_unit_cost * main_contract_total_quantity, 2)
 
             # Calculate variance to date
-            variance_to_date = budget_cost - subcontract_cost
+            variance_to_date = round(budget_cost - subcontract_cost, 2)
 
             # Calculate estimate at completion
-            estimate_at_completion = budget_unit_cost * float(contract_remain_quantity) + total_actual_resources_cost
+            estimate_at_completion = round(budget_unit_cost * float(contract_remain_quantity) + total_actual_resources_cost, 2)
 
             
             # Calculate ETC remaining
-            ETC_remaining = estimate_at_completion - subcontract_cost
+            ETC_remaining = round(estimate_at_completion - subcontract_cost, 2)
 
             # Calculate VAC remaining
-            VAC_remaining = budget_cost - estimate_at_completion
+            VAC_remaining = round(budget_cost - estimate_at_completion, 2)
 
             resource_usage[resoures_level_2_record.Resource_Code_L2] = {
                 "id": resoures_level_2_record.id,
@@ -1350,34 +1351,34 @@ class MainContract(models.Model):
                     ultimate_usage_resource_L3_total_qty = ultimate_usage_resource_L3_total_qty + total_quantity
                     ultimate_usage_resource_L3_total_single_amount = float(ultimate_usage_resource_L3_total_single_amount) + assembly_detail_record_Unit_Cost
 
-            subcontract_qty = ultimate_usage_resource_L3_total_qty
-            subcontract_cost = ultimate_usage_resource_L3_total_amount
+            subcontract_qty = round(ultimate_usage_resource_L3_total_qty, 2)
+            subcontract_cost = round(ultimate_usage_resource_L3_total_amount, 2)
             print('subcontract_cost')
             print(subcontract_cost)
 
             
 
             # Calculate expense costs
-            expense_cost = ExpenseTable.objects.filter(
+            expense_cost = round(ExpenseTable.objects.filter(
                 Company_Details=self.company_details,
                 contract_value=self,
                 assembly_value=filter_Estimation_Assemblies,
                 resource_value__Resource_Code_L1=resoures_level_1_record,
                 resource_value__Resource_Code_L2=resoures_level_2_record,
                 resource_value__Resource_Code_L3=resoures_level_3_record
-            ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0
+            ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0, 2)
 
-            expense_qty = ExpenseTable.objects.filter(
+            expense_qty = round(ExpenseTable.objects.filter(
                 Company_Details=self.company_details,
                 contract_value=self,
                 assembly_value=filter_Estimation_Assemblies,
                 resource_value__Resource_Code_L1=resoures_level_1_record,
                 resource_value__Resource_Code_L2=resoures_level_2_record,
                 resource_value__Resource_Code_L3=resoures_level_3_record
-            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0
+            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0, 2)
 
             # Calculate store costs
-            store_cost = StoreTable.objects.filter(
+            store_cost = round(StoreTable.objects.filter(
                 Company_Details=self.company_details,
                 contract_value=self,
                 assembly_value=filter_Estimation_Assemblies,
@@ -1385,10 +1386,10 @@ class MainContract(models.Model):
                 resource_value__Resource_Code_L2=resoures_level_2_record,
                 resource_value__Resource_Code_L3=resoures_level_3_record,
                 stock_trasaction_status="Stock-Out"
-            ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0
+            ).aggregate(total_cost=Sum('total_cost'))['total_cost'] or 0, 2)
 
 
-            store_qty = StoreTable.objects.filter(
+            store_qty = round(StoreTable.objects.filter(
                 Company_Details=self.company_details,
                 contract_value=self,
                 assembly_value=filter_Estimation_Assemblies,
@@ -1396,36 +1397,36 @@ class MainContract(models.Model):
                 resource_value__Resource_Code_L2=resoures_level_2_record,
                 resource_value__Resource_Code_L3=resoures_level_3_record,
                 stock_trasaction_status="Stock-Out"
-            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0
+            ).aggregate(quantity=Sum('quantity'))['quantity'] or 0, 2)
 
             # Calculate budget costs
-            budget_unit_cost = Estimation_Assemblies_Resource_Details_Table.objects.filter(
+            budget_unit_cost = round(Estimation_Assemblies_Resource_Details_Table.objects.filter(
                 Company_Details=self.company_details,
                 Estimation_Assemblies=filter_Estimation_Assemblies,
                 Resource_record__Resource_Code_L1=resoures_level_1_record,
                 Resource_record__Resource_Code_L2=resoures_level_2_record,
                 Resource_record__Resource_Code_L3=resoures_level_3_record
-            ).aggregate(total=Sum('Unit_Cost'))['total'] or 0
-            budget_cost = budget_unit_cost * float(budget_quantity)
+            ).aggregate(total=Sum('Unit_Cost'))['total'] or 0, 2)
+            budget_cost = round(budget_unit_cost * float(budget_quantity), 2)
 
 
-            total_actual_resources_cost = float(subcontract_cost) + float(expense_cost) + float(store_cost)
+            total_actual_resources_cost = round(float(subcontract_cost) + float(expense_cost) + float(store_cost), 2)
 
             # Calculate earned cost
-            earned_cost = budget_unit_cost * main_contract_total_quantity
+            earned_cost = round(budget_unit_cost * main_contract_total_quantity, 2)
 
             # Calculate variance to date
-            variance_to_date = budget_cost - subcontract_cost
+            variance_to_date = round(budget_cost - subcontract_cost, 2)
 
             # Calculate estimate at completion
-            estimate_at_completion = budget_unit_cost * float(contract_remain_quantity) + total_actual_resources_cost
+            estimate_at_completion = round(budget_unit_cost * float(contract_remain_quantity) + total_actual_resources_cost, 2)
 
             
             # Calculate ETC remaining
-            ETC_remaining = estimate_at_completion - subcontract_cost
+            ETC_remaining = round(estimate_at_completion - subcontract_cost, 2)
 
             # Calculate VAC remaining
-            VAC_remaining = budget_cost - estimate_at_completion
+            VAC_remaining = round(budget_cost - estimate_at_completion, 2)
 
             resource_usage[resoures_level_3_record.Resource_Code_L3] = {
                 "id": resoures_level_3_record.id,
@@ -2007,8 +2008,12 @@ class MainContractInvoiceTable(models.Model):
 class MainContractInvoiceDetailsTable(models.Model):
     main_contract_invoice = models.ForeignKey(MainContractInvoiceTable, on_delete=models.CASCADE, related_name="contract_details_invoice_details")
     main_contract_assembly = models.ForeignKey(MainContractDetail, on_delete=models.CASCADE, related_name="contract_details_invoice")
+    
     Invoice_Quantity = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Invoice Quantity")
     Invoice_Revenue = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Invoice Revenue")
+    
+    Next_Remain_Quantity = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Invoice Quantity", default=None, blank=True, null=True)
+    Next_Remain_Revenue = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Invoice Revenue", default=None, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -2160,6 +2165,9 @@ class SubContractInvoiceDetailsTable(models.Model):
     sub_contract_assembly = models.ForeignKey(SubContractDetail, on_delete=models.CASCADE, related_name="contract_details_invoice")
     Invoice_Quantity = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Invoice Quantity")
     Invoice_Revenue = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Invoice Revenue")
+
+    Next_Remain_Quantity = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Invoice Quantity", default=None, blank=True, null=True)
+    Next_Remain_Revenue = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Invoice Revenue", default=None, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

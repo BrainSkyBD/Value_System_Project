@@ -338,13 +338,15 @@ def create_invoice(request):
                 messages.error(request, f"Error : Your remain invoice quantity is {get_remain_invoice}, you trying to add {invoice_quantity}")
                 return redirect('view_contract', contract_id)
             
-            
+            Next_Remain_Quantity = float(get_remain_invoice) - float(invoice_quantity)
 
             var_MainContractInvoice_details = MainContractInvoiceDetailsTable(
                 main_contract_invoice = var_MainContractInvoice,
                 main_contract_assembly = get_contract_details,
                 Invoice_Quantity = invoice_quantity,
-                Invoice_Revenue = float(get_contract_details.unit_price)*float(invoice_quantity)
+                Invoice_Revenue = float(get_contract_details.unit_price)*float(invoice_quantity),
+                Next_Remain_Quantity = Next_Remain_Quantity,
+                Next_Remain_Revenue = float(get_contract_details.unit_price)*float(Next_Remain_Quantity)
             )
             var_MainContractInvoice_details.save()
         
@@ -386,7 +388,7 @@ def view_contract(request, contract_id):
 
     filter_main_contract_invoice = MainContractInvoiceTable.objects.filter(
         invoice_contract_row=contract
-    )
+    ).order_by('-id')
 
     filter_resoures_level_1 = Resource_Code_L1_Table.objects.filter(Company_Details=contract.company_details)
 
@@ -1105,13 +1107,16 @@ def subcontract_create_invoice(request):
                 messages.error(request, f"Error : Your remain invoice quantity is {get_remain_invoice}, you trying to add {invoice_quantity}")
                 return redirect('view_contract', contract_id)
             
-            
+
+            Next_Remain_Quantity = float(get_remain_invoice) - float(invoice_quantity)
 
             var_MainContractInvoice_details = SubContractInvoiceDetailsTable(
                 sub_contract_invoice = var_MainContractInvoice,
                 sub_contract_assembly = get_contract_details,
                 Invoice_Quantity = invoice_quantity,
-                Invoice_Revenue = float(get_contract_details.unit_cost)*float(invoice_quantity)
+                Invoice_Revenue = float(get_contract_details.unit_cost)*float(invoice_quantity),
+                Next_Remain_Quantity = Next_Remain_Quantity,
+                Next_Remain_Revenue = float(get_contract_details.unit_cost)*float(Next_Remain_Quantity)
             )
             var_MainContractInvoice_details.save()
         
@@ -1132,7 +1137,7 @@ def view_subcontract(request, subcontract_id):
 
     filter_main_contract_invoice = SubContractInvoiceTable.objects.filter(
         invoice_contract_row=contract
-    )
+    ).order_by('-id')
     context = {
         'contract': contract,
         'contract_details': contract_details,

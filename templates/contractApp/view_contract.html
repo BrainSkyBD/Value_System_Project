@@ -74,7 +74,7 @@
                                             {% if filter_main_contract_invoice %}
                                             {% for invoice in filter_main_contract_invoice %}
                                             <tr>
-                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ forloop.revcounter }}</td>
                                                 <td>#INV{{ invoice.id }}</td>
                                                 <td>
                                                     <button class="btn btn-success btn-sm btn-details" data-target="details_table_tr{{ invoice.id }}" style="color:white;">See details</button>
@@ -88,8 +88,12 @@
                                                             <tr class="text-nowrap">
                                                                 <th>#</th>
                                                                 <th>Assembly Name</th>
+                                                                <th>Contract Quantity</th>
+                                                                <th>Unit Price</th>
                                                                 <th>Invoice Quantity</th>
                                                                 <th>Invoice Revenue</th>
+                                                                <th>Next Remain Quantity</th>
+                                                                <th>Next Remain Revenue</th>
                                                                 <th>DateTime</th>
                                                             </tr>
                                                         </thead>
@@ -99,8 +103,12 @@
                                                             <tr>
                                                                 <td>{{ forloop.counter }}</td>
                                                                 <td>{{ detail.main_contract_assembly.assembly_name }}</td>
+                                                                <td>{{ detail.main_contract_assembly.contract_quantity }}</td>
+                                                                <td>{{ detail.main_contract_assembly.unit_price }}</td>
                                                                 <td>{{ detail.Invoice_Quantity }}</td>
                                                                 <td>$ {{ detail.Invoice_Revenue }}</td>
+                                                                <td>{{ detail.Next_Remain_Quantity }}</td>
+                                                                <td>{{ detail.Next_Remain_Revenue }}</td>
                                                                 <td>{{ detail.created_at }}</td>
                                                             </tr>
                                                             {% endfor %}
@@ -889,6 +897,7 @@
                                                     <tr class="text-nowrap">
                                                         <th>#</th>
                                                         <th>Assembly Name</th>
+                                                        <th>Contract Quantity</th>
                                                         <th>Invoice Quantity</th>
                                                         <th>Invoice Revenue</th>
                                                         <th>DateTime</th>
@@ -900,6 +909,7 @@
                                                     <tr>
                                                         <td>{{ forloop.counter }}</td>
                                                         <td>{{ detail.main_contract_assembly.assembly_name }}</td>
+                                                        <td>{{ detail.main_contract_assembly.contract_quantity }}</td>
                                                         <td>{{ detail.Invoice_Quantity }}</td>
                                                         <td>$ {{ detail.Invoice_Revenue }}</td>
                                                         <td>{{ detail.created_at }}</td>
