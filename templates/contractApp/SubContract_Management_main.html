@@ -52,15 +52,15 @@
     }
 
     .level1-row {
-        background-color: #e0f7fa;
+        background-color: #95b3d7;
     }
 
     .level2-row {
-        background-color: #ffe0b2;
+        background-color: #b8cce4;
     }
 
     .level3-row {
-        background-color: #e1bee7;
+        background-color: #dce6f1;
     }
 
     .add-button {
@@ -125,7 +125,7 @@
                                     </tr>
                                     {% for record_main_contract_details in contract.main_subcontract_details_query %}
                                     <!-- Level 1 Row -->
-                                    <tr class="hidden contract-{{contract.id}} level1-row">
+                                    <tr class="hidden contract-{{contract.id}} level1-row" style="color:black;">
                                         <td>
                                             <span style="margin-left: 26px;">
                                                 <span class="toggle-icon" data-target="level1-{{record_main_contract_details.id}}-{{ record_main_contract_details.assembly_value.Assemblies_Code_L1.id }}" onclick="toggleRows(this, 'level1-{{record_main_contract_details.id}}-{{ record_main_contract_details.assembly_value.Assemblies_Code_L1.id }}')">▶</span>
@@ -147,7 +147,7 @@
 
 
                                     <!-- Level 2 Rows -->
-                                    <tr class="hidden level1-{{record_main_contract_details.id}}-{{ record_main_contract_details.assembly_value.Assemblies_Code_L1.id }} level2-row">
+                                    <tr style="color:black;" class="hidden level1-{{record_main_contract_details.id}}-{{ record_main_contract_details.assembly_value.Assemblies_Code_L1.id }} level2-row">
                                         <td class="nested">
                                             <span style="margin-left: 58px;">
                                                 <span class="toggle-icon" data-target="level2-{{record_main_contract_details.id}}-{{ record_main_contract_details.assembly_value.Assemblies_Code_L2.id }}" onclick="toggleRows(this, 'level2-{{record_main_contract_details.id}}-{{ record_main_contract_details.assembly_value.Assemblies_Code_L2.id }}')">▶</span>
@@ -171,7 +171,7 @@
 
 
                                     <!-- Level 3 Rows -->
-                                    <tr class="hidden level2-{{record_main_contract_details.id}}-{{ record_main_contract_details.assembly_value.Assemblies_Code_L2.id }} level3-row">
+                                    <tr style="color:black;" class="hidden level2-{{record_main_contract_details.id}}-{{ record_main_contract_details.assembly_value.Assemblies_Code_L2.id }} level3-row">
                                         <td class="nested nested-2">
                                             <span style="margin-left: 106px;">
                                                 
