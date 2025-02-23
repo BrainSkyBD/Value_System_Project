@@ -713,7 +713,8 @@ class MainContract(models.Model):
                 "etc_remaining": ETC_REMAINING,
                 "estimate_at_completion_eac": Estimate_At_Completion_EAC,
                 "vac_value": VAC_value,
-                "resource_level_1_values": self.contract_resource_level_1_values(assemblies_level_1_record, assemblies_level_2_record, assemblies_level_3_record)
+                "resource_level_1_values": self.contract_resource_level_1_values(assemblies_level_1_record, assemblies_level_2_record, assemblies_level_3_record),
+                "filter_contract_assembly_details": filter_contract_details
             }
         
         return resource_usage

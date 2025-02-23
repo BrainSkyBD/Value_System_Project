@@ -482,6 +482,7 @@ def edit_contract(request, contract_id):
             'id': assembly.id,
             'assembly_title': assembly.Assembly_Title,
             'assembly_name': assembly.Assembly_Name,
+            'assembly_title': assembly.Assembly_Title,
             'unit_of_measure': assembly.Unit_of_Measure,
             'assembly_unit_cost': assembly.Assembly_Unit_Cost,
             'resource_code_totals': assembly.get_resource_code_totals(),
@@ -651,10 +652,14 @@ def Contract_Management_main(request):
         'details__assembly_row__Assemblies_Code_L2',
         'details__assembly_row__Assemblies_Code_L3'
     )
+    filter_resoures_level_1 = Resource_Code_L1_Table.objects.filter(Company_Details=company_details_record)
+    filter_assemblies_level_1 = Assemblies_Code_L1_Table.objects.filter(Company_Details=company_details_record)
     context = {
-        'my_contracts': my_contracts
+        'my_contracts': my_contracts,
+        'filter_resoures_level_1':filter_resoures_level_1,
+        'filter_assemblies_level_1':filter_assemblies_level_1
     }
-    return render(request, 'contractApp/Contract_Management_main.html', context)
+    return render(request, 'contractApp/Contract_Management_main2.html', context)
 
 
 
@@ -1045,6 +1050,7 @@ def SubContract_Management_main(request):
         'my_contracts': my_contracts
     }
     return render(request, 'contractApp/SubContract_Management_main.html', context)
+    
 
 
 
