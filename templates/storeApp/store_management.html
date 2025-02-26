@@ -167,22 +167,24 @@
 
                                     <!-- Company Resources Rows -->
                                     {% for resource in level3.resources %}
-                                    <tr class="hidden resources-{{ level3.resource.id }}" style="background: #ffffff;
-    color: black;">
-                                        <td class="nested nested-3">
-                                            <span style="margin-left: 92px;">
-                                                {{ resource.Resource_Name }}
-                                            </span>
-                                        </td>
-                                        <td>{{ resource.Company_Details.Company_Legal_Name }}</td>
-                                        <td>{{ resource.calculate_stock_availablity }}</td>
-                                        <td>{{ resource.total_stock_in_calculation }}</td>
-                                        <td>{{ resource.total_stock_in_calculation_price }}</td>
-                                        <td>{{ resource.total_stock_out_calculation }}</td>
-                                        <td>{{ resource.total_stock_out_calculation_price }}</td>
-                                        <td>{{ resource.Unit_of_Measure }}</td>
-                                        <td>$ {{ resource.Budget_Unit_Cost }}</td>
-                                    </tr>
+                                        {% if resource.calculate_stock_availablity > 0 %}
+                                            <tr class="hidden resources-{{ level3.resource.id }}" style="background: #ffffff;
+            color: black;">
+                                                <td class="nested nested-3">
+                                                    <span style="margin-left: 92px;">
+                                                        {{ resource.Resource_Name }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ resource.Company_Details.Company_Legal_Name }}</td>
+                                                <td>{{ resource.calculate_stock_availablity }}</td>
+                                                <td>{{ resource.total_stock_in_calculation }}</td>
+                                                <td>{{ resource.total_stock_in_calculation_price }}</td>
+                                                <td>{{ resource.total_stock_out_calculation }}</td>
+                                                <td>{{ resource.total_stock_out_calculation_price }}</td>
+                                                <td>{{ resource.Unit_of_Measure }}</td>
+                                                <td>$ {{ resource.Budget_Unit_Cost }}</td>
+                                            </tr>
+                                        {% endif %}
                                     {% empty %}
                                     <tr class="hidden resources-{{ level3.resource.id }}" style="background: #873a95; color: white;">
                                         <td colspan="7" class=" text-muted"><span style="margin-left: 92px; font-style: italic;">No resources available</span></td>
