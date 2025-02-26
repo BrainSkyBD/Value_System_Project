@@ -262,7 +262,7 @@
                 function populateAssemblyDropdown(assemblies) {
                     assemblyDropdown.innerHTML = '';
                     assemblies.forEach(assembly => {
-                        const assemblyName = assembly.assembly_name || 'Unnamed Assembly';
+                        const assemblyName = assembly.assembly_title || 'Unnamed Assembly';
                         const unitOfMeasure = assembly.unit_of_measure || 'N/A';
                         
                         const li = document.createElement('li');
@@ -322,7 +322,7 @@
                 function populateResourceDropdown(resources) {
                     resourceDropdown.innerHTML = '';
                     resources.forEach(resource => {
-                        const resourceName = resource.Resource_Code_L3  || 'Unnamed resource';
+                        const resourceName = resource.Resource_Title  || 'Unnamed resource';
                         const unitOfMeasure = resource.Unit_of_Measure || 'N/A';
                         
 

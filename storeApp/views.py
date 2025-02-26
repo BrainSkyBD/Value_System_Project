@@ -128,6 +128,7 @@ def fetch_assemblies_by_contract(request, contract_id):
 
         assemblies_list.append({
             'id': assembly['assembly_row__id'],
+            'assembly_title': assembly['assembly_row__Assembly_Title'] or 'Unnamed Assembly',
             'assembly_name': assembly['assembly_row__Assembly_Name'] or 'Unnamed Assembly',
             'unit_of_measure': assembly['assembly_row__Unit_of_Measure'] or 'N/A',
             'assembly_unit_cost': assembly['assembly_row__Assembly_Unit_Cost'] or 0,
@@ -165,6 +166,7 @@ def fetch_resorce_by_assemblies(request, assembly_id):
             print(resource_record.calculate_stock_availablity())
             resourse_list.append({
                 'id': resource_record.id,
+                'Resource_Title': resource_record.Resource_Title or 'Unnamed Resource',
                 'Resource_Name': resource_record.Resource_Name or 'Unnamed Resource',
                 'Resource_Code_L3': resource_record.Resource_Code_L3.Resource_Code_L3 if resource_record.Resource_Code_L3 else 'N/A',
                 'Unit_of_Measure': resource_record.Unit_of_Measure or 'N/A',
