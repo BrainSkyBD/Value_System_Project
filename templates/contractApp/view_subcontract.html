@@ -27,8 +27,8 @@
       <table class="table table-bordered">
         <thead>
           <tr class="text-nowrap">
-            <th>Combination Assembly Code</th>
             <th>Assembly Name</th>
+            <th>Combination Assembly Code</th>
             <th>Unit</th>
             <th>Item Description</th>
             <th>Unit Cost</th>
@@ -340,7 +340,7 @@
           <tbody>
             {% for detail in contract_details %}
               <tr>
-                <td><span class="badge badge-primary" style="background: #0070ff;">{{ detail.assembly_value.Assembly_Name }}</span></td>
+                <td><span class="badge badge-primary" style="background: #0070ff;">{{ detail.assembly_value.Assembly_Title }}</span></td>
                 <td>{{ detail.calculate_percentage_of_contract_quantity }}%</td>
                 <td>{{ detail.func_Assembly_Invoices_total_quantity }}</td>
                 <td>$ {{ detail.func_Assembly_Invoices_total_revenue }}</td>

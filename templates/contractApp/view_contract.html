@@ -299,6 +299,7 @@
 
           </tr>
           <tr class="text-nowrap">
+            <th>Assembly-Name</th>
             <th>Comb-Assem-Code</th>
             <th>Assembly Code L1</th>
             <th>Assembly Code L2</th>
@@ -419,7 +420,8 @@
         <tbody>
           {% for detail in contract_details %}
             <tr>
-              <td><span class="badge badge-primary" style="background: #0070ff;">{{ detail.comb_assem_code }}</span></td>
+              <td><span class="badge badge-primary" style="background: #0070ff;">{{ detail.assembly_row.Assembly_Title }}</span></td>
+              <td><span>{{ detail.comb_assem_code }}</span></td>
               <td>{{ detail.assembly_row.Assemblies_Code_L1.Assemblies_Code_L1 }}</td>
               <td>{{ detail.assembly_row.Assemblies_Code_L2.Assemblies_Code_L2 }}</td>
               <td>{{ detail.assembly_row.Assemblies_Code_L3.Assemblies_Code_L3 }}</td>
