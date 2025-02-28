@@ -786,6 +786,9 @@ def save_subcontract(request):
         if not company_details_record:
             return JsonResponse({'status': 'error', 'message': 'No company details found for the user'}, status=400)
 
+        
+        
+
         # Create the MainContract
         sub_contract = SubContractTable.objects.create(
             company_details=company_details_record,

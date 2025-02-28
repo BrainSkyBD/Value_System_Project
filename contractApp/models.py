@@ -2073,7 +2073,10 @@ class SubContractTable(models.Model):
 
     def calculate_total_price(self):
         total = self.details.aggregate(Sum('subcontract_total_price'))['subcontract_total_price__sum']
-        total = round(total, 2)
+        if total:
+            total = round(total, 2)
+        else:
+            total = 0.00
         return total if total is not None else 0
 
 

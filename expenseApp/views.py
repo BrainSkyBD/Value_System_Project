@@ -100,7 +100,8 @@ def fetch_assemblies_by_contract(request, contract_id):
         'assembly_row__Assembly_Title',
         'assembly_row__Assembly_Name',
         'assembly_row__Unit_of_Measure',
-        'assembly_row__Assembly_Unit_Cost'
+        'assembly_row__Assembly_Unit_Cost',
+        'assembly_row__Assembly_Quantity'
     )
 
     # Filter assemblies containing the selected resource
@@ -131,7 +132,8 @@ def fetch_assemblies_by_contract(request, contract_id):
             'assembly_name': assembly['assembly_row__Assembly_Name'] or 'Unnamed Assembly',
             'unit_of_measure': assembly['assembly_row__Unit_of_Measure'] or 'N/A',
             'assembly_unit_cost': assembly['assembly_row__Assembly_Unit_Cost'] or 0,
-            'resource_code_totals': resource_code_totals
+            'resource_code_totals': resource_code_totals,
+            'Assembly_Quantity' : assembly['assembly_row__Assembly_Quantity'] or 0
         })
     
     print(assemblies_list)
