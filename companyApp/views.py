@@ -11,7 +11,7 @@ from .models import CompanyDetailsTable, CompanyResourcesTable, Resource_Code_L1
 from authenticationApp.models import User
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-
+from assembliesApp.models import Estimation_Assemblies_Resource_Details_Table
 @login_required
 def company_settings(request):
     # Retrieve the latest company details for the current user
@@ -458,6 +458,14 @@ def edit_resource(request, pk):
 
         # Save the updated record
         get_resource_record.save()
+
+        filter_Estimation_Assemblies_Resource_Details_under_resource = Estimation_Assemblies_Resource_Details_Table.objects.filter(
+            Resource_record = get_resource_record
+        )
+        for assembly_row in filter_Estimation_Assemblies_Resource_Details_under_resource:
+            assembly_row.Resource_Budget_Unit_Cost = Budget_Unit_Cost
+            assembly_row.Unit_Cost= float(Budget_Unit_Cost) * float(assembly_row.Quantity)
+            assembly_row.save()
 
         messages.success(request, "Resources successfully Updated!")
         return redirect('List_Resource_Dictionary')

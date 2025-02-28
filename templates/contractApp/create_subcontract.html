@@ -66,6 +66,9 @@
                         <label class=" col-form-label" for="Comb_Assem_Code">Comb-Assem-Code</label>
                         <input type="text" class="form-control" id="Comb_Assem_Code" name="Comb_Assem_Code" placeholder="Comb-Assem-Code" required readonly>
                     </div>
+                    
+                    
+                    
             
                     <!-- Container to display resource totals for the selected assembly, hidden by default -->
                     <div id="resourceTotalsContainer" class="mb-3 col-md-12" style="display: none;">
@@ -77,7 +80,11 @@
                         <label class=" col-form-label" for="Item_Description">Item Description</label>
                         <textarea type="text" class="form-control" id="Item_Description" name="Item_Description" placeholder="" required></textarea>
                     </div>
-                    <div class="mb-3 col-md-12">
+                    <div class="mb-3 col-md-6">
+                        <label class=" col-form-label" for="contract_assembly_quantity">Contract Assembly Quantity</label>
+                        <input type="text" class="form-control" id="contract_assembly_quantity" name="contract_assembly_quantity" placeholder="contract assembly quantity" required readonly>
+                    </div>
+                    <div class="mb-3 col-md-6">
                         <label class=" col-form-label" for="Contract_Quantity">Sub-Contract Quantity</label>
                         <input type="number" class="form-control" id="Contract_Quantity" name="Contract_Quantity" placeholder="Enter Contract Quantity" value="1.00" step="0.01" min="0" required>
                     </div>
@@ -266,7 +273,7 @@
                         assemblyInput.disabled = false;
 
                         // Enable the calculate button once data is available
-                        document.getElementById('calculateButton').disabled = false;
+                        // document.getElementById('calculateButton').disabled = false;
                     } catch (error) {
                         console.error('Error fetching assemblies:', error);
                     }
@@ -298,7 +305,8 @@
 
                     document.getElementById('hiddenassemblyInputValue').value=assembly.assembly_title;
                     document.getElementById('hiddenassemblyInputId').value=assembly.id;
-                    document.getElementById('Comb_Assem_Code').value=`${assembly.assembly_title}`;
+                    document.getElementById('Comb_Assem_Code').value=`${assembly.assembly_name}`;
+                    document.getElementById('contract_assembly_quantity').value=`${assembly.Assembly_Quantity}`;
                 }
                 
             
@@ -456,13 +464,22 @@
                         alert('Please select a valid assembly name.');
                         return;
                     }
+
+                    
             
                     const unit = assembly.unit_of_measure;
                     const unitCost = parseFloat(assembly.assembly_unit_cost);
                     const contractQuantity = parseFloat(document.getElementById('Contract_Quantity').value);
+
+                    const contract_assembly_quantity = parseFloat(document.getElementById('contract_assembly_quantity').value);
                     
                     const unitPrice = unitCost;
                     const totalPrice = unitPrice * contractQuantity;
+
+                    if (contract_assembly_quantity < contractQuantity) {
+                        alert('The Sub-Contract Quantity cannot be greater than the Contract Assembly Quantity.');
+                        return;
+                    }
             
                     // Update the results table
                     const resultsTableBody = document.getElementById('resultsTableBody');
