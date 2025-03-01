@@ -46,7 +46,7 @@
                             <input type="hidden" id="hiddenassemblyInputValue" value="{{expense.assembly_value.Assembly_Name}}">
                             <input type="hidden" id="hiddenassemblyInputId" value="{{expense.assembly_value.id}}">
 
-                            <input type="text" class="form-control" id="assemblyInput" value="{% if expense.assembly_value %}{{expense.assembly_value.Assembly_Name}}{% endif %}" placeholder="Assembly Name" disabled>
+                            <input type="text" class="form-control" id="assemblyInput" value="{% if expense.assembly_value %}{{expense.assembly_value.Assembly_Title}}{% endif %}" placeholder="Assembly Name" disabled>
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="assemblyDropdownButton">
                                 <span class="visually-hidden">Toggle Dropdown</span>
                             </button>
@@ -61,7 +61,7 @@
                             <input type="hidden" id="hiddenresourceInputValue" value="{{expense.resource_value.Resource_Name}}">
                             <input type="hidden" id="hiddenresourceInputId" value="{{expense.resource_value.id}}">
 
-                            <input type="text" class="form-control" id="resourceInput" value="{% if expense.resource_value %}{{expense.resource_value.Resource_Name}}{% endif %}" placeholder="Resource Code" autocomplete="off" disabled>
+                            <input type="text" class="form-control" id="resourceInput" value="{% if expense.resource_value %}{{expense.resource_value.Resource_Title}}{% endif %}" placeholder="Resource Code" autocomplete="off" disabled>
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="resourceDropdownButton">
                                 <span class="visually-hidden">Toggle Dropdown</span>
                             </button>
