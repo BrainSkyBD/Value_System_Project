@@ -1898,9 +1898,13 @@ class MainContractDetail(models.Model):
                 budget_cost = float(budget_unit_rates) * float(contract_remain_quantity)
                 estimate_at_completion = budget_cost + actual_resource_code_cost
 
-                context_estimate_at_completion_EAC[resource_level_1] = round(estimate_at_completion, 2)
+                every_estimate_at_completion = round(estimate_at_completion, 2)
 
-            estimate_at_completion_total_sum = estimate_at_completion_total_sum + estimate_at_completion
+                context_estimate_at_completion_EAC[resource_level_1] = every_estimate_at_completion
+
+                estimate_at_completion_total_sum = estimate_at_completion_total_sum + every_estimate_at_completion
+
+            # estimate_at_completion_total_sum = estimate_at_completion_total_sum + estimate_at_completion
 
         context_estimate_at_completion_EAC['sum_total_estimate_at_completion_cost'] = round(estimate_at_completion_total_sum, 2)
 
@@ -1916,17 +1920,23 @@ class MainContractDetail(models.Model):
         
         # Calculate the difference for each resource_level_1
         cost_difference = {}
+
+        var_total_ETC_value = 0
         
         for resource_level_1 in resource_estimate_at_completion_costs.keys():
             if resource_level_1 != 'sum_total_estimate_at_completion_cost':  # Exclude the total key
                 estimate_at_completion_cost = resource_estimate_at_completion_costs.get(resource_level_1, 0)
                 subcontract_cost = subcontract_costs.get(resource_level_1, 0)
-                cost_difference[resource_level_1] = round(estimate_at_completion_cost - subcontract_cost, 2)
+                every_ETC_value = round(estimate_at_completion_cost - subcontract_cost, 2)
+                cost_difference[resource_level_1] = every_ETC_value
+
+                var_total_ETC_value = var_total_ETC_value + every_ETC_value
         
         # Add total difference if needed
-        total_estimate_at_completion_cost = resource_estimate_at_completion_costs.get('sum_total_estimate_at_completion_cost', 0)
-        total_subcontract_cost = subcontract_costs.get('total_sum_calculate_usage_amount', 0)
-        cost_difference['contract_ETC_remaining_value'] = round(total_estimate_at_completion_cost - total_subcontract_cost, 2)
+        # total_estimate_at_completion_cost = resource_estimate_at_completion_costs.get('sum_total_estimate_at_completion_cost', 0)
+        # total_subcontract_cost = subcontract_costs.get('total_sum_calculate_usage_amount', 0)
+        # cost_difference['contract_ETC_remaining_value'] = round(total_estimate_at_completion_cost - total_subcontract_cost, 2)
+        cost_difference['contract_ETC_remaining_value'] = var_total_ETC_value
         return cost_difference
 
 
