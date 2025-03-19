@@ -88,6 +88,10 @@
                         <label class=" col-form-label" for="Contract_Quantity">Sub-Contract Quantity</label>
                         <input type="number" class="form-control" id="Contract_Quantity" name="Contract_Quantity" placeholder="Enter Contract Quantity" value="1.00" step="0.01" min="0" required>
                     </div>
+                    <div class="mb-3 col-md-6">
+                        <label class=" col-form-label" for="unit_price">Unit Price</label>
+                        <input type="number" class="form-control" id="unit_price" name="unit_price" placeholder="Enter Unit Price" value="1.00" step="0.01" min="0" required>
+                    </div>
                     
                 </div>
               
@@ -468,7 +472,9 @@
                     
             
                     const unit = assembly.unit_of_measure;
-                    const unitCost = parseFloat(assembly.assembly_unit_cost);
+                    const userInputUnitPrice = parseFloat(document.getElementById('unit_price').value); 
+                    const unitCost = userInputUnitPrice
+                    {% comment %} const unitCost = parseFloat(assembly.assembly_unit_cost); {% endcomment %}
                     const contractQuantity = parseFloat(document.getElementById('Contract_Quantity').value);
 
                     const contract_assembly_quantity = parseFloat(document.getElementById('contract_assembly_quantity').value);
