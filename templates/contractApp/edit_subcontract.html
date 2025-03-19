@@ -283,7 +283,7 @@
                 function populateAssemblyDropdown(assemblies) {
                     assemblyDropdown.innerHTML = '';
                     assemblies.forEach(assembly => {
-                        const assemblyName = assembly.assembly_name || 'Unnamed Assembly';
+                        const assemblyName = assembly.assembly_title || 'Unnamed Assembly';
                         const unitOfMeasure = assembly.unit_of_measure || 'N/A';
                         
                         const li = document.createElement('li');
@@ -300,7 +300,7 @@
                 // Assembly selection
                 function selectAssembly(assembly) {
                     console.log(assembly)
-                    assemblyInput.value = assembly.assembly_name;
+                    assemblyInput.value = assembly.assembly_title;
                     assemblyDropdown.classList.remove('show');
 
                     document.getElementById('hiddenassemblyInputValue').value=assembly.assembly_name;
