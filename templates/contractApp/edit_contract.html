@@ -236,7 +236,7 @@
                             e.preventDefault();
             
                             // Set input field to selected assembly name
-                            numberInput.value = item.assembly_name;
+                            numberInput.value = item.assembly_title;
                             numberInput_id.value = item.id;
                             document.getElementById('Comb_Assem_Code').value=`${item.Assemblies_Code_L1}-${item.Assemblies_Code_L2}-${item.Assemblies_Code_L3}`;
                             
@@ -305,11 +305,8 @@
             
                 // Function to perform the calculations and update the table
                 function calculateValues() {
-                    const selectedAssemblyName = numberInput.value;
-                    console.log(selectedAssemblyName)
-                    const assembly = assembliesData.find(a => a.assembly_name === selectedAssemblyName);
-                    console.log(assembly)
-            
+                    const selectedAssemblyName = numberInput_id.value;
+                    const assembly = assembliesData.find(a => a.id === parseInt(selectedAssemblyName));
                     if (!assembly) {
                         alert('Please select a valid assembly name.');
                         return;

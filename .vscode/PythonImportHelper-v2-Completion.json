@@ -474,6 +474,22 @@
         "documentation": {}
     },
     {
+        "label": "Resource_Code_L1_Table",
+        "importPath": "companyApp.models",
+        "description": "companyApp.models",
+        "isExtraImport": true,
+        "detail": "companyApp.models",
+        "documentation": {}
+    },
+    {
+        "label": "CompanyDetailsTable",
+        "importPath": "companyApp.models",
+        "description": "companyApp.models",
+        "isExtraImport": true,
+        "detail": "companyApp.models",
+        "documentation": {}
+    },
+    {
         "label": "CompanyDetailsTable",
         "importPath": "companyApp.models",
         "description": "companyApp.models",
@@ -706,7 +722,7 @@
         "documentation": {}
     },
     {
-        "label": "Sum",
+        "label": "F",
         "importPath": "django.db.models",
         "description": "django.db.models",
         "isExtraImport": true,
@@ -714,7 +730,7 @@
         "documentation": {}
     },
     {
-        "label": "F",
+        "label": "Sum",
         "importPath": "django.db.models",
         "description": "django.db.models",
         "isExtraImport": true,
@@ -1148,30 +1164,6 @@
         "documentation": {}
     },
     {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
-        "isExtraImport": true,
-        "detail": "django.shortcuts",
-        "documentation": {}
-    },
-    {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
-        "isExtraImport": true,
-        "detail": "django.shortcuts",
-        "documentation": {}
-    },
-    {
-        "label": "render",
-        "importPath": "django.shortcuts",
-        "description": "django.shortcuts",
-        "isExtraImport": true,
-        "detail": "django.shortcuts",
-        "documentation": {}
-    },
-    {
         "label": "get_object_or_404",
         "importPath": "django.shortcuts",
         "description": "django.shortcuts",
@@ -1188,7 +1180,7 @@
         "documentation": {}
     },
     {
-        "label": "render",
+        "label": "redirect",
         "importPath": "django.shortcuts",
         "description": "django.shortcuts",
         "isExtraImport": true,
@@ -1196,7 +1188,7 @@
         "documentation": {}
     },
     {
-        "label": "redirect",
+        "label": "render",
         "importPath": "django.shortcuts",
         "description": "django.shortcuts",
         "isExtraImport": true,
@@ -1665,7 +1657,7 @@
         "documentation": {}
     },
     {
-        "label": "Estimation_Assemblies_Table",
+        "label": "Estimation_Assemblies_Resource_Details_Table",
         "importPath": "assembliesApp.models",
         "description": "assembliesApp.models",
         "isExtraImport": true,
@@ -1673,7 +1665,7 @@
         "documentation": {}
     },
     {
-        "label": "Estimation_Assemblies_Resource_Details_Table",
+        "label": "Estimation_Assemblies_Table",
         "importPath": "assembliesApp.models",
         "description": "assembliesApp.models",
         "isExtraImport": true,
@@ -1761,19 +1753,27 @@
         "documentation": {}
     },
     {
-        "label": "CompanyDetailsTable",
-        "importPath": "companyApp.models ",
-        "description": "companyApp.models ",
+        "label": "csrf_exempt",
+        "importPath": "django.views.decorators.csrf",
+        "description": "django.views.decorators.csrf",
         "isExtraImport": true,
-        "detail": "companyApp.models ",
+        "detail": "django.views.decorators.csrf",
         "documentation": {}
     },
     {
-        "label": "Resource_Code_L1_Table",
-        "importPath": "companyApp.models ",
-        "description": "companyApp.models ",
+        "label": "csrf_exempt",
+        "importPath": "django.views.decorators.csrf",
+        "description": "django.views.decorators.csrf",
         "isExtraImport": true,
-        "detail": "companyApp.models ",
+        "detail": "django.views.decorators.csrf",
+        "documentation": {}
+    },
+    {
+        "label": "csrf_exempt",
+        "importPath": "django.views.decorators.csrf",
+        "description": "django.views.decorators.csrf",
+        "isExtraImport": true,
+        "detail": "django.views.decorators.csrf",
         "documentation": {}
     },
     {
@@ -1785,35 +1785,20 @@
         "documentation": {}
     },
     {
-        "label": "csrf_exempt",
-        "importPath": "django.views.decorators.csrf",
-        "description": "django.views.decorators.csrf",
-        "isExtraImport": true,
-        "detail": "django.views.decorators.csrf",
-        "documentation": {}
-    },
-    {
-        "label": "csrf_exempt",
-        "importPath": "django.views.decorators.csrf",
-        "description": "django.views.decorators.csrf",
-        "isExtraImport": true,
-        "detail": "django.views.decorators.csrf",
-        "documentation": {}
-    },
-    {
-        "label": "csrf_exempt",
-        "importPath": "django.views.decorators.csrf",
-        "description": "django.views.decorators.csrf",
-        "isExtraImport": true,
-        "detail": "django.views.decorators.csrf",
-        "documentation": {}
-    },
-    {
         "label": "StoreTable",
         "importPath": "storeApp.models",
         "description": "storeApp.models",
         "isExtraImport": true,
         "detail": "storeApp.models",
+        "documentation": {}
+    },
+    {
+        "label": "re",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "re",
+        "description": "re",
+        "detail": "re",
         "documentation": {}
     },
     {
@@ -1830,15 +1815,6 @@
         "description": "decimal",
         "isExtraImport": true,
         "detail": "decimal",
-        "documentation": {}
-    },
-    {
-        "label": "re",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "re",
-        "description": "re",
-        "detail": "re",
         "documentation": {}
     },
     {
@@ -2044,7 +2020,7 @@
         "kind": 2,
         "importPath": "assembliesApp.views",
         "description": "assembliesApp.views",
-        "peekOfCode": "def estimate_assemblies(request):\n    try:\n        # Retrieve the latest company details for the user\n        company_details_record = request.user.company_details\n        if not company_details_record:\n            # Handle case where no company details are found\n            messages.error(request, \"please setup your company first\")\n            return redirect(\"company_settings\")\n            return render(\n                request,",
+        "peekOfCode": "def estimate_assemblies(request):\n    try:\n        # Retrieve the latest company details for the user\n        company_details_record = request.user.company_details\n        if not company_details_record:\n            # Handle case where no company details are found\n            messages.error(request, \"please setup your company first\")\n            return redirect(\"company_settings\")\n            # return render(\n            #     request,",
         "detail": "assembliesApp.views",
         "documentation": {}
     },
@@ -2908,7 +2884,7 @@
         "kind": 6,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "class DateTimeEncoder(DjangoJSONEncoder):\n    def default(self, obj):\n        if isinstance(obj, datetime):\n            return obj.isoformat()\n        return super().default(obj)\nfrom django.shortcuts import render, redirect\nfrom django.http import JsonResponse\nfrom django.contrib.auth.decorators import login_required\nfrom .models import MainContract, MainContractDetail, SubContractTable, SubContractDetail, MainContractBudgetCostTable, MainContractInvoiceTable, MainContractInvoiceDetailsTable, SubContractInvoiceTable, SubContractInvoiceDetailsTable\nfrom companyApp.models import CompanyDetailsTable",
+        "peekOfCode": "class DateTimeEncoder(DjangoJSONEncoder):\n    def default(self, obj):\n        if isinstance(obj, datetime):\n            return obj.isoformat()\n        return super().default(obj)\nimport re\nfrom decimal import Decimal, InvalidOperation\nfrom django.contrib.auth.decorators import login_required\nfrom django.db.models import F, Sum\nfrom django.http import JsonResponse",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -2917,7 +2893,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def clean_decimal(value):\n    \"\"\"Remove any characters that are not digits or a decimal point and convert to Decimal.\"\"\"\n    clean_value = re.sub(r'[^\\d.]', '', value)\n    try:\n        return Decimal(clean_value)\n    except InvalidOperation:\n        return Decimal(0)  # or handle this in a way that suits your needs\n@login_required\ndef save_contract(request):\n    company_details_record = request.user.company_details",
+        "peekOfCode": "def clean_decimal(value):\n    \"\"\"Remove any characters that are not digits or a decimal point and convert to Decimal.\"\"\"\n    clean_value = re.sub(r\"[^\\d.]\", \"\", value)\n    try:\n        return Decimal(clean_value)\n    except InvalidOperation:\n        return Decimal(0)  # or handle this in a way that suits your needs\n@login_required\ndef save_contract(request):\n    company_details_record = request.user.company_details",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -2926,7 +2902,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def save_contract(request):\n    company_details_record = request.user.company_details\n    if request.method == 'POST':\n        print(request.POST)\n        contract_name = request.POST.get('contract_name')\n        comb_assem_code = request.POST.get('Comb_Assem_Code')\n        number_input = request.POST.get('numberInput')\n        numberInput_id = request.POST.get('numberInput_id')\n        item_description = request.POST.get('Item_Description')\n        print(contract_name, comb_assem_code, number_input, numberInput_id, item_description)",
+        "peekOfCode": "def save_contract(request):\n    company_details_record = request.user.company_details\n    if request.method == \"POST\":\n        print(request.POST)\n        contract_name = request.POST.get(\"contract_name\")\n        comb_assem_code = request.POST.get(\"Comb_Assem_Code\")\n        number_input = request.POST.get(\"numberInput\")\n        numberInput_id = request.POST.get(\"numberInput_id\")\n        item_description = request.POST.get(\"Item_Description\")\n        print(",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -2935,7 +2911,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def save_edit_contract(request):\n    company_details_record = request.user.company_details\n    if request.method == 'POST':\n        print(request.POST)\n        main_contract_id = request.POST.get('main_contract_id')  # Get main_contract.id from the request\n        contract_name = request.POST.get('contract_name')\n        comb_assem_code = request.POST.get('Comb_Assem_Code')\n        number_input = request.POST.get('numberInput')\n        numberInput_id = request.POST.get('numberInput_id')\n        item_description = request.POST.get('Item_Description')",
+        "peekOfCode": "def save_edit_contract(request):\n    company_details_record = request.user.company_details\n    if request.method == \"POST\":\n        print(request.POST)\n        main_contract_id = request.POST.get(\n            \"main_contract_id\"\n        )  # Get main_contract.id from the request\n        contract_name = request.POST.get(\"contract_name\")\n        comb_assem_code = request.POST.get(\"Comb_Assem_Code\")\n        number_input = request.POST.get(\"numberInput\")",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -2944,7 +2920,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def contract_list(request):\n    company_details_record = request.user.company_details\n    contracts = MainContract.objects.filter(company_details=company_details_record).order_by('-id')\n    return render(request, 'contractApp/contract_list.html', {'contracts': contracts})\n@login_required\n@csrf_exempt\ndef create_invoice(request):\n    if request.method == 'POST':\n        invoice_qty = []\n        contract_details_id = []",
+        "peekOfCode": "def contract_list(request):\n    company_details_record = request.user.company_details\n    contracts = MainContract.objects.filter(\n        company_details=company_details_record\n    ).order_by(\"-id\")\n    return render(request, \"contractApp/contract_list.html\", {\"contracts\": contracts})\n@login_required\n@csrf_exempt\ndef create_invoice(request):\n    if request.method == \"POST\":",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -2953,7 +2929,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def create_invoice(request):\n    if request.method == 'POST':\n        invoice_qty = []\n        contract_details_id = []\n        for key in request.POST:\n            if key.startswith('invoice_qty_'):\n                invoice_qty.append(request.POST[key])\n            if key.startswith('contract_details_id_'):\n                contract_details_id.append(request.POST[key])\n        contract_id= request.POST.get('contract_id')",
+        "peekOfCode": "def create_invoice(request):\n    if request.method == \"POST\":\n        invoice_qty = []\n        contract_details_id = []\n        for key in request.POST:\n            if key.startswith(\"invoice_qty_\"):\n                invoice_qty.append(request.POST[key])\n            if key.startswith(\"contract_details_id_\"):\n                contract_details_id.append(request.POST[key])\n        contract_id = request.POST.get(\"contract_id\")",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -2971,7 +2947,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def delete_contract(request, contract_id):\n    # Get the contract, or return a 404 if not found\n    contract = get_object_or_404(MainContract, id=contract_id)\n    # Check if the user is authorized to delete this contract (optional)\n    if contract.company_details.User != request.user:\n        return JsonResponse({'status': 'error', 'message': 'You do not have permission to delete this contract.'}, status=403)\n    # Delete the contract\n    contract.delete()\n    # Redirect to contract list or return success message\n    return JsonResponse({'status': 'success'})",
+        "peekOfCode": "def delete_contract(request, contract_id):\n    # Get the contract, or return a 404 if not found\n    contract = get_object_or_404(MainContract, id=contract_id)\n    # Check if the user is authorized to delete this contract (optional)\n    if contract.company_details.User != request.user:\n        return JsonResponse(\n            {\n                \"status\": \"error\",\n                \"message\": \"You do not have permission to delete this contract.\",\n            },",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -2980,7 +2956,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def create_contract(request):\n    company_details_record = request.user.company_details\n    filter_Estimation_Assemblies_Table = Estimation_Assemblies_Table.objects.filter(Company_Details=company_details_record)\n    # Gather assemblies and resource totals\n    assemblies_data = []\n    for assembly in filter_Estimation_Assemblies_Table:\n        assemblies_data.append({\n            'id': assembly.id,\n            'assembly_title': assembly.Assembly_Title,\n            'assembly_name': assembly.Assembly_Name,",
+        "peekOfCode": "def create_contract(request):\n    company_details_record = request.user.company_details\n    filter_Estimation_Assemblies_Table = Estimation_Assemblies_Table.objects.filter(\n        Company_Details=company_details_record\n    )\n    # Gather assemblies and resource totals\n    assemblies_data = []\n    for assembly in filter_Estimation_Assemblies_Table:\n        assemblies_data.append(\n            {",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -2989,7 +2965,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def edit_contract(request, contract_id):\n    company_details_record = request.user.company_details\n    main_contract = MainContract.objects.get(id=contract_id)\n    main_contract_details = MainContractDetail.objects.filter(main_contract=main_contract)\n    filter_Estimation_Assemblies_Table = Estimation_Assemblies_Table.objects.filter(\n        Company_Details=company_details_record)\n    # Gather assemblies and resource totals\n    assemblies_data = []\n    for assembly in filter_Estimation_Assemblies_Table:\n        assemblies_data.append({",
+        "peekOfCode": "def edit_contract(request, contract_id):\n    company_details_record = request.user.company_details\n    main_contract = MainContract.objects.get(id=contract_id)\n    main_contract_details = MainContractDetail.objects.filter(\n        main_contract=main_contract\n    )\n    filter_Estimation_Assemblies_Table = Estimation_Assemblies_Table.objects.filter(\n        Company_Details=company_details_record\n    )\n    # Gather assemblies and resource totals",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -2998,7 +2974,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def delete_contract_row(request, row_id):\n    print('row_id')\n    if request.method == 'DELETE':\n        try:\n            d=3\n            print('row_id')\n            print(row_id)\n            # Fetch the row from the database\n            row = MainContractDetail.objects.get(id=row_id)\n            row.delete()  # Delete the row",
+        "peekOfCode": "def delete_contract_row(request, row_id):\n    print(\"row_id\")\n    if request.method == \"DELETE\":\n        try:\n            d = 3\n            print(\"row_id\")\n            print(row_id)\n            # Fetch the row from the database\n            row = MainContractDetail.objects.get(id=row_id)\n            row.delete()  # Delete the row",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -3007,7 +2983,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def Contract_Management(request):\n    company_details_record = request.user.company_details\n    print('company_details_record')\n    print(company_details_record)\n    if request.method == \"POST\":\n        if 'add_assemblies' in request.POST:\n            parent_type = request.POST['parent_type']\n            assemblies_name = request.POST['assemblies_name']\n            if parent_type == 'level1':\n                Assemblies_Code_L1_Table.objects.create(",
+        "peekOfCode": "def Contract_Management(request):\n    company_details_record = request.user.company_details\n    print(\"company_details_record\")\n    print(company_details_record)\n    if request.method == \"POST\":\n        if \"add_assemblies\" in request.POST:\n            parent_type = request.POST[\"parent_type\"]\n            assemblies_name = request.POST[\"assemblies_name\"]\n            if parent_type == \"level1\":\n                Assemblies_Code_L1_Table.objects.create(",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -3016,7 +2992,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def Contract_Management_pro(request):\n    company_details_record = request.user.company_details\n    my_contracts = MainContract.objects.filter(company_details=company_details_record)\n    data = []\n    for main_contract in my_contracts:\n        estimation_assemblies = Estimation_Assemblies_Table.objects.filter(\n            id__in=MainContractDetail.objects.filter(main_contract=main_contract).values_list('assembly_row_id', flat=True)\n        )\n        level1_assemblies = Assemblies_Code_L1_Table.objects.filter(\n            id__in=estimation_assemblies.values_list('Assemblies_Code_L1_id', flat=True)",
+        "peekOfCode": "def Contract_Management_pro(request):\n    company_details_record = request.user.company_details\n    my_contracts = MainContract.objects.filter(company_details=company_details_record)\n    data = []\n    for main_contract in my_contracts:\n        estimation_assemblies = Estimation_Assemblies_Table.objects.filter(\n            id__in=MainContractDetail.objects.filter(\n                main_contract=main_contract\n            ).values_list(\"assembly_row_id\", flat=True)\n        )",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -3025,7 +3001,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def Contract_Management_main(request):\n    company_details_record = request.user.company_details\n    # my_contracts = MainContract.objects.filter(company_details=company_details_record)\n    my_contracts = MainContract.objects.filter(company_details=company_details_record).order_by('-id').prefetch_related(\n        'details__assembly_row__Assemblies_Code_L1',\n        'details__assembly_row__Assemblies_Code_L2',\n        'details__assembly_row__Assemblies_Code_L3'\n    )\n    filter_resoures_level_1 = Resource_Code_L1_Table.objects.filter(Company_Details=company_details_record)\n    filter_assemblies_level_1 = Assemblies_Code_L1_Table.objects.filter(Company_Details=company_details_record)",
+        "peekOfCode": "def Contract_Management_main(request):\n    company_details_record = request.user.company_details\n    # my_contracts = MainContract.objects.filter(company_details=company_details_record)\n    my_contracts = (\n        MainContract.objects.filter(company_details=company_details_record)\n        .order_by(\"-id\")\n        .prefetch_related(\n            \"details__assembly_row__Assemblies_Code_L1\",\n            \"details__assembly_row__Assemblies_Code_L2\",\n            \"details__assembly_row__Assemblies_Code_L3\",",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -3034,7 +3010,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def contract_assembly_resource_details_management(request):\n    company_details_record = request.user.company_details\n    # my_contracts = MainContract.objects.filter(company_details=company_details_record)\n    my_contracts = MainContract.objects.filter(company_details=company_details_record).order_by('-id').prefetch_related(\n        'details__assembly_row__Assemblies_Code_L1',\n        'details__assembly_row__Assemblies_Code_L2',\n        'details__assembly_row__Assemblies_Code_L3'\n    )\n    filter_resoures_level_1 = Resource_Code_L1_Table.objects.filter(Company_Details=company_details_record)\n    filter_assemblies_level_1 = Assemblies_Code_L1_Table.objects.filter(Company_Details=company_details_record)",
+        "peekOfCode": "def contract_assembly_resource_details_management(request):\n    company_details_record = request.user.company_details\n    # my_contracts = MainContract.objects.filter(company_details=company_details_record)\n    my_contracts = (\n        MainContract.objects.filter(company_details=company_details_record)\n        .order_by(\"-id\")\n        .prefetch_related(\n            \"details__assembly_row__Assemblies_Code_L1\",\n            \"details__assembly_row__Assemblies_Code_L2\",\n            \"details__assembly_row__Assemblies_Code_L3\",",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -3043,7 +3019,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def create_subcontract(request):\n    company_details_record = request.user.company_details\n    filter_Estimation_Assemblies_Table = Estimation_Assemblies_Table.objects.filter(Company_Details=company_details_record)\n    # Gather assemblies and resource totals\n    assemblies_data = []\n    for assembly in filter_Estimation_Assemblies_Table:\n        assemblies_data.append({\n            'id': assembly.id,\n            'assembly_title': assembly.Assembly_Title,\n            'assembly_name': assembly.Assembly_Name,",
+        "peekOfCode": "def create_subcontract(request):\n    company_details_record = request.user.company_details\n    filter_Estimation_Assemblies_Table = Estimation_Assemblies_Table.objects.filter(\n        Company_Details=company_details_record\n    )\n    # Gather assemblies and resource totals\n    assemblies_data = []\n    for assembly in filter_Estimation_Assemblies_Table:\n        assemblies_data.append(\n            {",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -3052,7 +3028,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def edit_subcontract(request, subcontract_id):\n    main_subcontract = SubContractTable.objects.get(id=subcontract_id)\n    main_subcontract_details = SubContractDetail.objects.filter(sub_contract=main_subcontract)\n    company_details_record = request.user.company_details\n    filter_Estimation_Assemblies_Table = Estimation_Assemblies_Table.objects.filter(Company_Details=company_details_record)\n    # Gather assemblies and resource totals\n    assemblies_data = []\n    for assembly in filter_Estimation_Assemblies_Table:\n        assemblies_data.append({\n            'id': assembly.id,",
+        "peekOfCode": "def edit_subcontract(request, subcontract_id):\n    main_subcontract = SubContractTable.objects.get(id=subcontract_id)\n    main_subcontract_details = SubContractDetail.objects.filter(\n        sub_contract=main_subcontract\n    )\n    company_details_record = request.user.company_details\n    filter_Estimation_Assemblies_Table = Estimation_Assemblies_Table.objects.filter(\n        Company_Details=company_details_record\n    )\n    # Gather assemblies and resource totals",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -3061,7 +3037,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def save_subcontract(request):\n    if request.method == 'POST':\n        print('subcontract')\n        print(request.POST)\n        subcontract_name = request.POST.get('subcontract_name')\n        comb_assem_code = request.POST.get('Comb_Assem_Code')\n        hiddencontractInputId = request.POST.get('hiddencontractInputId')\n        hiddenassemblyInputId = request.POST.get('hiddenassemblyInputId')\n        item_description = request.POST.get('Item_Description')\n        totalTotalPrice = request.POST.get('totalTotalPrice')",
+        "peekOfCode": "def save_subcontract(request):\n    if request.method == \"POST\":\n        print(\"subcontract\")\n        print(request.POST)\n        subcontract_name = request.POST.get(\"subcontract_name\")\n        comb_assem_code = request.POST.get(\"Comb_Assem_Code\")\n        hiddencontractInputId = request.POST.get(\"hiddencontractInputId\")\n        hiddenassemblyInputId = request.POST.get(\"hiddenassemblyInputId\")\n        item_description = request.POST.get(\"Item_Description\")\n        totalTotalPrice = request.POST.get(\"totalTotalPrice\")",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -3070,7 +3046,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def save_edit_subcontract(request):\n    if request.method == 'POST':\n        print('subcontract')\n        print(request.POST)\n        main_contract_id = request.POST.get('main_contract_id')\n        subcontract_name = request.POST.get('subcontract_name')\n        comb_assem_code = request.POST.get('Comb_Assem_Code')\n        hiddencontractInputId = request.POST.get('hiddencontractInputId')\n        hiddenassemblyInputId = request.POST.get('hiddenassemblyInputId')\n        item_description = request.POST.get('Item_Description')",
+        "peekOfCode": "def save_edit_subcontract(request):\n    if request.method == \"POST\":\n        print(\"subcontract\")\n        print(request.POST)\n        main_contract_id = request.POST.get(\"main_contract_id\")\n        subcontract_name = request.POST.get(\"subcontract_name\")\n        comb_assem_code = request.POST.get(\"Comb_Assem_Code\")\n        hiddencontractInputId = request.POST.get(\"hiddencontractInputId\")\n        hiddenassemblyInputId = request.POST.get(\"hiddenassemblyInputId\")\n        item_description = request.POST.get(\"Item_Description\")",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -3079,7 +3055,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def delete_subcontract_row(request, row_id):\n    print('row_id')\n    if request.method == 'DELETE':\n        try:\n            d=3\n            print('row_id')\n            print(row_id)\n            # Fetch the row from the database\n            row = SubContractDetail.objects.get(id=row_id)\n            row.delete()  # Delete the row",
+        "peekOfCode": "def delete_subcontract_row(request, row_id):\n    print(\"row_id\")\n    if request.method == \"DELETE\":\n        try:\n            d = 3\n            print(\"row_id\")\n            print(row_id)\n            # Fetch the row from the database\n            row = SubContractDetail.objects.get(id=row_id)\n            row.delete()  # Delete the row",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -3088,7 +3064,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def subcontract_list(request):\n    company_details_record = request.user.company_details\n    contracts = SubContractTable.objects.filter(company_details=company_details_record).order_by('-id')\n    return render(request, 'contractApp/subcontract_list.html', {'contracts': contracts})\ndef SubContract_Management(request):\n    company_details_record = request.user.company_details\n    print('company_details_record')\n    print(company_details_record)\n    if request.method == \"POST\":\n        if 'add_assemblies' in request.POST:",
+        "peekOfCode": "def subcontract_list(request):\n    company_details_record = request.user.company_details\n    contracts = SubContractTable.objects.filter(\n        company_details=company_details_record\n    ).order_by(\"-id\")\n    return render(\n        request, \"contractApp/subcontract_list.html\", {\"contracts\": contracts}\n    )\ndef SubContract_Management(request):\n    company_details_record = request.user.company_details",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -3097,7 +3073,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def SubContract_Management(request):\n    company_details_record = request.user.company_details\n    print('company_details_record')\n    print(company_details_record)\n    if request.method == \"POST\":\n        if 'add_assemblies' in request.POST:\n            parent_type = request.POST['parent_type']\n            assemblies_name = request.POST['assemblies_name']\n            if parent_type == 'level1':\n                Assemblies_Code_L1_Table.objects.create(",
+        "peekOfCode": "def SubContract_Management(request):\n    company_details_record = request.user.company_details\n    print(\"company_details_record\")\n    print(company_details_record)\n    if request.method == \"POST\":\n        if \"add_assemblies\" in request.POST:\n            parent_type = request.POST[\"parent_type\"]\n            assemblies_name = request.POST[\"assemblies_name\"]\n            if parent_type == \"level1\":\n                Assemblies_Code_L1_Table.objects.create(",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -3106,7 +3082,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def SubContract_Management_main(request):\n    company_details_record = request.user.company_details\n    my_contracts = SubContractTable.objects.filter(company_details=company_details_record).order_by('-id').prefetch_related(\n        'details__assembly_value__Assemblies_Code_L1',\n        'details__assembly_value__Assemblies_Code_L2',\n        'details__assembly_value__Assemblies_Code_L3'\n    )\n    context = {\n        'my_contracts': my_contracts\n    }",
+        "peekOfCode": "def SubContract_Management_main(request):\n    company_details_record = request.user.company_details\n    my_contracts = (\n        SubContractTable.objects.filter(company_details=company_details_record)\n        .order_by(\"-id\")\n        .prefetch_related(\n            \"details__assembly_value__Assemblies_Code_L1\",\n            \"details__assembly_value__Assemblies_Code_L2\",\n            \"details__assembly_value__Assemblies_Code_L3\",\n        )",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -3115,7 +3091,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def subcontract_create_invoice(request):\n    if request.method == 'POST':\n        invoice_qty = []\n        contract_details_id = []\n        for key in request.POST:\n            if key.startswith('invoice_qty_'):\n                invoice_qty.append(request.POST[key])\n            if key.startswith('contract_details_id_'):\n                contract_details_id.append(request.POST[key])\n        contract_id= request.POST.get('contract_id')",
+        "peekOfCode": "def subcontract_create_invoice(request):\n    if request.method == \"POST\":\n        invoice_qty = []\n        contract_details_id = []\n        for key in request.POST:\n            if key.startswith(\"invoice_qty_\"):\n                invoice_qty.append(request.POST[key])\n            if key.startswith(\"contract_details_id_\"):\n                contract_details_id.append(request.POST[key])\n        contract_id = request.POST.get(\"contract_id\")",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -3124,7 +3100,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def view_subcontract(request, subcontract_id):\n    # Fetch the contract using the contract ID, or return a 404 if not found\n    contract = get_object_or_404(SubContractTable, id=subcontract_id)\n    # Fetch the related MainContractDetail records\n    contract_details = SubContractDetail.objects.filter(sub_contract=contract)\n    filter_main_contract_invoice = SubContractInvoiceTable.objects.filter(\n        invoice_contract_row=contract\n    ).order_by('-id')\n    context = {\n        'contract': contract,",
+        "peekOfCode": "def view_subcontract(request, subcontract_id):\n    # Fetch the contract using the contract ID, or return a 404 if not found\n    contract = get_object_or_404(SubContractTable, id=subcontract_id)\n    # Fetch the related MainContractDetail records\n    contract_details = SubContractDetail.objects.filter(sub_contract=contract)\n    filter_main_contract_invoice = SubContractInvoiceTable.objects.filter(\n        invoice_contract_row=contract\n    ).order_by(\"-id\")\n    context = {\n        \"contract\": contract,",
         "detail": "contractApp.views",
         "documentation": {}
     },
@@ -3133,7 +3109,7 @@
         "kind": 2,
         "importPath": "contractApp.views",
         "description": "contractApp.views",
-        "peekOfCode": "def delete_subcontract(request, subcontract_id):\n    # Get the contract, or return a 404 if not found\n    contract = get_object_or_404(MainContract, id=contract_id)\n    # Check if the user is authorized to delete this contract (optional)\n    if contract.company_details.User != request.user:\n        return JsonResponse({'status': 'error', 'message': 'You do not have permission to delete this contract.'}, status=403)\n    # Delete the contract\n    contract.delete()\n    # Redirect to contract list or return success message\n    return JsonResponse({'status': 'success'})",
+        "peekOfCode": "def delete_subcontract(request, subcontract_id):\n    # Get the contract, or return a 404 if not found\n    contract = get_object_or_404(MainContract, id=contract_id)\n    # Check if the user is authorized to delete this contract (optional)\n    if contract.company_details.User != request.user:\n        return JsonResponse(\n            {\n                \"status\": \"error\",\n                \"message\": \"You do not have permission to delete this contract.\",\n            },",
         "detail": "contractApp.views",
         "documentation": {}
     },
