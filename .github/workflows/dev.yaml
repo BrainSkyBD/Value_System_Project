@@ -1,0 +1,26 @@
+name: Deploy to aws production
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Deploy to aws production
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.MAIN_HOST }}
+                  username: ${{ secrets.MAIN_USERNAME }}
+                  key: ${{ secrets.MAIN_SSH_KEY }}
+                  port: ${{ secrets.MAIN_PORT }}
+                  script: |
+                      source env/bin/activate
+                      cd ~/Value_System_Project
+                      git pull
+                      pip install -r requirements.txt
+                      sudo supervisorctl restart all
+                      sudo systemctl reload nginx
+
