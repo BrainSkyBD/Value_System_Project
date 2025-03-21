@@ -63,11 +63,11 @@ def estimate_assemblies(request):
             # Handle case where no company details are found
             messages.error(request, "please setup your company first")
             return redirect("company_settings")
-            return render(
-                request,
-                "company_settings",
-                {"message": "No company details found for the user."},
-            )
+            # return render(
+            #     request,
+            #     "company_settings",
+            #     {"message": "No company details found for the user."},
+            # )
             # return render(request, "assembliesApp/error.html", {"message": "No company details found for the user."})
 
         # Filter resources and assemblies related to the company
