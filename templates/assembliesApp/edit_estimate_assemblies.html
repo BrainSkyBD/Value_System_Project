@@ -616,7 +616,7 @@ function addItem() {
     tableBody.appendChild(newRow);
 
     // Add resource to the list with the unique ID
-    list_resourses_ids.push([resourceCode_id, quantity.toFixed(2), itemTotalCost.toFixed(2), uniqueId, "new"]);
+    list_resourses_ids.push([resourceCode_id, quantity.toFixed(2), itemTotalCost.toFixed(2), unitOfMeasure, "new", assembly_quantity_value.toFixed(2)]);
     document.getElementById('list_resourses_ids').value = JSON.stringify(list_resourses_ids);
 
     // Debugging: Verify data-code-l4 is set correctly

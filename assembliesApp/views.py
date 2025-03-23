@@ -222,7 +222,6 @@ def duplicate_assembly(request, assembly_id):
 
 @login_required
 def save_edit_company_assembly_record(request):
-
     get_assembly_record_id = request.POST.get("get_assembly_record_id")
     company_details_record = request.user.company_details
     assembly = get_object_or_404(
